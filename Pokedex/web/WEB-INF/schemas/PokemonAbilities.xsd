@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<xsd:schema version="1.0"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="https://www.pokedex.com/schemas/PokemonAbilities.xsd"
+            xmlns="https://www.pokedex.com/schemas/PokemonAbilities.xsd"
+            elementFormDefault="qualified">  
+    <xsd:complexType name="PokemonAbilities">
+        <xsd:sequence>
+            <xsd:element name="pokemonId" type="xsd:positiveInteger"/>
+            <xsd:element name="abilityName" type="xsd:string"/>                             
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

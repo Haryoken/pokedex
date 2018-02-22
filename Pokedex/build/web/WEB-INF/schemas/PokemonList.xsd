@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<xsd:schema version="1.0"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="https://www.pokedex.com/schemas/PokemonList.xsd"
+            xmlns="https://www.pokedex.com/schemas/PokemonList.xsd"
+            elementFormDefault="qualified">
+    <xsd:element name="PokemonList">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="pokemon" type="Pokemon" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="Pokemon">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="nationalDexId" type="xsd:positiveInteger"/>
+                <xsd:element name="englishName" type="xsd:string"/>
+                <xsd:element name="japaneseName" type="xsd:string"/>
+                <xsd:element name="romajiName" type="xsd:string"/>
+                <xsd:element name="height" type="xsd:string"/>
+                <xsd:element name="weight" type="xsd:string"/>
+                <xsd:element name="catchRate" type="xsd:decimal"/>
+                <xsd:element name="baseExp" type="xsd:positiveInteger"/>
+                <xsd:element name="baseHappiness" type="xsd:positiveInteger"/>
+                <xsd:element name="growthRate" type="xsd:string"/>
+                <xsd:element name="isLegendary" type="xsd:boolean"/>
+                <xsd:element name="pictureURI" type="xsd:anyURI"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
