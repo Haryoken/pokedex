@@ -10,11 +10,13 @@ and open the template in the editor.
             targetNamespace="https://www.pokedex.com/schemas/PokemonGeneration.xsd"
             xmlns="https://www.pokedex.com/schemas/PokemonGeneration.xsd"
             elementFormDefault="qualified">  
-    <xsd:complexType name="PokemonGeneration">
-        <xsd:sequence>
-            <xsd:element name="pokemonId" type="xsd:positiveInteger"/>
-            <xsd:element name="appearInGame" type="xsd:string"/>          
-            <xsd:element name="localIndexNo" type="xsd:positiveInteger"/>              
-        </xsd:sequence>
-    </xsd:complexType>
+    <xsd:element name="PokemonGeneration">
+        <xsd:complexType name="PokemonGeneration">
+            <xsd:sequence>
+                <xsd:element name="pokemonId" type="xsd:positiveInteger"/>
+                <xsd:element name="appearInGame" type="xsd:string"/>          
+                <xsd:element name="localIndexNo" type="xsd:positiveInteger"/>              
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>

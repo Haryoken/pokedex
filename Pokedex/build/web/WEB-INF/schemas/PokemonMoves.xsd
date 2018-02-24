@@ -10,14 +10,16 @@ and open the template in the editor.
             targetNamespace="https://www.pokedex.com/schemas/PokemonMoves.xsd"
             xmlns="https://www.pokedex.com/schemas/PokemonMoves.xsd"
             elementFormDefault="qualified">  
-    <xsd:complexType name="PokemonMoves">
-        <xsd:sequence>
-            <xsd:element name="pokemonId" type="xsd:positiveInteger"/>
-            <xsd:element name="moveName" type="xsd:string"/>          
-            <xsd:element name="learntByLevelUp" type="xsd:boolean"/>
-            <xsd:element name="learntByTM" type="xsd:boolean"/>
-            <xsd:element name="learntByTutor" type="xsd:boolean"/>
-            <xsd:element name="isEggMove" type="xsd:boolean"/>        
-        </xsd:sequence>
-    </xsd:complexType>
+    <xsd:element name="PokemonMoves">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="pokemonId" type="xsd:positiveInteger"/>
+                <xsd:element name="moveName" type="xsd:string"/>          
+                <xsd:element name="learntByLevelUp" type="xsd:boolean"/>
+                <xsd:element name="learntByTM" type="xsd:boolean"/>
+                <xsd:element name="learntByTutor" type="xsd:boolean"/>
+                <xsd:element name="isEggMove" type="xsd:boolean"/>        
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>

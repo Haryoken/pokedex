@@ -10,12 +10,14 @@ and open the template in the editor.
             targetNamespace="https://www.pokedex.com/schemas/Ability.xsd"
             xmlns="https://www.pokedex.com/schemas/Ability.xsd"
             elementFormDefault="qualified">  
-    <xsd:complexType name="Ability">
-        <xsd:sequence>
+    <xsd:element name="Ability">
+        <xsd:complexType>
+            <xsd:sequence>
            
-            <xsd:element name="abilityName" type="xsd:string"/>          
-            <xsd:element name="description" type="xsd:string"/>
+                <xsd:element name="abilityName" type="xsd:string"/>          
+                <xsd:element name="description" type="xsd:string"/>
                      
-        </xsd:sequence>
-    </xsd:complexType>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>

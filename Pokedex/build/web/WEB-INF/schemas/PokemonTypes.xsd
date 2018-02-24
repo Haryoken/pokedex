@@ -22,7 +22,7 @@ and open the template in the editor.
     <xsd:complexType name="PokemonType">
         <xsd:sequence>
             <xsd:element name="typeLabel" type="xsd:string"/>
-            <xsd:element name="typeIconURI"type="xsd:anyURI"/>
+            <xsd:element name="typeIconURI" type="xsd:anyURI"/>
         </xsd:sequence>
     </xsd:complexType>
     

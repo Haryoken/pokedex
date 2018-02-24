@@ -10,11 +10,13 @@ and open the template in the editor.
             targetNamespace="https://www.pokedex.com/schemas/PokemonLocations.xsd"
             xmlns="https://www.pokedex.com/schemas/PokemonLocations.xsd"
             elementFormDefault="qualified">  
-    <xsd:complexType name="PokemonLocations">
-        <xsd:sequence>
-            <xsd:element name="pokemonId" type="xsd:positiveInteger"/>
-            <xsd:element name="pokemonLocation" type="xsd:positiveInteger"/>          
-            <xsd:element name="condition" type="xsd:string"/>                 
-        </xsd:sequence>
-    </xsd:complexType>
+    <xsd:element name="PokemonLocations">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="pokemonId" type="xsd:positiveInteger"/>
+                <xsd:element name="pokemonLocation" type="xsd:positiveInteger"/>          
+                <xsd:element name="condition" type="xsd:string"/>                 
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>

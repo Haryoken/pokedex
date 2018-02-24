@@ -10,11 +10,13 @@ and open the template in the editor.
             targetNamespace="https://www.pokedex.com/schemas/Region.xsd"
             xmlns="https://www.pokedex.com/schemas/Region.xsd"
             elementFormDefault="qualified">  
-    <xsd:complexType name="Region">
-        <xsd:sequence>
-            <xsd:element name="id" type="xsd:positiveInteger"/>
-            <xsd:element name="regionName" type="xsd:string"/>          
-            <xsd:element name="mapURI" type="xsd:anyURI"/>                 
-        </xsd:sequence>
-    </xsd:complexType>
+    <xsd:element name="Region">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="id" type="xsd:positiveInteger"/>
+                <xsd:element name="regionName" type="xsd:string"/>          
+                <xsd:element name="mapURI" type="xsd:anyURI"/>                 
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>

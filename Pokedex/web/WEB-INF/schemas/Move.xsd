@@ -9,19 +9,22 @@ and open the template in the editor.
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             targetNamespace="https://www.pokedex.com/schemas/Move.xsd"
             xmlns="https://www.pokedex.com/schemas/Move.xsd"
-            elementFormDefault="qualified">  
-    <xsd:complexType name="Move">
-        <xsd:sequence>
-            <xsd:element name="name" type="xsd:string"/>
-            <xsd:element name="category" type="xsd:string"/>          
-            <xsd:element name="power" type="xsd:string"/>
-            <xsd:element name="accuracy" type="xsd:positiveInteger"/>
-            <xsd:element name="pp" type="xsd:positiveInteger"/>
-            <xsd:element name="tm" type="xsd:string"/>
-            <xsd:element name="effect" type="xsd:string"/>           
-            <xsd:element name="probability" type="xsd:positiveInteger"/>   
-            <xsd:element name="isZMove" type="xsd:boolean" default="false"/>     
-            <xsd:element name="generationAppearance" type="xsd:positiveInteger"/>         
-        </xsd:sequence>
-    </xsd:complexType>
+            elementFormDefault="qualified"> 
+    <xsd:element name="Move"> 
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="name" type="xsd:string"/>
+                <xsd:element name="type" type="xsd:string"/>
+                <xsd:element name="category" type="xsd:string"/>          
+                <xsd:element name="power" type="xsd:string"/>
+                <xsd:element name="accuracy" type="xsd:positiveInteger"/>
+                <xsd:element name="pp" type="xsd:positiveInteger"/>
+                <xsd:element name="tm" type="xsd:string"/>
+                <xsd:element name="effect" type="xsd:string"/>           
+                <xsd:element name="probability" type="xsd:positiveInteger"/>   
+                <xsd:element name="isZMove" type="xsd:boolean" default="false"/>     
+                <xsd:element name="generationAppearance" type="xsd:positiveInteger"/>         
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>
