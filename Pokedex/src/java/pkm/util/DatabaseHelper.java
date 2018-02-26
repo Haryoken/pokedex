@@ -18,7 +18,7 @@ public class DatabaseHelper {
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
         Connection connection;
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        String DBStr = "jdbc:sqlserver://localhost;databaseName=PokemonDB";
+        String DBStr = "jdbc:sqlserver://localhost:1433;databaseName=PokemonDB";
         String user = "sa";
         String password = "zodiacaries1104";
         connection = DriverManager.getConnection(DBStr, user, password);

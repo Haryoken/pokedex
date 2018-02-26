@@ -79,7 +79,17 @@ public class JAXBHelper {
             Logger.getLogger(JAXBHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    public static <T> void unmarshall(String xmlFilePath, T jaxbObject) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(jaxbObject.getClass());
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(jaxbObject, new File(xmlFilePath));
+        } catch (JAXBException ex) {
+            Logger.getLogger(JAXBHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public static <T> boolean validateXML(String xmlFilePath, String schemaFilePath, Object jaxbObject) throws FileNotFoundException, IOException, JAXBException {
         try {
             JAXBContext context = JAXBContext.newInstance(jaxbObject.getClass());
