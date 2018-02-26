@@ -24,6 +24,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
+import pkm.dao.PokemonDAO;
 import pkm.xml.object.Ability.xsd.Ability;
 import pkm.xml.object.PokemonAbilities.xsd.PokemonAbilities;
 import pkm.xml.object.PokemonList.xsd.Pokemon;
@@ -65,7 +66,131 @@ public class DataCrawler {
     public void setPokemon(Pokemon pokemon) {
         this.pokemon = pokemon;
     }
+    public void crawlAllPokemonIdAndName() throws IOException, XMLStreamException {
+        String urlString = "https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number";
+        URL url = new URL(urlString);
+        URLConnection connection = url.openConnection();
+        System.setProperty("http.agent", "Chrome");
+        connection.addRequestProperty("User-Agent", "Mozilla/4.76"); //Need modifying
+        InputStream is = connection.getInputStream();
 
+        XMLInputFactory factory = XMLInputFactory.newInstance();
+        factory.setProperty(XMLInputFactory.IS_VALIDATING, false);
+        factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, false);
+
+        //USING Iterator
+        //XMLEventReader reader = factory.createXMLEventReader(is, "UTF-8");
+        XMLEventReader reader = factory.createXMLEventReader(new InputStreamReader(HTMLValidator.validateInputStream(is), "UTF-8"));
+        XMLEvent event;
+        boolean isNationalDexTag = false;
+        boolean isPokemonNameTag = false;
+
+        boolean isDexIdCollected = false;
+        boolean isNameCollected = false;
+
+        String xmlPath = "web/WEB-INF/xml/PokemonList.xml";
+        String schemaPath = "web/WEB-INF/schemas/PokemonList.xsd";
+        PokemonDAO pkmDao = new PokemonDAO();
+        while (reader.hasNext()) {
+            try {
+                if (this.getPokemonList().getPokemon().size() == 806) {
+                    //Validate data and save to DB
+                    JAXBHelper.saveAsXML(xmlPath, this.getPokemonList());
+                    if (JAXBHelper.validateXML(xmlPath, schemaPath, this.getPokemonList().getPokemon())) {
+                        System.out.println("XML Validation Success.");
+                        
+                        //Save Data to DB
+                        pkmDao.insertPokemon(this.getPokemonList().getPokemon().get(0));
+                        //Purge the list
+                        this.pokemonList = new PokemonList();
+                        this.pokemon = new Pokemon();
+                        break;
+                    }
+                }
+                
+
+                StartElement startElement;
+                Attribute attribute;
+
+                event = reader.nextEvent();
+
+                if (event.isStartElement()) {
+                    startElement = event.asStartElement();
+                    String tagName = startElement.getName().toString();
+                    //System.out.println(tagName); // For DEBUG Purporse
+
+                    //Find the pokemon nationalDexId:
+                    if (tagName.equals("td")) {
+                        attribute = startElement.getAttributeByName(new QName("style"));
+                        if (attribute != null && attribute.getValue().equals("font-family:monospace")) { // Ignore the first <td>.
+                            event = reader.nextEvent();
+                            while (true) { // This LOOP purpose is to ignore characterElement and endElement of the <td> above.
+                                if (event.isStartElement()) {
+                                    startElement = event.asStartElement();
+                                    if (startElement.getName().toString().equals("td")) {
+                                        attribute = startElement.getAttributeByName(new QName("style"));
+                                        if (attribute != null && attribute.getValue().equals("font-family:monospace")) {
+                                            isNationalDexTag = true;
+                                            event = reader.nextEvent(); //must have 
+                                        }
+                                        if (event.isCharacters() && isNationalDexTag) {
+                                            String idString = event.asCharacters().toString().trim();
+                                            idString = idString.substring(1);
+                                            //System.out.println(idString); //For DEBUG Purpose
+                                            this.getPokemon().setNationalDexId(BigInteger.valueOf(Long.parseLong(idString)));
+                                            //event = reader. nextEvent();
+                                            isDexIdCollected = true;
+                                            isNationalDexTag = false;
+                                        }
+                                    }
+                                    break;
+                                }
+                                event = reader.nextEvent(); // LOOP continue 
+                            }
+                        }
+                    }
+                    //Find the pokemon Name:
+                    if (tagName.equals("a")) {
+                        attribute = startElement.getAttributeByName(new QName("title"));
+                        if (attribute != null && attribute.getValue().contains("(Pokémon)") && !attribute.getValue().contains("Victini")) {
+                            isPokemonNameTag = true;
+                            event = reader.nextEvent();
+                        }
+                        if (event.isCharacters() && isPokemonNameTag) {
+                            String name = event.asCharacters().toString().trim();
+                            //System.out.println(name.toUpperCase()); //For DEBUG Purpose
+                            this.getPokemon().setEnglishName(name);
+                            isNameCollected = true;
+                            isPokemonNameTag = false;
+                        }
+                    }
+                }
+
+                if (isDexIdCollected && isNameCollected) {
+                    Pokemon temp;
+                    if (this.getPokemonList().getPokemon().isEmpty()) {
+                        this.getPokemonList().getPokemon().add(this.getPokemon());
+                    } else {
+                        temp = this.getPokemonList().getPokemon().get(this.getPokemonList().getPokemon().size() - 1);
+                        if (!temp.getNationalDexId().equals(this.getPokemon().getNationalDexId())) {
+                            this.getPokemonList().getPokemon().add(this.getPokemon());
+                        }
+                    }
+
+                    this.pokemon = new Pokemon();
+                    isDexIdCollected = false;
+                    isNameCollected = false;
+                }
+            } catch (XMLStreamException e) {
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JAXBException ex) {
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
     public void crawlPokemonMainInfo(String pokemonName) throws IOException, XMLStreamException {
         String urlString = "https://bulbapedia.bulbagarden.net/wiki/"+pokemonName+"_(Pok%C3%A9mon)";
         URL url = new URL(urlString);
@@ -201,131 +326,5 @@ public class DataCrawler {
             }
         }
 
-    }
-
-    public void crawlAllPokemonIdAndName() throws IOException, XMLStreamException {
-        String urlString = "https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number";
-        URL url = new URL(urlString);
-        URLConnection connection = url.openConnection();
-        System.setProperty("http.agent", "Chrome");
-        connection.addRequestProperty("User-Agent", "Mozilla/4.76"); //Need modifying
-        InputStream is = connection.getInputStream();
-
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        factory.setProperty(XMLInputFactory.IS_VALIDATING, false);
-        factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, false);
-
-        //USING Iterator
-        //XMLEventReader reader = factory.createXMLEventReader(is, "UTF-8");
-        XMLEventReader reader = factory.createXMLEventReader(new InputStreamReader(HTMLValidator.validateInputStream(is), "UTF-8"));
-        XMLEvent event;
-        boolean isNationalDexTag = false;
-        boolean isPokemonNameTag = false;
-
-        boolean isDexIdCollected = false;
-        boolean isNameCollected = false;
-
-        String xmlPath = "web/WEB-INF/xml/PokemonList.xml";
-        String schemaPath = "web/WEB-INF/schemas/PokemonList.xsd";
-        
-        while (reader.hasNext()) {
-            try {
-                if (this.getPokemonList().getPokemon().size() == 806) {
-                    //Validate data and save to DB
-                    JAXBHelper.saveAsXML(xmlPath, this.getPokemonList());
-                    if (JAXBHelper.validateXML(xmlPath, schemaPath, this.getPokemonList().getPokemon())) {
-                        System.out.println("XML Validation Success.");
-
-                        //Save Data to DB
-                        
-                        //Purge the list
-                        this.pokemonList = new PokemonList();
-                        this.pokemon = new Pokemon();
-                        break;
-                    }
-                }
-                
-
-                StartElement startElement;
-                Attribute attribute;
-
-                event = reader.nextEvent();
-
-                if (event.isStartElement()) {
-                    startElement = event.asStartElement();
-                    String tagName = startElement.getName().toString();
-                    //System.out.println(tagName); // For DEBUG Purporse
-
-                    //Find the pokemon nationalDexId:
-                    if (tagName.equals("td")) {
-                        attribute = startElement.getAttributeByName(new QName("style"));
-                        if (attribute != null && attribute.getValue().equals("font-family:monospace")) { // Ignore the first <td>.
-                            event = reader.nextEvent();
-                            while (true) { // This LOOP purpose is to ignore characterElement and endElement of the <td> above.
-                                if (event.isStartElement()) {
-                                    startElement = event.asStartElement();
-                                    if (startElement.getName().toString().equals("td")) {
-                                        attribute = startElement.getAttributeByName(new QName("style"));
-                                        if (attribute != null && attribute.getValue().equals("font-family:monospace")) {
-                                            isNationalDexTag = true;
-                                            event = reader.nextEvent(); //must have 
-                                        }
-                                        if (event.isCharacters() && isNationalDexTag) {
-                                            String idString = event.asCharacters().toString().trim();
-                                            idString = idString.substring(1);
-                                            //System.out.println(idString); //For DEBUG Purpose
-                                            this.getPokemon().setNationalDexId(BigInteger.valueOf(Long.parseLong(idString)));
-                                            //event = reader. nextEvent();
-                                            isDexIdCollected = true;
-                                            isNationalDexTag = false;
-                                        }
-                                    }
-                                    break;
-                                }
-                                event = reader.nextEvent(); // LOOP continue 
-                            }
-                        }
-                    }
-                    //Find the pokemon Name:
-                    if (tagName.equals("a")) {
-                        attribute = startElement.getAttributeByName(new QName("title"));
-                        if (attribute != null && attribute.getValue().contains("(Pokémon)") && !attribute.getValue().contains("Victini")) {
-                            isPokemonNameTag = true;
-                            event = reader.nextEvent();
-                        }
-                        if (event.isCharacters() && isPokemonNameTag) {
-                            String name = event.asCharacters().toString().trim();
-                            //System.out.println(name.toUpperCase()); //For DEBUG Purpose
-                            this.getPokemon().setEnglishName(name);
-                            isNameCollected = true;
-                            isPokemonNameTag = false;
-                        }
-                    }
-                }
-
-                if (isDexIdCollected && isNameCollected) {
-                    Pokemon temp;
-                    if (this.getPokemonList().getPokemon().isEmpty()) {
-                        this.getPokemonList().getPokemon().add(this.getPokemon());
-                    } else {
-                        temp = this.getPokemonList().getPokemon().get(this.getPokemonList().getPokemon().size() - 1);
-                        if (!temp.getNationalDexId().equals(this.getPokemon().getNationalDexId())) {
-                            this.getPokemonList().getPokemon().add(this.getPokemon());
-                        }
-                    }
-
-                    this.pokemon = new Pokemon();
-                    isDexIdCollected = false;
-                    isNameCollected = false;
-                }
-            } catch (XMLStreamException e) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JAXBException ex) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-    }
+    }  
 }
