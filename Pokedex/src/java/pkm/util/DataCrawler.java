@@ -5,6 +5,7 @@
  */
 package pkm.util;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,6 +16,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -22,6 +24,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
+import pkm.xml.object.Ability.xsd.Ability;
+import pkm.xml.object.PokemonAbilities.xsd.PokemonAbilities;
 import pkm.xml.object.PokemonList.xsd.Pokemon;
 import pkm.xml.object.PokemonList.xsd.PokemonList;
 import pkm.xml.object.PokemonTypes.xsd.PokemonType;
@@ -35,10 +39,23 @@ public class DataCrawler {
 
     Pokemon pokemon;
     PokemonList pokemonList;
+    PokemonAbilities pokemonAbilities;
+    PokemonTypes pokemonTypes;
 
     public DataCrawler() {
         pokemon = new Pokemon();
         pokemonList = new PokemonList();
+        pokemonAbilities = new PokemonAbilities();
+        pokemonTypes = new PokemonTypes();
+
+    }
+
+    public PokemonList getPokemonList() {
+        return pokemonList;
+    }
+
+    public void setPokemonList(PokemonList pokemonList) {
+        this.pokemonList = pokemonList;
     }
 
     public Pokemon getPokemon() {
@@ -49,7 +66,8 @@ public class DataCrawler {
         this.pokemon = pokemon;
     }
 
-    public void crawlPokemon(String urlString) throws IOException, XMLStreamException {
+    public void crawlPokemonMainInfo(String pokemonName) throws IOException, XMLStreamException {
+        String urlString = "https://bulbapedia.bulbagarden.net/wiki/"+pokemonName+"_(Pok%C3%A9mon)";
         URL url = new URL(urlString);
         URLConnection connection = url.openConnection();
         System.setProperty("http.agent", "Chrome");
@@ -65,46 +83,115 @@ public class DataCrawler {
         XMLEventReader reader = factory.createXMLEventReader(new InputStreamReader(HTMLValidator.validateInputStream(is), "UTF-8"));
         XMLEvent event;
 
+        Attribute attribute;
+        StartElement startElement;
+
+        boolean isJapaneseNameContainer = false;
+        boolean isPictureURIContainer = false;
+
+        //Info needed:
+        boolean isIdCollected = false;
+        boolean isRomajiNameCollected = false;
+        boolean isJapaneseNameCollected = false;
+        boolean isPictureURICollected = false;
+
         while (reader.hasNext()) {
             try {
+                if (isJapaneseNameCollected
+                        && isJapaneseNameCollected
+                        && isPictureURICollected
+                        && isRomajiNameCollected) {
+                    //Validate and save to DB
+                    break;
+                }
                 event = reader.nextEvent();
 
                 if (event.isStartElement()) {
-                    StartElement startElement = event.asStartElement();
+                    startElement = event.asStartElement();
                     String tagName = startElement.getName().toString();
-                    System.out.println(tagName); // For Debug Porpurse
+                    //System.out.println(tagName); // For Debug Porpurse
 
                     //Find the pokemon englishName:
-                    if (tagName.equals("h1")) {
-                        Attribute attribute = startElement.getAttributeByName(new QName("id"));
-                        if (attribute != null && attribute.getValue().equals("firstHeading")) {
-                            event = reader.nextEvent();
-                            if (event.isCharacters()) {
+//                    if (tagName.equals("h1")) {
+//                        attribute = startElement.getAttributeByName(new QName("id"));
+//                        if (attribute != null && attribute.getValue().equals("firstHeading")) {
+//                            event = reader.nextEvent();
+//                            if (event.isCharacters()) {
+//
+//                                this.getPokemon().setEnglishName(event.asCharacters().toString().replace("(Pokémon)", "").trim());
+//
+//                            }
+//                        }
+//                    }
+//                    if (tagName.equals("a")) { // <a title = "List of Pokémon by National Pokédex number">
+//                        attribute = startElement.getAttributeByName(new QName("title"));
+//                        if (attribute != null && attribute.getValue().equals("List of Pokémon by National Pokédex number")) {
+//                            event = reader.nextEvent();
+//                            if (event.isStartElement()) {
+//                                startElement = event.asStartElement();
+//                                if (startElement.getName().toString().equals("span")) //<span>;
+//                                {
+//                                    event = reader.nextEvent();
+//                                }
+//                                if (event.isCharacters()) {
+//                                    String idString = event.asCharacters().toString().trim();
+//                                    if (!idString.equals("Pokémon")) {
+//                                        idString = idString.substring(1);                                    
+//                                        this.getPokemon().setNationalDexId(BigInteger.valueOf(Long.parseLong(idString)));
+//                                        isIdCollected = true;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+                    //Find Pokemon romajiName
+                    if (tagName.equals("i")) {
+                        event = reader.nextEvent();
+                        if (event.isCharacters()) {
+                            this.getPokemon().setRomajiName(event.asCharacters().toString());
+                            isRomajiNameCollected = true;
+                        }
+                    }
 
-                                this.getPokemon().setEnglishName(event.asCharacters().toString().replace("(Pokémon)", "").trim());
-
+                    //Find Pokemon japaneseName
+                    if (tagName.equals("span")) {
+                        attribute = startElement.getAttributeByName(new QName("lang"));
+                        if (attribute != null && attribute.getValue().equals("ja")) {
+                            isJapaneseNameContainer = true;
+                        }
+                    }
+                    if (isJapaneseNameContainer) {
+                        event = reader.nextEvent();
+                        if (event.isStartElement()) {
+                            startElement = event.asStartElement();
+                            if (startElement.getName().toString().equals("b")) {
+                                event = reader.nextEvent();
+                                if (event.isCharacters()) {
+                                    this.getPokemon().setJapaneseName(event.asCharacters().toString());
+                                    isJapaneseNameCollected = true;
+                                    isJapaneseNameContainer = false;
+                                }
                             }
                         }
                     }
-                    if (tagName.equals("a")) { // <a title = "List of Pokémon by National Pokédex number">
-                        Attribute attribute = startElement.getAttributeByName(new QName("title"));
-                        if (attribute != null && attribute.getValue().equals("List of Pokémon by National Pokédex number")) {
-                            event = reader.nextEvent();
-                            if (event.isStartElement()) {
-                                startElement = event.asStartElement();
-                                if (startElement.getName().toString().equals("span")) //<span>;
-                                {
-                                    event = reader.nextEvent();
-                                }
-                                if (event.isCharacters()) {
-                                    String idString = event.asCharacters().toString();
-                                    if (!idString.equals("Pokémon")) {
-                                        idString = idString.substring(1);
-                                        this.getPokemon().setNationalDexId(BigInteger.valueOf(Long.parseLong(idString)));
-                                    }
-                                }
-                            }
 
+                    //Find pokemon PictureURI
+                    if (tagName.equals("a")) {
+                        attribute = startElement.getAttributeByName(new QName("title"));
+                        System.out.println("");
+                        if (attribute != null && attribute.getValue().equals(this.getPokemon().getEnglishName())) {
+                            isPictureURIContainer = true;
+                        }
+                    }
+                    if (isPictureURIContainer) {
+                        event = reader.nextEvent();
+                        if (event.isStartElement()) {
+                            if (event.asStartElement().getName().toString().equals("img")) {
+                                String pictureURI = event.asStartElement().getAttributeByName(new QName("src")).getValue();
+                                this.getPokemon().setPictureURI(pictureURI);
+                                isPictureURICollected = true;
+                                isPictureURIContainer = false;
+                            }
                         }
                     }
                 }
@@ -113,15 +200,15 @@ public class DataCrawler {
                 System.out.println("XMLStreamException: " + e.getMessage());
             }
         }
-        //System.out.println("TYPE: " + getPokemonType().getTypeLabel());
 
     }
 
-    public void crawlAllPokemonIdAndName(String urlString) throws IOException, XMLStreamException {
+    public void crawlAllPokemonIdAndName() throws IOException, XMLStreamException {
+        String urlString = "https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number";
         URL url = new URL(urlString);
         URLConnection connection = url.openConnection();
         System.setProperty("http.agent", "Chrome");
-        connection.addRequestProperty("User-Agent", "Mozilla/4.76"); //Need modify
+        connection.addRequestProperty("User-Agent", "Mozilla/4.76"); //Need modifying
         InputStream is = connection.getInputStream();
 
         XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -132,14 +219,36 @@ public class DataCrawler {
         //XMLEventReader reader = factory.createXMLEventReader(is, "UTF-8");
         XMLEventReader reader = factory.createXMLEventReader(new InputStreamReader(HTMLValidator.validateInputStream(is), "UTF-8"));
         XMLEvent event;
+        boolean isNationalDexTag = false;
+        boolean isPokemonNameTag = false;
 
+        boolean isDexIdCollected = false;
+        boolean isNameCollected = false;
+
+        String xmlPath = "web/WEB-INF/xml/PokemonList.xml";
+        String schemaPath = "web/WEB-INF/schemas/PokemonList.xsd";
+        
         while (reader.hasNext()) {
             try {
+                if (this.getPokemonList().getPokemon().size() == 806) {
+                    //Validate data and save to DB
+                    JAXBHelper.saveAsXML(xmlPath, this.getPokemonList());
+                    if (JAXBHelper.validateXML(xmlPath, schemaPath, this.getPokemonList().getPokemon())) {
+                        System.out.println("XML Validation Success.");
+
+                        //Save Data to DB
+                        
+                        //Purge the list
+                        this.pokemonList = new PokemonList();
+                        this.pokemon = new Pokemon();
+                        break;
+                    }
+                }
+                
+
                 StartElement startElement;
                 Attribute attribute;
 
-                boolean isNationalDexTag = false;
-                boolean isPokemonNameTag = false;
                 event = reader.nextEvent();
 
                 if (event.isStartElement()) {
@@ -167,6 +276,7 @@ public class DataCrawler {
                                             //System.out.println(idString); //For DEBUG Purpose
                                             this.getPokemon().setNationalDexId(BigInteger.valueOf(Long.parseLong(idString)));
                                             //event = reader. nextEvent();
+                                            isDexIdCollected = true;
                                             isNationalDexTag = false;
                                         }
                                     }
@@ -176,9 +286,10 @@ public class DataCrawler {
                             }
                         }
                     }
+                    //Find the pokemon Name:
                     if (tagName.equals("a")) {
                         attribute = startElement.getAttributeByName(new QName("title"));
-                        if (attribute != null && attribute.getValue().contains("(Pokémon)") && !attribute.getValue().contains("Victini") ) {
+                        if (attribute != null && attribute.getValue().contains("(Pokémon)") && !attribute.getValue().contains("Victini")) {
                             isPokemonNameTag = true;
                             event = reader.nextEvent();
                         }
@@ -186,14 +297,33 @@ public class DataCrawler {
                             String name = event.asCharacters().toString().trim();
                             //System.out.println(name.toUpperCase()); //For DEBUG Purpose
                             this.getPokemon().setEnglishName(name);
-                              pokemonList.getPokemon().add(pokemon);
+                            isNameCollected = true;
+                            isPokemonNameTag = false;
+                        }
+                    }
+                }
+
+                if (isDexIdCollected && isNameCollected) {
+                    Pokemon temp;
+                    if (this.getPokemonList().getPokemon().isEmpty()) {
+                        this.getPokemonList().getPokemon().add(this.getPokemon());
+                    } else {
+                        temp = this.getPokemonList().getPokemon().get(this.getPokemonList().getPokemon().size() - 1);
+                        if (!temp.getNationalDexId().equals(this.getPokemon().getNationalDexId())) {
+                            this.getPokemonList().getPokemon().add(this.getPokemon());
                         }
                     }
 
+                    this.pokemon = new Pokemon();
+                    isDexIdCollected = false;
+                    isNameCollected = false;
                 }
-
             } catch (XMLStreamException e) {
-                System.out.println("XMLStreamException: " + e.getMessage());
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JAXBException ex) {
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 

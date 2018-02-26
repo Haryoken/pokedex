@@ -10,14 +10,25 @@ and open the template in the editor.
             targetNamespace="https://www.pokedex.com/schemas/TypeInteraction.xsd"
             xmlns="https://www.pokedex.com/schemas/TypeInteraction.xsd"
             elementFormDefault="qualified">  
+     
+    
+    
     <xsd:element name="TypeInteraction">
-        <xsd:complexType>
+        <xsd:complexType>      
             <xsd:sequence>
                 <xsd:element name="baseType" type="xsd:string"/>
                 <xsd:element name="affectedType" type="xsd:string"/> 
-                <xsd:element name="effect" type="xsd:string"/>
+                <xsd:element name="effect" type="TypeEffect"/>
                 <xsd:element name="effectMultipler" type="xsd:string"/>                                
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
+    
+        <xsd:complexType name="TypeEffect">
+            <xsd:choice>
+                <xsd:element name="superEffective" type="xsd:string" fixed="super-effective"/>
+                <xsd:element name="notVeryEffective" type="xsd:string" fixed="not very effective"/>
+                <xsd:element name="noEffect" type="xsd:string" fixed="no effect"/>              
+            </xsd:choice>
+        </xsd:complexType>
 </xsd:schema>

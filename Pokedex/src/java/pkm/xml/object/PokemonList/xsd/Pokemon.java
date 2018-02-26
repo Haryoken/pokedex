@@ -60,28 +60,29 @@ public class Pokemon {
     @XmlElement(required = true)
     @XmlSchemaType(name = "positiveInteger")
     protected BigInteger nationalDexId;
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     protected String englishName;
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     protected String japaneseName;
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     protected String romajiName;
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     protected String height;
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     protected String weight;
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     protected BigDecimal catchRate;
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     @XmlSchemaType(name = "positiveInteger")
     protected BigInteger baseExp;
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     @XmlSchemaType(name = "positiveInteger")
     protected BigInteger baseHappiness;
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     protected String growthRate;
+    @XmlElement(defaultValue = "false")
     protected boolean isLegendary;
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     @XmlSchemaType(name = "anyURI")
     protected String pictureURI;
 

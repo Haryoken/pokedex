@@ -6,6 +6,7 @@
 package pkm.util;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.stream.XMLStreamException;
@@ -18,7 +19,9 @@ public class TestDataCrawler {
     public static void main(String[] agrs){
         DataCrawler crawler = new DataCrawler();
         try {
-            crawler.crawlAllPokemonIdAndName("https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number");
+//            crawler.getPokemon().setNationalDexId(BigInteger.ONE);         
+//            crawler.getPokemon().setEnglishName("Bulbasaur");
+            crawler.crawlAllPokemonIdAndName();
         } catch (IOException ex) {
             Logger.getLogger(TestDataCrawler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (XMLStreamException ex) {

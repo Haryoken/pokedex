@@ -37,4 +37,12 @@ public class ObjectFactory {
         return new TypeInteraction();
     }
 
+    /**
+     * Create an instance of {@link TypeEffect }
+     * 
+     */
+    public TypeEffect createTypeEffect() {
+        return new TypeEffect();
+    }
+
 }

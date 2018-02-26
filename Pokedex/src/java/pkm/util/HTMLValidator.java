@@ -21,23 +21,25 @@ import java.util.regex.Pattern;
 public class HTMLValidator {
 
     public static InputStream validateInputStream(InputStream is) throws IOException {
+        System.out.println("HTML Validation is stared.");
         BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         String inputLine = "";
         String html = "";
-        System.out.println("Validating....");
-        while ((inputLine = br.readLine()) != null) {           
-                html = removeHTML(html);
+        System.out.println("Reading input stream...."); 
+        while ((inputLine = br.readLine()) != null) {   
                 html += inputLine;            
         }     
-        System.out.println("Validation is done.");
+        System.out.println("Cleaning Javascript....");
+        html =  cleanJavascript(html);
         InputStream resultIs = new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8));
+        System.out.println("Validation is done.");
         return resultIs;
     }
    
-    public static String removeHTML(String response) {
+    public static String cleanJavascript(String input) {
         Pattern regex = Pattern.compile("(?:<[ \\n\\r]*script[^>]*>)(.*?)(?:<[ \\n\\r]*/script[^>]*>)", Pattern.MULTILINE
                 | Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
-        Matcher match = regex.matcher(response);
+        Matcher match = regex.matcher(input);
         String result = match.replaceAll("");
         return result;
     }

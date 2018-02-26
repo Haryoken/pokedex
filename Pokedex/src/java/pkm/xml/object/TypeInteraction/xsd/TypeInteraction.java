@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="baseType" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="affectedType" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="effect" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="effect" type="{https://www.pokedex.com/schemas/TypeInteraction.xsd}TypeEffect"/>
  *         &lt;element name="effectMultipler" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -45,7 +45,7 @@ public class TypeInteraction {
     @XmlElement(required = true)
     protected String affectedType;
     @XmlElement(required = true)
-    protected String effect;
+    protected TypeEffect effect;
     @XmlElement(required = true)
     protected String effectMultipler;
 
@@ -102,10 +102,10 @@ public class TypeInteraction {
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link TypeEffect }
      *     
      */
-    public String getEffect() {
+    public TypeEffect getEffect() {
         return effect;
     }
 
@@ -114,10 +114,10 @@ public class TypeInteraction {
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link TypeEffect }
      *     
      */
-    public void setEffect(String value) {
+    public void setEffect(TypeEffect value) {
         this.effect = value;
     }
 

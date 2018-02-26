@@ -17,21 +17,21 @@ and open the template in the editor.
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
-   
+    
     <xsd:complexType name="Pokemon">
         <xsd:sequence>
             <xsd:element name="nationalDexId" type="xsd:positiveInteger"/>
-            <xsd:element name="englishName" type="xsd:string"/>
-            <xsd:element name="japaneseName" type="xsd:string"/>
-            <xsd:element name="romajiName" type="xsd:string"/>
-            <xsd:element name="height" type="xsd:string"/>
-            <xsd:element name="weight" type="xsd:string"/>
-            <xsd:element name="catchRate" type="xsd:decimal"/>
-            <xsd:element name="baseExp" type="xsd:positiveInteger"/>
-            <xsd:element name="baseHappiness" type="xsd:positiveInteger"/>
-            <xsd:element name="growthRate" type="xsd:string"/>
-            <xsd:element name="isLegendary" type="xsd:boolean"/>
-            <xsd:element name="pictureURI" type="xsd:anyURI"/>
+            <xsd:element name="englishName" type="xsd:string" nillable="true"/>
+            <xsd:element name="japaneseName" type="xsd:string" nillable="true"/>
+            <xsd:element name="romajiName" type="xsd:string" nillable="true"/>
+            <xsd:element name="height" type="xsd:string" nillable="true"/>
+            <xsd:element name="weight" type="xsd:string" nillable="true"/>
+            <xsd:element name="catchRate" type="xsd:decimal" nillable="true"/>
+            <xsd:element name="baseExp" type="xsd:positiveInteger" nillable="true"/>
+            <xsd:element name="baseHappiness" type="xsd:positiveInteger" nillable="true"/>
+            <xsd:element name="growthRate" type="xsd:string" nillable="true"/>
+            <xsd:element name="isLegendary" type="xsd:boolean" default="false"/>
+            <xsd:element name="pictureURI" type="xsd:anyURI" nillable="true"/>
         </xsd:sequence>
     </xsd:complexType>
    
