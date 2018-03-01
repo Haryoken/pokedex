@@ -21,21 +21,46 @@ import java.util.regex.Pattern;
 public class HTMLValidator {
 
     public static InputStream validateInputStream(InputStream is) throws IOException {
-        System.out.println("HTML Validation is stared.");
         BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         String inputLine = "";
         String html = "";
-        System.out.println("Reading input stream...."); 
-        while ((inputLine = br.readLine()) != null) {   
-                html += inputLine;            
-        }     
-        System.out.println("Cleaning Javascript....");
-        html =  cleanJavascript(html);
+        while ((inputLine = br.readLine()) != null) {
+            if (!inputLine.contains("<meta")
+                    && !inputLine.contains("<link")
+                    && !inputLine.contains("</style>")
+                    && !inputLine.contains("<style>")
+                    && !inputLine.contains("<!doctype")
+                    && !inputLine.contains("<!DOCTYPE")
+                    && !inputLine.contains("<noscript")
+                    && !inputLine.contains("</noscript>")
+                    && !inputLine.contains("filter-egg-group-op")) {
+                inputLine = cleanString("itemscope", inputLine);
+                html += inputLine;
+            }
+        }
+//        html = cleanJavascript(html);
+        html = cleanHead(html);
+        html = cleanJavascript(html);
         InputStream resultIs = new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8));
-        System.out.println("Validation is done.");
         return resultIs;
     }
-   
+
+    public static String cleanString(String pattern, String input) {
+        Pattern regex = Pattern.compile(pattern, Pattern.MULTILINE
+                | Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+        Matcher match = regex.matcher(input);
+        String result = match.replaceAll("");
+        return result;
+    }
+
+    public static String cleanHead(String input) {
+        Pattern regex = Pattern.compile("(?:<[ \\n\\r]*head[^>]*>)(.*?)(?:<[ \\n\\r]*/head[^>]*>)", Pattern.MULTILINE
+                | Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+        Matcher match = regex.matcher(input);
+        String result = match.replaceAll("");
+        return result;
+    }
+
     public static String cleanJavascript(String input) {
         Pattern regex = Pattern.compile("(?:<[ \\n\\r]*script[^>]*>)(.*?)(?:<[ \\n\\r]*/script[^>]*>)", Pattern.MULTILINE
                 | Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
@@ -43,4 +68,5 @@ public class HTMLValidator {
         String result = match.replaceAll("");
         return result;
     }
+
 }

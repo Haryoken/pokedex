@@ -5,6 +5,7 @@
  */
 package pkm.dao;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -127,6 +128,76 @@ public class PokemonDAO {
             statement.setString(1, pokemon.getJapaneseName());
             statement.setString(2, pokemon.getRomajiName());
             statement.setString(3, pokemon.getPictureURI());
+            int row = statement.executeUpdate();
+            if (row > 0) {
+                return true;
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return false;
+    }
+    public boolean update_catchRate_baseXP_baseHappiness(Pokemon pokemon){
+        String query = "UPDATE tblPokemon SET catchRate=?, baseExp=?, baseHappiness=? WHERE nationalDexId= '"
+                +pokemon.getNationalDexId()+"'";             
+        try {
+            connection = DatabaseHelper.getConnection();
+            statement = connection.prepareStatement(query);
+
+            statement.setBigDecimal(1, pokemon.getCatchRate());
+            statement.setInt(2, Integer.parseInt(pokemon.getBaseExp().toString()));
+            statement.setInt(3, Integer.parseInt(pokemon.getBaseHappiness().toString()));
+
+            int row = statement.executeUpdate();
+            if (row > 0) {
+                return true;
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return false;
+    }
+    public boolean updateGrowthRate(Pokemon pokemon){
+        String query = "UPDATE tblPokemon SET growthRate=? WHERE nationalDexId= '"
+                +pokemon.getNationalDexId()+"'";             
+        try {
+            connection = DatabaseHelper.getConnection();
+            statement = connection.prepareStatement(query);
+
+            statement.setString(1, pokemon.getGrowthRate());
+           
             int row = statement.executeUpdate();
             if (row > 0) {
                 return true;

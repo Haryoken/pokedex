@@ -28,9 +28,13 @@ public class TestDataCrawler {
             //crawler.crawlAllPokemonIdAndName();
             if (pokemonList.size() > 0) {
                 for(Pokemon pokemon: pokemonList){
-                    crawler.crawl_romajiName_japaneseName_PictureURI(pokemon);
+                    crawler.crawl_baseXP_baseHappiness_catchRate_growthRate(pokemon);
                 }
             }
+//        Pokemon pkm = new Pokemon();
+//        pkm.setEnglishName("Mime Jr.");
+//        pkm.setNationalDexId(BigInteger.valueOf(439));
+//        crawler.crawl_baseXP_baseHappiness_catchRate_growthRate(pkm);
         } catch (IOException ex) {
             Logger.getLogger(TestDataCrawler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (XMLStreamException ex) {

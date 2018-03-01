@@ -5,7 +5,7 @@
         <group>
             <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/util/TestDataCrawler.java</file>
             <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/util/DataCrawler.java</file>
-            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/util/DatabaseHelper.java</file>
+            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/util/HTMLValidator.java</file>
             <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/dao/PokemonDAO.java</file>
         </group>
     </open-files>
