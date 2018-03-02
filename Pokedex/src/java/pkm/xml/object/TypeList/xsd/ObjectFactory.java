@@ -1,5 +1,5 @@
 
-package pkm.xml.object.PokemonTypes.xsd;
+package pkm.xml.object.TypeList.xsd;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRegistry;
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the pkm.xml.object.PokemonTypes.xsd package. 
+ * generated in the pkm.xml.object.TypeList.xsd package. 
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -23,18 +23,26 @@ public class ObjectFactory {
 
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: pkm.xml.object.PokemonTypes.xsd
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: pkm.xml.object.TypeList.xsd
      * 
      */
     public ObjectFactory() {
     }
 
     /**
-     * Create an instance of {@link PokemonTypes }
+     * Create an instance of {@link TypeList }
      * 
      */
-    public PokemonTypes createPokemonTypes() {
-        return new PokemonTypes();
+    public TypeList createTypeList() {
+        return new TypeList();
+    }
+
+    /**
+     * Create an instance of {@link Type }
+     * 
+     */
+    public Type createType() {
+        return new Type();
     }
 
 }

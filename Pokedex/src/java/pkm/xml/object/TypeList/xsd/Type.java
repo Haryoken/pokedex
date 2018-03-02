@@ -1,5 +1,5 @@
 
-package pkm.xml.object.PokemonTypes.xsd;
+package pkm.xml.object.TypeList.xsd;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -9,12 +9,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for PokemonType complex type.
+ * <p>Java class for Type complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="PokemonType">
+ * &lt;complexType name="Type">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -29,11 +29,11 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "PokemonType", propOrder = {
+@XmlType(name = "Type", propOrder = {
     "typeLabel",
     "typeIconURI"
 })
-public class PokemonType {
+public class Type {
 
     @XmlElement(required = true)
     protected String typeLabel;

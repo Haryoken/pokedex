@@ -23,22 +23,24 @@ public class TestDataCrawler {
     public static void main(String[] agrs) {
         DataCrawler crawler = new DataCrawler();
         try {
-            PokemonDAO pkmDao = new PokemonDAO();
-            List<Pokemon> pokemonList = pkmDao.getAllthePokemon();
-            //crawler.crawlAllPokemonIdAndName();
-            if (pokemonList.size() > 0) {
-                for(Pokemon pokemon: pokemonList){
-                    crawler.crawl_baseXP_baseHappiness_catchRate_growthRate(pokemon);
-                }
-            }
+            crawler.crawl_All_Types();
+            //crawler.crawl_All_nationalDexId_englishName();
+//            PokemonDAO pkmDao = new PokemonDAO();
+//            List<Pokemon> pokemonList = pkmDao.getAllthePokemon();
+//            if (pokemonList.size() > 0) {
+//                for(Pokemon pokemon: pokemonList){
+//                    crawler.crawl_romajiName_japaneseName_pictureURI(pokemon);
+//                }
+//            }
 //        Pokemon pkm = new Pokemon();
-//        pkm.setEnglishName("Mime Jr.");
-//        pkm.setNationalDexId(BigInteger.valueOf(439));
-//        crawler.crawl_baseXP_baseHappiness_catchRate_growthRate(pkm);
+//        pkm.setEnglishName("Bulbasaur");
+//        pkm.setNationalDexId(BigInteger.valueOf(1));
+//        crawler.crawl_baseHappiness(pkm);
         } catch (IOException ex) {
             Logger.getLogger(TestDataCrawler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (XMLStreamException ex) {
             Logger.getLogger(TestDataCrawler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
 }

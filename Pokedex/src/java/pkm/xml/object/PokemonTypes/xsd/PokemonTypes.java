@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="pokemonId" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
- *         &lt;element name="pokemonType" type="{https://www.pokedex.com/schemas/PokemonTypes.xsd}PokemonType"/>
+ *         &lt;element name="pokemonTypeLabel" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "pokemonId",
-    "pokemonType"
+    "pokemonTypeLabel"
 })
 @XmlRootElement(name = "PokemonTypes")
 public class PokemonTypes {
@@ -42,7 +42,7 @@ public class PokemonTypes {
     @XmlSchemaType(name = "positiveInteger")
     protected BigInteger pokemonId;
     @XmlElement(required = true)
-    protected PokemonType pokemonType;
+    protected String pokemonTypeLabel;
 
     /**
      * Gets the value of the pokemonId property.
@@ -69,27 +69,27 @@ public class PokemonTypes {
     }
 
     /**
-     * Gets the value of the pokemonType property.
+     * Gets the value of the pokemonTypeLabel property.
      * 
      * @return
      *     possible object is
-     *     {@link PokemonType }
+     *     {@link String }
      *     
      */
-    public PokemonType getPokemonType() {
-        return pokemonType;
+    public String getPokemonTypeLabel() {
+        return pokemonTypeLabel;
     }
 
     /**
-     * Sets the value of the pokemonType property.
+     * Sets the value of the pokemonTypeLabel property.
      * 
      * @param value
      *     allowed object is
-     *     {@link PokemonType }
+     *     {@link String }
      *     
      */
-    public void setPokemonType(PokemonType value) {
-        this.pokemonType = value;
+    public void setPokemonTypeLabel(String value) {
+        this.pokemonTypeLabel = value;
     }
 
 }
