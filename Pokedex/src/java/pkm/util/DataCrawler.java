@@ -1520,6 +1520,7 @@ public class DataCrawler {
         }
     }
 
+    //bulbapedia.bulbagarden.net
     public void crawlPokemonMoves(Pokemon pokemon) throws IOException, XMLStreamException {
         String urlString = "https://bulbapedia.bulbagarden.net/wiki/" + pokemon.getEnglishName() + "_(Pok%C3%A9mon)/Generation_VI_learnset#By_leveling_up";
         try {
@@ -1661,4 +1662,77 @@ public class DataCrawler {
         }
     }
 
+    //CRAWL EVOLUTION
+    //ign.com
+    public void crawlEvolution(Pokemon pokemon) throws IOException, XMLStreamException {
+        pokemon = cleanNamePokemonIGN(pokemon);
+        String urlString = "http://www.ign.com/pokedex/pokemon/" + pokemon.getEnglishName().toLowerCase();
+
+        XMLEventReader reader = readFromWebsite(urlString);
+        XMLEvent event;
+
+        //StaX Iterator API:
+        Attribute attribute;
+        StartElement startElement;
+        int errorCount = 0;
+
+        //Tag Flag:
+        boolean isStatsContainer = false;
+        boolean isStatsTable = false;
+
+        boolean isHpContainer = false;
+        boolean isAtkContainer = false;
+        boolean isDefContainer = false;
+        boolean isSpAtkContainer = false;
+        boolean isSpDefContainer = false;
+        boolean isSpeedContainer = false;
+
+        //Info needed:
+        boolean isStatsCollected = false;
+        //DAO
+        PokemonDAO pkmDAO = null;
+        PokemonStatsDAO pkmStatsDAO = null;
+        while (reader.hasNext()) {
+            try {
+                if (errorCount == 50) {
+                    errorCount = 0;
+                    break;
+                }
+
+                event = reader.nextEvent();
+                if (event.isStartElement()) {
+                    startElement = event.asStartElement();
+                    String tagName = startElement.getName().toString();
+                    System.out.println(tagName);
+                    
+                    if (tagName.equals("{http://www.w3.org/1999/xhtml}div")) {
+                        attribute = startElement.getAttributeByName(new QName("class"));
+                        if(attribute != null){
+                            System.out.println(attribute.getValue());
+                        }
+                        if (attribute != null && attribute.getValue().equals("container pokemon-evolution")) {
+                            isStatsTable = true;
+                        }
+                    }
+                    
+                }
+                if (event.isEndElement() && isStatsTable) {
+                    if (event.asEndElement().getName().toString().equals("{http://www.w3.org/1999/xhtml}table")) {
+                        isStatsTable = false;
+                        isStatsCollected = true;
+                    }
+                }
+
+            } catch (XMLStreamException e) {
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                errorCount += 1;
+            } catch (NullPointerException e) {
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                break;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                break;
+            }
+        }
+    }
 }
