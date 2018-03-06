@@ -2,9 +2,9 @@
 <PokemonList xmlns="https://www.pokedex.com/schemas/PokemonList.xsd">
     <pokemon>
         <nationalDexId>807</nationalDexId>
-        <englishName xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
-        <japaneseName>ゼラオラ</japaneseName>
-        <romajiName>Zeraora</romajiName>
+        <englishName>Zeraora</englishName>
+        <japaneseName xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+        <romajiName xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
         <height xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
         <weight xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
         <catchRate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
@@ -12,6 +12,6 @@
         <baseHappiness xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
         <growthRate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
         <isLegendary>false</isLegendary>
-        <pictureURI>//cdn.bulbagarden.net/upload/6/63/Spr_7u_807.png</pictureURI>
+        <pictureURI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
     </pokemon>
 </PokemonList>

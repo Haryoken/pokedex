@@ -22,8 +22,8 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="pokemonId" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *         &lt;element name="moveName" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="learntByLevelUp" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
- *         &lt;element name="learntByTM" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *         &lt;element name="learntByLevelUp" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
+ *         &lt;element name="learntByTM" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *         &lt;element name="learntByTutor" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="isEggMove" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *       &lt;/sequence>
@@ -51,8 +51,12 @@ public class PokemonMoves {
     protected BigInteger pokemonId;
     @XmlElement(required = true)
     protected String moveName;
-    protected boolean learntByLevelUp;
-    protected boolean learntByTM;
+    @XmlElement(required = true)
+    @XmlSchemaType(name = "positiveInteger")
+    protected BigInteger learntByLevelUp;
+    @XmlElement(required = true)
+    @XmlSchemaType(name = "positiveInteger")
+    protected BigInteger learntByTM;
     protected boolean learntByTutor;
     protected boolean isEggMove;
 
@@ -107,32 +111,48 @@ public class PokemonMoves {
     /**
      * Gets the value of the learntByLevelUp property.
      * 
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *     
      */
-    public boolean isLearntByLevelUp() {
+    public BigInteger getLearntByLevelUp() {
         return learntByLevelUp;
     }
 
     /**
      * Sets the value of the learntByLevelUp property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *     
      */
-    public void setLearntByLevelUp(boolean value) {
+    public void setLearntByLevelUp(BigInteger value) {
         this.learntByLevelUp = value;
     }
 
     /**
      * Gets the value of the learntByTM property.
      * 
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *     
      */
-    public boolean isLearntByTM() {
+    public BigInteger getLearntByTM() {
         return learntByTM;
     }
 
     /**
      * Sets the value of the learntByTM property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *     
      */
-    public void setLearntByTM(boolean value) {
+    public void setLearntByTM(BigInteger value) {
         this.learntByTM = value;
     }
 

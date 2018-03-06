@@ -5,23 +5,24 @@
  */
 package pkm.util;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.HttpURLConnection;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
@@ -30,13 +31,26 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
+import pkm.dao.AbilityDAO;
+import pkm.dao.MoveDAO;
+import pkm.dao.PokemonAbilitiesDAO;
 import pkm.dao.PokemonDAO;
+import pkm.dao.PokemonMovesDAO;
+import pkm.dao.PokemonStatsDAO;
+import pkm.dao.PokemonTypesDAO;
+import pkm.dao.TypeDAO;
 import pkm.xml.object.Ability.xsd.Ability;
+import pkm.xml.object.Move.xsd.Move;
+
 import pkm.xml.object.PokemonAbilities.xsd.PokemonAbilities;
 import pkm.xml.object.PokemonList.xsd.Pokemon;
 import pkm.xml.object.PokemonList.xsd.PokemonList;
-import pkm.xml.object.PokemonTypes.xsd.PokemonType;
+import pkm.xml.object.PokemonMoves.xsd.PokemonMoves;
+import pkm.xml.object.PokemonStats.xsd.PokemonStats;
 import pkm.xml.object.PokemonTypes.xsd.PokemonTypes;
+
+import pkm.xml.object.TypeList.xsd.Type;
+import pkm.xml.object.TypeList.xsd.TypeList;
 
 /**
  *
@@ -46,22 +60,154 @@ public class DataCrawler {
 
     Pokemon pokemon;
     PokemonList pokemonList;
+
+    Type pokemonType;
+    TypeList typeList;
+
+    PokemonTypes pokemonTypes;
+    List<PokemonTypes> pokemonTypesList;
+
+    Ability ability;
+    List<Ability> abilityList;
+
     PokemonAbilities pokemonAbilities;
-    PokemonType pokemonType;
+    List<PokemonAbilities> abilitiesList;
+
+    PokemonStats pokemonStats;
+
+    Move move;
+    List<Move> moveList;
+
+    PokemonMoves pokemonMoves = null;
+    List<PokemonMoves> pokemonMoveList = null;
 
     public DataCrawler() {
         pokemon = new Pokemon();
         pokemonList = new PokemonList();
+
+        pokemonType = new Type();
+        typeList = new TypeList();
+
+        pokemonTypesList = new ArrayList<PokemonTypes>();
+        pokemonTypes = new PokemonTypes();
+
+        ability = new Ability();
+        abilityList = new ArrayList<>();
+
         pokemonAbilities = new PokemonAbilities();
-        pokemonType = new PokemonType();
+        abilitiesList = new ArrayList<>();
+
+        pokemonStats = new PokemonStats();
+
+        move = new Move();
+        moveList = new ArrayList<>();
+
+        pokemonMoves = new PokemonMoves();
+        pokemonMoveList = new ArrayList<>();
 
     }
 
-    public PokemonType getPokemonType() {
+    public PokemonMoves getPokemonMoves() {
+        return pokemonMoves;
+    }
+
+    public void setPokemonMoves(PokemonMoves pokemonMoves) {
+        this.pokemonMoves = pokemonMoves;
+    }
+
+    public List<PokemonMoves> getPokemonMoveList() {
+        return pokemonMoveList;
+    }
+
+    public void setPokemonMoveList(List<PokemonMoves> pokemonMoveList) {
+        this.pokemonMoveList = pokemonMoveList;
+    }
+
+    public Move getMove() {
+        return move;
+    }
+
+    public void setMove(Move move) {
+        this.move = move;
+    }
+
+    public List<Move> getMoveList() {
+        return moveList;
+    }
+
+    public void setMoveList(List<Move> moveList) {
+        this.moveList = moveList;
+    }
+
+    public PokemonStats getPokemonStats() {
+        return pokemonStats;
+    }
+
+    public void setPokemonStats(PokemonStats pokemonStats) {
+        this.pokemonStats = pokemonStats;
+    }
+
+    public PokemonAbilities getPokemonAbilities() {
+        return pokemonAbilities;
+    }
+
+    public void setPokemonAbilities(PokemonAbilities pokemonAbilities) {
+        this.pokemonAbilities = pokemonAbilities;
+    }
+
+    public List<PokemonAbilities> getAbilitiesList() {
+        return abilitiesList;
+    }
+
+    public void setAbilitiesList(List<PokemonAbilities> abilitiesList) {
+        this.abilitiesList = abilitiesList;
+    }
+
+    public Ability getAbility() {
+        return ability;
+    }
+
+    public void setAbility(Ability ability) {
+        this.ability = ability;
+    }
+
+    public List<Ability> getAbilityList() {
+        return abilityList;
+    }
+
+    public void setAbilityList(List<Ability> abilityList) {
+        this.abilityList = abilityList;
+    }
+
+    public PokemonTypes getPokemonTypes() {
+        return pokemonTypes;
+    }
+
+    public void setPokemonTypes(PokemonTypes pokemonTypes) {
+        this.pokemonTypes = pokemonTypes;
+    }
+
+    public List<PokemonTypes> getPokemonTypesList() {
+        return pokemonTypesList;
+    }
+
+    public void setPokemonTypesList(List<PokemonTypes> pokemonTypesList) {
+        this.pokemonTypesList = pokemonTypesList;
+    }
+
+    public TypeList getTypeList() {
+        return typeList;
+    }
+
+    public void setTypeList(TypeList typeList) {
+        this.typeList = typeList;
+    }
+
+    public Type getPokemonType() {
         return pokemonType;
     }
 
-    public void setPokemonType(PokemonType pokemonType) {
+    public void setPokemonType(Type pokemonType) {
         this.pokemonType = pokemonType;
     }
 
@@ -100,7 +246,28 @@ public class DataCrawler {
         return pokemon;
     }
 
+    private static Pokemon cleanNamePokemonIGN(Pokemon pokemon) {
+        if (pokemon.getEnglishName().equals("Mr. Mime")) {
+            pokemon.setEnglishName("mr-mime");
+        }
+        if (pokemon.getEnglishName().equals("Mime Jr.")) {
+            pokemon.setEnglishName("Mime-Jr");
+        }
+        if (pokemon.getEnglishName().equals("Farfetch'd")) {
+            pokemon.setEnglishName("farfetchd");
+        }
+        if (pokemon.getEnglishName().equals("Nidoran♀") || pokemon.getEnglishName().equals("Nidoran♂")) {
+            pokemon.setEnglishName("nidoran-f");
+        }
+        if (pokemon.getEnglishName().equals("Flabébé")) {
+            pokemon.setEnglishName("flabb");
+        }
+        return pokemon;
+    }
+
     private XMLEventReader readFromWebsite(String urlString) throws MalformedURLException, IOException, XMLStreamException {
+        XMLEventReader reader = null;
+
         URL url = new URL(urlString);
         URLConnection connection = url.openConnection();
         System.setProperty("http.agent", "Chrome");
@@ -113,18 +280,20 @@ public class DataCrawler {
 
         //USING Iterator
         //XMLEventReader reader = factory.createXMLEventReader(is, "UTF-8");
-        XMLEventReader reader = null;
         if (urlString.contains("azurilland")) {
             reader = factory.createXMLEventReader(new InputStreamReader(HTMLValidator.validateInputStreamAzurill(is), "UTF-8"));
         } else if (urlString.contains("bulbagarden")) {
             reader = factory.createXMLEventReader(new InputStreamReader(HTMLValidator.validateInputStream(is), "UTF-8"));
-        } else if (urlString.contains("wikia")){
-             reader = factory.createXMLEventReader(new InputStreamReader(HTMLValidator.validateInputStreamWikia(is), "UTF-8"));
+        } else if (urlString.contains("wikia")) {
+            reader = factory.createXMLEventReader(new InputStreamReader(HTMLValidator.validateInputStreamWikia(is), "UTF-8"));
+        } else if (urlString.contains("ign")) {
+            reader = factory.createXMLEventReader(new InputStreamReader(HTMLValidator.validateInputStreamIGN(is), "UTF-8"));
         }
         return reader;
     }
 
     //CRAWL POKEMON
+    //bulbapedia.bulbagarden.net
     public void crawl_All_nationalDexId_englishName() throws IOException, XMLStreamException {
         String urlString = "https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number";
 
@@ -145,9 +314,19 @@ public class DataCrawler {
         PokemonDAO pkmDao = new PokemonDAO();
         while (reader.hasNext()) {
             try {
+                if (this.getPokemonList().getPokemon().size() > 0) {
+                    //Save Data to DB
+                    for (Pokemon pokemon : this.getPokemonList().getPokemon()) {
+                        if (!pkmDao.isExistedInDB(pokemon)) {
+                            pkmDao.insertPokemon(pokemon);
+                        }
+                    }
+                    //Purge the list
+                    this.pokemonList = new PokemonList();
+                    //this.pokemon = new Pokemon();
 
+                }
                 event = reader.nextEvent();
-
                 if (event.isStartElement()) {
                     startElement = event.asStartElement();
                     String tagName = startElement.getName().toString();
@@ -214,37 +393,7 @@ public class DataCrawler {
                         isDexIdCollected = false;
                         isNameCollected = false;
                     }
-                    //Validate and add to DB every 200 records colleted:
-                    if (this.getPokemonList().getPokemon().size() == 200) {
-                        //Validate data and save to DB
-                        JAXBHelper.saveAsXML(xmlPath, this.getPokemonList());
-                        if (JAXBHelper.validateXML(xmlPath, schemaPath, this.getPokemonList().getPokemon())) {
-                            //Save Data to DB
-                            for (Pokemon pokemon : this.getPokemonList().getPokemon()) {
-                                if (!pkmDao.isExistedInDB(pokemon)) {
-                                    pkmDao.insertPokemon(pokemon);
-                                }
-                            }
-                            //Purge the list
-                            this.pokemonList = new PokemonList();
-                            this.pokemon = new Pokemon();
-                        }
-                    }
-                    //Validate and add to DB last records:
-                    if (this.getPokemonList().getPokemon().size() > 0) {
-                        JAXBHelper.saveAsXML(xmlPath, this.getPokemonList());
-                        if (JAXBHelper.validateXML(xmlPath, schemaPath, this.getPokemonList().getPokemon())) {
-                            //Save Data to DB
-                            for (Pokemon pokemon : this.getPokemonList().getPokemon()) {
-                                if (!pkmDao.isExistedInDB(pokemon)) {
-                                    pkmDao.insertPokemon(pokemon);
-                                }
-                            }
-                            //Purge the list
-                            this.pokemonList = new PokemonList();
-                            this.pokemon = new Pokemon();
-                        }
-                    }
+
                     //Break when collect all the needed info:
                     if (tagName.equals("span")) {
                         attribute = startElement.getAttributeByName(new QName("id"));
@@ -258,15 +407,12 @@ public class DataCrawler {
 
             } catch (XMLStreamException e) {
                 Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JAXBException ex) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
     }
 
+    //bulbapedia.bulbagarden.net
     public void crawl_romajiName_japaneseName_pictureURI(Pokemon pokemon) throws IOException, XMLStreamException {
         //pokemon = cleanPokemonName(pokemon);
         String urlString = "https://bulbapedia.bulbagarden.net/wiki/" + pokemon.getEnglishName() + "_(Pok%C3%A9mon)";
@@ -399,6 +545,7 @@ public class DataCrawler {
 
     }
 
+    //azurilland.com
     public void crawl_baseXP_catchRate(Pokemon pokemon) throws IOException, XMLStreamException {
         pokemon = cleanPokemonName(pokemon);
         String urlString = "https://www.azurilland.com/pokedex/"
@@ -513,6 +660,7 @@ public class DataCrawler {
         }
     }
 
+    //azurilland.com
     public void crawl_baseHappiness(Pokemon pokemon) throws IOException, XMLStreamException {
         pokemon = cleanPokemonName(pokemon);
         String urlString = "https://www.azurilland.com/pokedex/"
@@ -610,6 +758,7 @@ public class DataCrawler {
         }
     }
 
+    //azurilland.com
     public void crawl_growthRate(Pokemon pokemon) throws IOException, XMLStreamException {
         pokemon = cleanPokemonName(pokemon);
         String urlString = "https://www.azurilland.com/pokedex/"
@@ -708,6 +857,7 @@ public class DataCrawler {
     }
 
     //CRAWL TYPE
+    //pokemon.wikia.com
     public void crawl_All_Types() throws IOException, XMLStreamException {
         String urlString = "http://pokemon.wikia.com/wiki/Types";
         XMLEventReader reader = readFromWebsite(urlString);
@@ -718,35 +868,57 @@ public class DataCrawler {
 
         int errorCount = 0;
 
+        boolean isAllTypesCollected = false;
+        boolean isAtTypeTable = false;
+
         String xmlPath = "web/WEB-INF/xml/PokemonTypes.xml";
         String schemaPath = "web/WEB-INF/schemas/TypeList.xsd";
-        PokemonDAO pkmDao = new PokemonDAO();
-        
-        while(reader.hasNext()){
-            try{
-                if(errorCount == 50){
+        TypeDAO typeDao = new TypeDAO();
+
+        while (reader.hasNext()) {
+            try {
+                if (errorCount == 50) {
                     errorCount = 0;
                     break;
                 }
+                if (isAllTypesCollected) {
+                    System.out.println("");
+                    for (Type type : this.getTypeList().getPokemonType()) {
+                        if (!typeDao.isTypeExisted(type)) {
+                            typeDao.insertPokemon(type);
+                            System.out.println("Insert Type: " + type.getTypeLabel());
+                        }
+                    }
+                    break;
+                }
                 event = reader.nextEvent();
-                if(event.isStartElement()){
+                if (event.isStartElement()) {
                     String tagName = event.asStartElement().getName().toString();
-                    System.out.println(tagName);
-                    if(tagName.equals("table")){
+                    if (tagName.equals("table")) {
                         attribute = event.asStartElement().getAttributeByName(new QName("class"));
-                        if(attribute!=null && attribute.getValue().equals("article-table")){
+                        if (attribute != null && attribute.getValue().equals("article-table")) {
+                            isAtTypeTable = true;
                             event = reader.nextEvent();
-                            while(true){
-                                if(event.isStartElement()){
-                                    if(event.asStartElement().getName().toString().equals("span")){
+                            while (true) {
+                                if (event.isStartElement()) {
+                                    if (event.asStartElement().getName().toString().equals("span")) {
                                         attribute = event.asStartElement().getAttributeByName(new QName("class"));
-                                        if(attribute != null && attribute.getValue().equals("t-type2")){
+                                        if (attribute != null && attribute.getValue().equals("t-type2")) {
                                             event = reader.nextEvent();
-                                            if(event.isCharacters()){
-                                                String typeLabel = event.asCharacters().getData();
-                                                System.out.println("");
+                                            if (event.isCharacters()) {
+                                                this.getPokemonType().setTypeLabel(event.asCharacters().getData());
+                                                this.getTypeList().getPokemonType().add(this.getPokemonType());
+                                                this.pokemonType = new Type();
                                             }
                                         }
+                                    }
+                                }
+                                if (event.isEndElement()) {
+                                    String endTag = event.asEndElement().getName().toString();
+                                    if (event.asEndElement().getName().toString().equals("table") && isAtTypeTable) {
+                                        isAtTypeTable = false;
+                                        isAllTypesCollected = true;
+                                        break;
                                     }
                                 }
                                 event = reader.nextEvent();
@@ -754,9 +926,738 @@ public class DataCrawler {
                         }
                     }
                 }
-            }catch(XMLStreamException ex){
-                
+            } catch (XMLStreamException ex) {
+
             }
+        }
+    }
+
+    //ign.com
+    public void crawl_PokemonTypes(Pokemon pokemon) throws IOException, XMLStreamException {
+        pokemon = cleanNamePokemonIGN(pokemon);
+        String urlString = "http://www.ign.com/pokedex/pokemon/" + pokemon.getEnglishName().toLowerCase();
+        try {
+            XMLEventReader reader = readFromWebsite(urlString);
+            XMLEvent event;
+
+            //StaX Iterator API:
+            Attribute attribute;
+            StartElement startElement;
+            int errorCount = 0;
+
+            //Tag Flag:
+            boolean isTypesContainer = false;
+
+            //Info needed:
+            boolean isPokemonTypesCollected = false;
+            //DAO
+            PokemonDAO pkmDAO = null;
+            TypeDAO typeDAO = null;
+            PokemonTypesDAO pkmTypesDAO = null;
+            while (reader.hasNext()) {
+                try {
+                    if (errorCount == 50) {
+                        errorCount = 0;
+                        break;
+                    }
+                    if (isPokemonTypesCollected) {
+                        pkmDAO = new PokemonDAO();
+                        typeDAO = new TypeDAO();
+                        pkmTypesDAO = new PokemonTypesDAO();
+                        for (PokemonTypes pokemonTypes : this.getPokemonTypesList()) {
+                            if (pkmDAO.isExistedInDB(Integer.parseInt(pokemonTypes.getPokemonId().toString()))) {
+                                if (typeDAO.isTypeExisted(pokemonTypes.getPokemonTypeLabel())) {
+                                    if (!pkmTypesDAO.isPokeMonTypesExisted(pokemonTypes)) {
+                                        pkmTypesDAO.insertPokemonTypes(pokemonTypes);
+                                        System.out.println("Insert: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName() + "-Type: " + pokemonTypes.getPokemonTypeLabel());
+                                    }
+                                }
+                            }
+                        }
+                        this.pokemonTypesList = new ArrayList();
+                        break;
+                    }
+                    event = reader.nextEvent();
+                    if (event.isStartElement()) {
+                        startElement = event.asStartElement();
+                        String tagName = startElement.getName().toString();
+                        //Find Pokemon romajiName
+                        if (tagName.equals("{http://www.w3.org/1999/xhtml}div")) {
+                            attribute = startElement.getAttributeByName(new QName("class"));
+                            if (attribute != null && attribute.getValue().equals("span5")) {
+                                isTypesContainer = true;
+                            }
+                        }
+                        if (tagName.equals("{http://www.w3.org/1999/xhtml}span") && isTypesContainer) {
+                            event = reader.nextEvent();
+                            if (event.isCharacters()) {
+                                this.getPokemonTypes().setPokemonId(pokemon.getNationalDexId());
+                                this.getPokemonTypes().setPokemonTypeLabel(event.asCharacters().getData());
+                                this.getPokemonTypesList().add(this.getPokemonTypes());
+                                this.pokemonTypes = new PokemonTypes();
+                            }
+                        }
+
+                    }
+                    if (event.isCharacters()) {
+                        if (event.asCharacters().getData().equals("Weak To")) {
+                            if (isTypesContainer) {
+                                isTypesContainer = false;
+                                isPokemonTypesCollected = true;
+                            }
+                        }
+                    }
+
+                } catch (XMLStreamException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    errorCount += 1;
+                } catch (NullPointerException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    break;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    //CRAWL ABILITIES
+    //pokemon.wikia.com
+    public void crawl_All_Ability() throws IOException, XMLStreamException {
+        String urlString = "http://pokemon.wikia.com/wiki/Pok%C3%A9mon_Abilities";
+        try {
+            XMLEventReader reader = readFromWebsite(urlString);
+            XMLEvent event;
+
+            //StaX Iterator API:
+            Attribute attribute;
+            StartElement startElement;
+            int errorCount = 0;
+
+            //Tag Flag:
+            boolean isAbilityContainer = false;
+            boolean isAbilityTable = false;
+            boolean isAbilityTd = false;
+
+            //Info needed:
+            boolean isAllAbilitiesCollected = false;
+            //DAO
+            AbilityDAO abilityDAO = null;
+            while (reader.hasNext()) {
+                try {
+                    if (errorCount == 50) {
+                        errorCount = 0;
+                        break;
+                    }
+                    if (isAllAbilitiesCollected) {
+                        abilityDAO = new AbilityDAO();
+                        for (Ability ability : this.getAbilityList()) {
+                            if (!abilityDAO.isAbilityExisted(ability.getAbilityName())) {
+                                abilityDAO.insertAbility(ability);
+                                System.out.println("Insert Ability: " + ability.getAbilityName().toUpperCase());
+                            }
+                        }
+                        this.abilitiesList = new ArrayList<>();
+                        break;
+                    }
+                    event = reader.nextEvent();
+                    if (event.isStartElement()) {
+                        startElement = event.asStartElement();
+                        String tagName = startElement.getName().toString();
+                        if (tagName.equals("div")) {
+                            attribute = startElement.getAttributeByName(new QName("id"));
+                            if (attribute != null && attribute.getValue().equals("mw-content-text")) {
+                                isAbilityContainer = true;
+                            }
+                        }
+                        if (isAbilityContainer && tagName.equals("table")) {
+                            attribute = startElement.getAttributeByName(new QName("class"));
+                            if (attribute != null && attribute.getValue().equals("wikitable")) {
+                                isAbilityTable = true;
+                            }
+                        }
+                        if (isAbilityTable && tagName.equals("td")) {
+                            attribute = startElement.getAttributeByName(new QName("style"));
+                            if (attribute != null && attribute.getValue().contains("background-color:")) {
+                                isAbilityTd = true;
+                            }
+                        }
+                        if (isAbilityTd && tagName.equals("a")) {
+                            event = reader.nextEvent();
+                            if (event.isCharacters()) {
+                                if (event.asCharacters().getData().equals("Wimp Out")) {
+                                    isAllAbilitiesCollected = true;
+                                }
+                                if (!event.asCharacters().getData().contains("Generation")) {
+                                    this.getAbility().setAbilityName(event.asCharacters().getData());
+                                    this.getAbility().setDescription(" ");
+                                    this.getAbilityList().add(this.getAbility());
+                                    ability = new Ability();
+                                }
+                            }
+                        }
+                    }
+
+                } catch (XMLStreamException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    errorCount += 1;
+                } catch (NullPointerException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    break;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    //azurilland.com
+    public void crawl_PokemonAbilities(Pokemon pokemon) throws IOException, XMLStreamException {
+        cleanPokemonName(pokemon);
+        String urlString = "https://www.azurilland.com/pokedex/"
+                + pokemon.getNationalDexId()
+                + "-"
+                + pokemon.getEnglishName().toLowerCase();
+        if (Integer.parseInt(pokemon.getNationalDexId().toString()) >= 651) {
+            int number = 99351 + Integer.parseInt(pokemon.getNationalDexId().toString());
+            urlString = "https://www.azurilland.com/pokedex/"
+                    + number
+                    + "-"
+                    + pokemon.getEnglishName().toLowerCase();
+        }
+        try {
+            XMLEventReader reader = readFromWebsite(urlString);
+            XMLEvent event;
+
+            //StaX Iterator API:
+            Attribute attribute;
+            StartElement startElement;
+            int errorCount = 0;
+
+            //Tag Flag:
+            boolean isAbilityContainer = false;
+            boolean isAbilityTable = false;
+
+            //Info needed:
+            boolean isPokemonAbilitiesCollected = false;
+            //DAO
+            AbilityDAO abilityDAO = null;
+            PokemonDAO pkmDAO = null;
+            PokemonAbilitiesDAO pkmAbiDAO = null;
+            while (reader.hasNext()) {
+                try {
+                    if (errorCount == 50) {
+                        errorCount = 0;
+                        break;
+                    }
+                    if (isPokemonAbilitiesCollected) {
+                        abilityDAO = new AbilityDAO();
+                        pkmDAO = new PokemonDAO();
+                        pkmAbiDAO = new PokemonAbilitiesDAO();
+                        for (PokemonAbilities pkmAbilities : this.getAbilitiesList()) {
+                            if (pkmDAO.isExistedInDB(Integer.parseInt(pkmAbilities.getPokemonId().toString()))
+                                    && abilityDAO.isAbilityExisted(pkmAbilities.getAbilityName())) {
+                                if (!pkmAbiDAO.isPokemonAbilityExisted(pkmAbilities)) {
+                                    pkmAbiDAO.insertPokemonAbility(pkmAbilities);
+                                    System.out.println("Insert Pokemon Ability - ID: " + pkmAbilities.getPokemonId()
+                                            + "-Ability: " + pkmAbilities.getAbilityName().toUpperCase());
+                                }
+                            }
+                        }
+                        this.abilitiesList = new ArrayList<>();
+                        break;
+                    }
+                    event = reader.nextEvent();
+                    if (event.isStartElement()) {
+                        startElement = event.asStartElement();
+                        String tagName = startElement.getName().toString();
+                        if (tagName.equals("table")) {
+                            attribute = startElement.getAttributeByName(new QName("class"));
+                            if (attribute != null && attribute.getValue().equals("listing listing-abilities b-table b-table-a")) {
+                                isAbilityTable = true;
+                            }
+                        }
+                        if (tagName.equals("a") && isAbilityTable) {
+                            attribute = startElement.getAttributeByName(new QName("data-type-id"));
+                            if (attribute != null && attribute.getValue().equals("10007")) {
+                                isAbilityContainer = true;
+                            }
+                        }
+                    }
+                    if (isAbilityContainer) {
+                        event = reader.nextEvent();
+                        if (event.isCharacters()) {
+                            this.getPokemonAbilities().setPokemonId(pokemon.getNationalDexId());
+                            this.getPokemonAbilities().setAbilityName(event.asCharacters().getData());
+                            this.getAbilitiesList().add(this.getPokemonAbilities());
+                            isAbilityContainer = false;
+                            this.pokemonAbilities = new PokemonAbilities();
+                        }
+                    }
+                    if (isAbilityTable && event.isEndElement()) {
+                        if (event.asEndElement().getName().toString().equals("table")) {
+                            isPokemonAbilitiesCollected = true;
+                            isAbilityTable = false;
+                        }
+                    }
+
+                } catch (XMLStreamException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    errorCount += 1;
+                } catch (NullPointerException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    break;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    //CRAWL STATS
+    //ign.com
+    public void crawl_PokemonStats(Pokemon pokemon) throws IOException, XMLStreamException {
+        pokemon = cleanNamePokemonIGN(pokemon);
+        String urlString = "http://www.ign.com/pokedex/pokemon/" + pokemon.getEnglishName().toLowerCase();
+        try {
+            XMLEventReader reader = readFromWebsite(urlString);
+            XMLEvent event;
+
+            //StaX Iterator API:
+            Attribute attribute;
+            StartElement startElement;
+            int errorCount = 0;
+
+            //Tag Flag:
+            boolean isStatsContainer = false;
+            boolean isStatsTable = false;
+
+            boolean isHpContainer = false;
+            boolean isAtkContainer = false;
+            boolean isDefContainer = false;
+            boolean isSpAtkContainer = false;
+            boolean isSpDefContainer = false;
+            boolean isSpeedContainer = false;
+
+            //Info needed:
+            boolean isStatsCollected = false;
+            //DAO
+            PokemonDAO pkmDAO = null;
+            PokemonStatsDAO pkmStatsDAO = null;
+            while (reader.hasNext()) {
+                try {
+                    if (errorCount == 50) {
+                        errorCount = 0;
+                        break;
+                    }
+                    if (isStatsCollected) {
+                        pkmDAO = new PokemonDAO();
+                        pkmStatsDAO = new PokemonStatsDAO();
+                        this.getPokemonStats().setPokemonId(pokemon.getNationalDexId());
+                        if (pkmDAO.isExistedInDB(Integer.parseInt(this.getPokemonStats().getPokemonId().toString()))) {
+                            pkmStatsDAO.insertPokemonStats(this.getPokemonStats());
+                            System.out.println("Insert Pokemon Stats - Pokemon: " + this.getPokemonStats().getPokemonId() + "-" + pokemon.getEnglishName());
+                            break;
+                        }
+
+                    }
+                    event = reader.nextEvent();
+                    if (event.isStartElement()) {
+                        startElement = event.asStartElement();
+                        String tagName = startElement.getName().toString();
+                        //System.out.println(tagName);
+                        //Find Pokemon romajiName
+                        if (tagName.equals("{http://www.w3.org/1999/xhtml}table")) {
+                            attribute = startElement.getAttributeByName(new QName("id"));
+                            if (attribute != null && attribute.getValue().equals("table-stats")) {
+                                isStatsTable = true;
+                            }
+                        }
+                        if (tagName.equals("{http://www.w3.org/1999/xhtml}span") && isStatsTable) {
+                            attribute = startElement.asStartElement().getAttributeByName(new QName("class"));
+                            if (attribute != null) {
+                                if (attribute.getValue().equals("pull-right")) {
+                                    event = reader.nextEvent();
+                                    if (event.isCharacters()) {
+                                        if (event.asCharacters().getData().equals("HP")) {
+                                            isHpContainer = true;
+                                        } else if (event.asCharacters().getData().equals("ATTACK")) {
+                                            isAtkContainer = true;
+                                        } else if (event.asCharacters().getData().equals("DEFENSE")) {
+                                            isDefContainer = true;
+                                        } else if (event.asCharacters().getData().equals("SP. ATK")) {
+                                            isSpAtkContainer = true;
+                                        } else if (event.asCharacters().getData().equals("SP. DEF")) {
+                                            isSpDefContainer = true;
+                                        } else if (event.asCharacters().getData().equals("SPEED")) {
+                                            isSpeedContainer = true;
+                                        }
+                                    }
+                                }
+                                if (attribute.getValue().equals("pull-left")) {
+                                    event = reader.nextEvent();
+                                    if (event.isCharacters()) {
+                                        if (isHpContainer) {
+                                            this.getPokemonStats().setBaseHP(BigInteger.valueOf(Long.valueOf(event.asCharacters().getData())));
+                                            isHpContainer = false;
+                                        } else if (isAtkContainer) {
+                                            this.getPokemonStats().setAttack(BigInteger.valueOf(Long.valueOf(event.asCharacters().getData())));
+                                            isAtkContainer = false;
+                                        } else if (isDefContainer) {
+                                            this.getPokemonStats().setDefense(BigInteger.valueOf(Long.valueOf(event.asCharacters().getData())));
+                                            isDefContainer = false;
+                                        } else if (isSpAtkContainer) {
+                                            this.getPokemonStats().setSpAttack(BigInteger.valueOf(Long.valueOf(event.asCharacters().getData())));
+                                            isSpAtkContainer = false;
+                                        } else if (isSpDefContainer) {
+                                            this.getPokemonStats().setSpDefense(BigInteger.valueOf(Long.valueOf(event.asCharacters().getData())));
+                                            isSpDefContainer = false;
+                                        } else if (isSpeedContainer) {
+                                            this.getPokemonStats().setSpeed(BigInteger.valueOf(Long.valueOf(event.asCharacters().getData())));
+                                            isSpeedContainer = false;
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
+                    }
+                    if (event.isEndElement() && isStatsTable) {
+                        if (event.asEndElement().getName().toString().equals("{http://www.w3.org/1999/xhtml}table")) {
+                            isStatsTable = false;
+                            isStatsCollected = true;
+                        }
+                    }
+
+                } catch (XMLStreamException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    errorCount += 1;
+                } catch (NullPointerException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    break;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    //CRAWL MOVES
+    //bulbapedia.bulbagarden.net
+    public void crawl_Moves() throws IOException, XMLStreamException {
+        String urlString = "https://bulbapedia.bulbagarden.net/wiki/List_of_moves";
+        try {
+            XMLEventReader reader = readFromWebsite(urlString);
+            XMLEvent event;
+
+            //StaX Iterator API:
+            Attribute attribute;
+            StartElement startElement;
+            int errorCount = 0;
+
+            //Tag Flag:
+            boolean isMoveDiv = false;
+            boolean isMoveTr = false;
+
+            //Info needed:
+            boolean isMoveCollected = false;
+            boolean isAllMoveCollected = false;
+            //DAO
+            MoveDAO moveDAO = null;
+            TypeDAO typeDAO = null;
+            while (reader.hasNext()) {
+                try {
+                    if (errorCount == 50) {
+                        errorCount = 0;
+                        break;
+                    }
+                    if (isAllMoveCollected) {
+                        break;
+                    }
+                    if (isMoveCollected) {
+                        this.getMoveList().add(this.getMove());
+                        this.move = new Move();
+                        isMoveCollected = false;
+                    }
+
+                    if (this.getMoveList().size() > 0) {
+                        moveDAO = new MoveDAO();
+                        typeDAO = new TypeDAO();
+                        for (Move move : this.getMoveList()) {
+                            if (move.getName().equals("Land's Wrath")) {
+                            }
+                            if (!moveDAO.isMoveExisted(move) && typeDAO.isTypeExisted(move.getType())) {
+                                if (moveDAO.insertMove(move)) {
+                                    System.out.println("Insert Move: " + move.getName());
+                                }
+                            }
+                        }
+                        moveList = new ArrayList<>();
+                    }
+
+                    event = reader.nextEvent();
+                    if (event.isStartElement()) {
+                        startElement = event.asStartElement();
+                        String tagName = startElement.getName().toString();
+                        if (tagName.equals("table")) {
+                            attribute = startElement.getAttributeByName(new QName("class"));
+                            if (attribute != null && attribute.getValue().equals("sortable roundy")) {
+                                isMoveDiv = true;
+                            }
+                        }
+
+                        if (isMoveDiv && tagName.equals("tr")) {
+                            isMoveTr = true;
+                        }
+                        if (isMoveTr && tagName.equals("a")) {
+                            attribute = startElement.getAttributeByName(new QName("href"));
+                            if (attribute != null) {
+                                if (attribute.getValue().contains("_(move)")) {
+                                    event = reader.nextEvent();
+                                    if (event.isCharacters()) {
+                                        this.getMove().setName(event.asCharacters().getData());
+                                    }
+                                }
+                                if (attribute.getValue().contains("_(type)")) {
+                                    event = reader.nextEvent();
+                                    if (event.isStartElement()) {
+                                        if (event.asStartElement().getName().toString().equals("span")) {
+                                            event = reader.nextEvent();
+                                            if (event.isCharacters()) {
+                                                this.getMove().setType(event.asCharacters().getData());
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (attribute.getValue().contains("_move")) {
+                                    event = reader.nextEvent();
+                                    if (event.isStartElement()) {
+                                        if (event.asStartElement().getName().toString().equals("span")) {
+                                            event = reader.nextEvent();
+                                            if (event.isCharacters()) {
+                                                this.getMove().setCategory(event.asCharacters().getData());
+                                            }
+                                        }
+                                    }
+                                }
+                                if (attribute.getValue().contains("_(condition)")) {
+                                    event = reader.nextEvent();
+                                    String PpPowerAcc = "";
+                                    while (true) {
+                                        if (event.isStartElement()) {
+                                            if (event.asStartElement().getName().toString().equals("td")) {
+                                                event = reader.nextEvent();
+                                                if (event.isCharacters()) {
+                                                    PpPowerAcc += event.asCharacters().getData() + ":";
+                                                }
+                                            }
+                                        }
+                                        if (event.isEndElement()) {
+                                            if (event.asEndElement().getName().toString().equals("tr")) {
+                                                isMoveTr = false;
+                                                String[] moveSpecArray = PpPowerAcc.split(":");
+                                                if (moveSpecArray.length < 4) {
+                                                    String temp0 = moveSpecArray[0];
+                                                    String temp1 = moveSpecArray[1];
+                                                    String temp2 = moveSpecArray[2];
+                                                    moveSpecArray = new String[4];
+                                                    moveSpecArray[0] = temp0;
+                                                    moveSpecArray[1] = "--";
+                                                    moveSpecArray[2] = temp1;
+                                                    moveSpecArray[3] = temp2;
+                                                }
+                                                if (moveSpecArray != null) {
+                                                    this.getMove().setPp(BigInteger.valueOf(Long.valueOf(moveSpecArray[0])));
+                                                    this.getMove().setPower(moveSpecArray[1]);
+                                                    this.getMove().setAccuracy(moveSpecArray[2]);
+                                                    this.getMove().setGenerationAppearance(moveSpecArray[3]);
+                                                }
+                                                isMoveCollected = true;
+                                                break; // break inner loop
+                                            }
+                                        }
+                                        event = reader.nextEvent();
+                                    }
+                                }
+                            }
+                        }
+                        if (tagName.equals("span") && isMoveDiv) {
+                            attribute = startElement.getAttributeByName(new QName("id"));
+                            if (attribute != null && attribute.getValue().equals("List_of_Shadow_moves")) {
+                                isMoveDiv = false;
+                                isAllMoveCollected = true;
+                            }
+                        }
+                    }
+
+                } catch (XMLStreamException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    errorCount += 1;
+                } catch (NullPointerException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    break;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+
+                }
+            }
+        } catch (IOException e) {
+            Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    public void crawlPokemonMoves(Pokemon pokemon) throws IOException, XMLStreamException {
+        String urlString = "https://bulbapedia.bulbagarden.net/wiki/" + pokemon.getEnglishName() + "_(Pok%C3%A9mon)/Generation_VI_learnset#By_leveling_up";
+        try {
+            XMLEventReader reader = readFromWebsite(urlString);
+            XMLEvent event;
+
+            //StaX Iterator API:
+            Attribute attribute;
+            StartElement startElement;
+            int errorCount = 0;
+
+            //Tag Flag:
+            boolean isMovesTable = false;
+            boolean isMovesTr = false;
+            boolean isMoveTbody = false;
+            //Info needed:
+            boolean isMoveCollected = false;
+            boolean isAllMoveCollected = false;
+            //DAO
+            MoveDAO moveDAO = null;
+            PokemonDAO pokemonDAO = null;
+            PokemonMovesDAO pkmMovesDAO = null;
+            while (reader.hasNext()) {
+                try {
+                    if (errorCount == 50) {
+                        errorCount = 0;
+                        break;
+                    }
+                    if (isAllMoveCollected) {
+                        moveDAO = new MoveDAO();
+                        pokemonDAO = new PokemonDAO();
+                        pkmMovesDAO = new PokemonMovesDAO();
+                        for (PokemonMoves pkmMoves : this.getPokemonMoveList()) {
+                            if (pokemonDAO.isExistedInDB(Integer.parseInt(pkmMoves.getPokemonId().toString())) && moveDAO.isMoveExisted(pkmMoves.getMoveName())) {
+                                if (!pkmMovesDAO.isPokemonAbilityExisted(pkmMoves)) {
+                                    if (pkmMovesDAO.insertPokemonMove(pkmMoves)) {
+                                        System.out.println("Insert PokemonMoves: " + pkmMoves.getPokemonId() + "-"
+                                                + pkmMoves.getMoveName().toUpperCase() + "-at Level: " + pkmMoves.getLearntByLevelUp());
+                                    }
+                                }
+                            }
+                        }
+                        this.pokemonMoveList = new ArrayList<>();
+                        break;
+                    }
+                    if (isMoveCollected) {
+                        this.getPokemonMoveList().add(this.getPokemonMoves());
+                        this.pokemonMoves = new PokemonMoves();
+                        isMoveCollected = false;
+                    }
+                    event = reader.nextEvent();
+
+                    if (event.isStartElement()) {
+                        startElement = event.asStartElement();
+                        String tagName = startElement.getName().toString();
+                        if (tagName.equals("table")) {
+                            attribute = startElement.getAttributeByName(new QName("class"));
+                            if (attribute != null && attribute.getValue().equals("sortable")) {
+                                isMovesTable = true;
+                            }
+                        }
+
+                        if (isMovesTable && tagName.equals("tr")) {
+                            attribute = startElement.getAttributeByName(new QName("style"));
+                            if (attribute == null) {
+                                isMovesTr = true;
+                                this.getPokemonMoves().setPokemonId(pokemon.getNationalDexId());
+                            }
+                        }
+                        if (isMovesTr) {
+                            if (tagName.equals("span")) {
+                                event = reader.nextEvent();
+                                if (event.isCharacters()) {
+                                    if (!event.asCharacters().getData().equals("N/A")) {
+                                        this.getPokemonMoves().setLearntByLevelUp(BigInteger.valueOf(Long.valueOf(event.asCharacters().getData())));
+                                    }
+                                }
+                            }
+                            if (tagName.equals("a")) {
+                                attribute = startElement.getAttributeByName(new QName("title"));
+                                if (attribute != null && attribute.getValue().contains("(move)")) {
+                                    event = reader.nextEvent();
+                                    if (event.isStartElement()) {
+                                        startElement = event.asStartElement();
+                                        if (startElement.getName().toString().equals("span")) {
+                                            event = reader.nextEvent();
+                                            if (event.isCharacters()) {
+                                                this.getPokemonMoves().setMoveName(event.asCharacters().getData());
+                                                isMovesTr = false;
+                                                isMoveCollected = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (tagName.equals("b")) {
+                                event = reader.nextEvent();
+                                if (event.isStartElement() && event.asStartElement().getName().toString().equals("a")) {
+                                    attribute = event.asStartElement().getAttributeByName(new QName("title"));
+                                    if (attribute != null && attribute.getValue().contains("(move)")) {
+                                        event = reader.nextEvent();
+                                        if (event.isStartElement()) {
+                                            startElement = event.asStartElement();
+                                            if (startElement.getName().toString().equals("span")) {
+                                                event = reader.nextEvent();
+                                                if (event.isCharacters()) {
+                                                    this.getPokemonMoves().setMoveName(event.asCharacters().getData());
+                                                    isMovesTr = false;
+                                                    isMoveCollected = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                    if (!isMovesTr && isMovesTable) {
+                        if (event.isEndElement()) {
+                            if (event.asEndElement().getName().toString().equals("table")) {
+                                isAllMoveCollected = true;
+                            }
+                        }
+                    }
+                } catch (XMLStreamException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    errorCount += 1;
+                } catch (NullPointerException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    break;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+
+                }
+            }
+        } catch (IOException e) {
+            Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 

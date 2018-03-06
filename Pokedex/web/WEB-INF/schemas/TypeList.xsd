@@ -13,7 +13,7 @@ and open the template in the editor.
     <xsd:element name="TypeList">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="pokemonType" type="Type"/>
+                <xsd:element name="pokemonType" type="Type" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -21,7 +21,6 @@ and open the template in the editor.
     <xsd:complexType name="Type">
         <xsd:sequence>
             <xsd:element name="typeLabel" type="xsd:string"/>
-            <xsd:element name="typeIconURI" type="xsd:anyURI" nillable="true"/>
         </xsd:sequence>
     </xsd:complexType>
     

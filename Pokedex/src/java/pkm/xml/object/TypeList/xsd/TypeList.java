@@ -1,6 +1,8 @@
 
 package pkm.xml.object.TypeList.xsd;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -18,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="pokemonType" type="{https://www.pokedex.com/schemas/TypeList.xsd}Type"/>
+ *         &lt;element name="pokemonType" type="{https://www.pokedex.com/schemas/TypeList.xsd}Type" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -35,30 +37,35 @@ import javax.xml.bind.annotation.XmlType;
 public class TypeList {
 
     @XmlElement(required = true)
-    protected Type pokemonType;
+    protected List<Type> pokemonType;
 
     /**
      * Gets the value of the pokemonType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Type }
-     *     
-     */
-    public Type getPokemonType() {
-        return pokemonType;
-    }
-
-    /**
-     * Sets the value of the pokemonType property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the pokemonType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Type }
-     *     
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getPokemonType().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Type }
+     * 
+     * 
      */
-    public void setPokemonType(Type value) {
-        this.pokemonType = value;
+    public List<Type> getPokemonType() {
+        if (pokemonType == null) {
+            pokemonType = new ArrayList<Type>();
+        }
+        return this.pokemonType;
     }
 
 }

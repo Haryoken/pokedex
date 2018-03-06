@@ -4,7 +4,6 @@ package pkm.xml.object.TypeList.xsd;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -19,7 +18,6 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="typeLabel" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="typeIconURI" type="{http://www.w3.org/2001/XMLSchema}anyURI"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -30,16 +28,12 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Type", propOrder = {
-    "typeLabel",
-    "typeIconURI"
+    "typeLabel"
 })
 public class Type {
 
     @XmlElement(required = true)
     protected String typeLabel;
-    @XmlElement(required = true, nillable = true)
-    @XmlSchemaType(name = "anyURI")
-    protected String typeIconURI;
 
     /**
      * Gets the value of the typeLabel property.
@@ -63,30 +57,6 @@ public class Type {
      */
     public void setTypeLabel(String value) {
         this.typeLabel = value;
-    }
-
-    /**
-     * Gets the value of the typeIconURI property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getTypeIconURI() {
-        return typeIconURI;
-    }
-
-    /**
-     * Sets the value of the typeIconURI property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setTypeIconURI(String value) {
-        this.typeIconURI = value;
     }
 
 }

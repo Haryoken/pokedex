@@ -5,8 +5,11 @@
         <group>
             <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/util/TestDataCrawler.java</file>
             <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/util/DataCrawler.java</file>
+            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/dao/PokemonAbilitiesDAO.java</file>
             <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/util/HTMLValidator.java</file>
-            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/dao/PokemonDAO.java</file>
+            <file>file:/D:/pokemon_dex/pokedex/Pokedex/web/WEB-INF/schemas/Move.xsd</file>
+            <file>file:/D:/pokemon_dex/pokedex/Pokedex/web/WEB-INF/schemas/PokemonMoves.xsd</file>
+            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/dao/PokemonMovesDAO.java</file>
         </group>
     </open-files>
 </project-private>

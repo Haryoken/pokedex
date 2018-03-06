@@ -24,13 +24,13 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="type" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="category" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="power" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="accuracy" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
+ *         &lt;element name="accuracy" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="pp" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *         &lt;element name="tm" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="effect" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="probability" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *         &lt;element name="isZMove" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
- *         &lt;element name="generationAppearance" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
+ *         &lt;element name="generationAppearance" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -65,8 +65,7 @@ public class Move {
     @XmlElement(required = true)
     protected String power;
     @XmlElement(required = true)
-    @XmlSchemaType(name = "positiveInteger")
-    protected BigInteger accuracy;
+    protected String accuracy;
     @XmlElement(required = true)
     @XmlSchemaType(name = "positiveInteger")
     protected BigInteger pp;
@@ -80,8 +79,7 @@ public class Move {
     @XmlElement(defaultValue = "false")
     protected boolean isZMove;
     @XmlElement(required = true)
-    @XmlSchemaType(name = "positiveInteger")
-    protected BigInteger generationAppearance;
+    protected String generationAppearance;
 
     /**
      * Gets the value of the name property.
@@ -184,10 +182,10 @@ public class Move {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getAccuracy() {
+    public String getAccuracy() {
         return accuracy;
     }
 
@@ -196,10 +194,10 @@ public class Move {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setAccuracy(BigInteger value) {
+    public void setAccuracy(String value) {
         this.accuracy = value;
     }
 
@@ -320,10 +318,10 @@ public class Move {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getGenerationAppearance() {
+    public String getGenerationAppearance() {
         return generationAppearance;
     }
 
@@ -332,10 +330,10 @@ public class Move {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setGenerationAppearance(BigInteger value) {
+    public void setGenerationAppearance(String value) {
         this.generationAppearance = value;
     }
 

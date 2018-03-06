@@ -26,8 +26,8 @@ public class PokemonDAO {
 
     Connection connection = null;
     PreparedStatement statement = null;
-    
-    public List<Pokemon> getAllthePokemon(){
+
+    public List<Pokemon> getAllthePokemon() {
         ResultSet rs = null;
         String query = "SELECT * FROM tblPokemon";
         List<Pokemon> pokemonList = new ArrayList<>();
@@ -36,7 +36,7 @@ public class PokemonDAO {
             connection = DatabaseHelper.getConnection();
             statement = connection.prepareStatement(query);
             rs = statement.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 pkm = new Pokemon();
                 pkm.setNationalDexId(BigInteger.valueOf(Long.parseLong(String.valueOf(rs.getInt("nationalDexId")))));
                 pkm.setEnglishName(rs.getString("englishName"));
@@ -49,6 +49,30 @@ public class PokemonDAO {
         }
         return pokemonList;
     }
+
+    public List<Pokemon> getPokemonBeforeGenVII() {
+        ResultSet rs = null;
+        String query = "SELECT * FROM tblPokemon WHERE nationalDexId < 722";
+        List<Pokemon> pokemonList = new ArrayList<>();
+        Pokemon pkm = null;
+        try {
+            connection = DatabaseHelper.getConnection();
+            statement = connection.prepareStatement(query);
+            rs = statement.executeQuery();
+            while (rs.next()) {
+                pkm = new Pokemon();
+                pkm.setNationalDexId(BigInteger.valueOf(Long.parseLong(String.valueOf(rs.getInt("nationalDexId")))));
+                pkm.setEnglishName(rs.getString("englishName"));
+                pokemonList.add(pkm);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pokemonList;
+    }
+
     public boolean isExistedInDB(Pokemon pokemon) {
         String query = "SELECT * FROM tblPokemon where nationalDexId ='"
                 + pokemon.getNationalDexId() + "'";
@@ -81,6 +105,41 @@ public class PokemonDAO {
         }
         return false;
     }
+
+    public boolean isExistedInDB(int id) {
+
+        String query = "SELECT * FROM tblPokemon where nationalDexId ='"
+                + id + "'";
+        try {
+            connection = DatabaseHelper.getConnection();
+            statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, e);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean insertPokemon(Pokemon pokemon) {
 
         String query = "INSERT INTO tblPokemon(nationalDexId,englishName)"
@@ -117,9 +176,10 @@ public class PokemonDAO {
         }
         return false;
     }
-    public boolean update_JapanseseName_RomajiName_PictureURI(Pokemon pokemon){
+
+    public boolean update_JapanseseName_RomajiName_PictureURI(Pokemon pokemon) {
         String query = "UPDATE tblPokemon SET japaneseName=?, romajiName=?, pictureURI=? WHERE nationalDexId= '"
-                +pokemon.getNationalDexId()+"'";             
+                + pokemon.getNationalDexId() + "'";
         try {
             connection = DatabaseHelper.getConnection();
             statement = connection.prepareStatement(query);
@@ -152,9 +212,10 @@ public class PokemonDAO {
         }
         return false;
     }
-    public boolean update_catchRate_baseXP_baseHappiness(Pokemon pokemon){
+
+    public boolean update_catchRate_baseXP_baseHappiness(Pokemon pokemon) {
         String query = "UPDATE tblPokemon SET catchRate=?, baseExp=? WHERE nationalDexId= '"
-                +pokemon.getNationalDexId()+"'";             
+                + pokemon.getNationalDexId() + "'";
         try {
             connection = DatabaseHelper.getConnection();
             statement = connection.prepareStatement(query);
@@ -187,15 +248,16 @@ public class PokemonDAO {
         }
         return false;
     }
-    public boolean updateGrowthRate(Pokemon pokemon){
+
+    public boolean updateGrowthRate(Pokemon pokemon) {
         String query = "UPDATE tblPokemon SET growthRate=? WHERE nationalDexId= '"
-                +pokemon.getNationalDexId()+"'";             
+                + pokemon.getNationalDexId() + "'";
         try {
             connection = DatabaseHelper.getConnection();
             statement = connection.prepareStatement(query);
 
             statement.setString(1, pokemon.getGrowthRate());
-           
+
             int row = statement.executeUpdate();
             if (row > 0) {
                 return true;
@@ -221,15 +283,16 @@ public class PokemonDAO {
         }
         return false;
     }
-    public boolean updateBaseHappiness(Pokemon pokemon){
+
+    public boolean updateBaseHappiness(Pokemon pokemon) {
         String query = "UPDATE tblPokemon SET baseHappiness=? WHERE nationalDexId= '"
-                +pokemon.getNationalDexId()+"'";             
+                + pokemon.getNationalDexId() + "'";
         try {
             connection = DatabaseHelper.getConnection();
             statement = connection.prepareStatement(query);
 
             statement.setInt(1, Integer.parseInt(pokemon.getBaseHappiness().toString()));
-           
+
             int row = statement.executeUpdate();
             if (row > 0) {
                 return true;
