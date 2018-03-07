@@ -85,31 +85,6 @@ public class HTMLValidator {
         return resultIs;
     }
 
-    public static InputStream validateInputStreamPokemonDotCom(InputStream is) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-        String inputLine = "";
-        String html = "";
-        while ((inputLine = br.readLine()) != null) {
-
-            if (true) {
-                html += inputLine;
-                //System.out.println(inputLine);
-            }
-        }
-//        html = cleanJavascript(html);
-//        html = cleanHead(html);
-//        html = cleanJavascript(html);
-        html = cleanTag(html, "script");
-        html = cleanTag(html, "head");
-        html = cleanTag(html, "noscript");
-        html = cleanTag(html, "form");
-        html = cleanTag(html, "a", "href=\"/us/play-pokemon/about/tournaments-rules-and-resources/\"");
-        html = cleanTag(html, "a", "href=\"/us/play-pokemon/worlds/2017/day-2-recap-and-finals-previews/\"");
-
-        InputStream resultIs = new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8));
-        return resultIs;
-    }
-
     public static InputStream validateInputStreamIGN(InputStream is) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         String inputLine = "";
@@ -139,31 +114,6 @@ public class HTMLValidator {
         html = cleanTag(html, "dd");
         html = cleanTag(html, "i");
         html = cleanTag(html, "a");
-        //html = cleanTag(html, "section");
-
-        InputStream resultIs = new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8));
-        return resultIs;
-    }
-
-    public static InputStream validateInputStreamIGNAbility(InputStream is) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-        String inputLine = "";
-        String html = "";
-        while ((inputLine = br.readLine()) != null) {
-            if (inputLine.contains("<section")) {
-                inputLine = cleanString(inputLine, "itemscope");
-            }
-            if (!inputLine.contains("!DOCTYPE")
-                    && !inputLine.contains("!doctype")) {
-
-                html += inputLine;
-                //System.out.println(inputLine);
-            }
-        }
-        html = cleanTag(html, "script");
-        html = cleanTag(html, "head");
-        html = cleanTag(html, "noscript");
-        html = cleanTag(html, "form");
         //html = cleanTag(html, "section");
 
         InputStream resultIs = new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8));

@@ -227,7 +227,7 @@ public class DataCrawler {
         this.pokemon = pokemon;
     }
 
-    private static Pokemon cleanPokemonName(Pokemon pokemon) {
+    private static Pokemon cleanPokemonNameAzurill(Pokemon pokemon) {
         if (pokemon.getEnglishName().equals("Mr. Mime")) {
             pokemon.setEnglishName("Mr-Mime");
         }
@@ -246,7 +246,7 @@ public class DataCrawler {
         return pokemon;
     }
 
-    private static Pokemon cleanNamePokemonIGN(Pokemon pokemon) {
+    private static Pokemon cleanPokemonNameIGN(Pokemon pokemon) {
         if (pokemon.getEnglishName().equals("Mr. Mime")) {
             pokemon.setEnglishName("mr-mime");
         }
@@ -262,6 +262,17 @@ public class DataCrawler {
         if (pokemon.getEnglishName().equals("Flabébé")) {
             pokemon.setEnglishName("flabb");
         }
+        return pokemon;
+    }
+
+    private static Pokemon cleanPokemonNameBulbapedia(Pokemon pokemon) {
+        if (pokemon.getEnglishName().equals("Mr. Mime")) {
+            pokemon.setEnglishName("Mr._Mime");
+        }
+        if (pokemon.getEnglishName().equals("Mime Jr.")) {
+            pokemon.setEnglishName("Mime_Jr.");
+        }
+
         return pokemon;
     }
 
@@ -323,15 +334,11 @@ public class DataCrawler {
                     }
                     //Purge the list
                     this.pokemonList = new PokemonList();
-                    //this.pokemon = new Pokemon();
-
                 }
                 event = reader.nextEvent();
                 if (event.isStartElement()) {
                     startElement = event.asStartElement();
                     String tagName = startElement.getName().toString();
-                    //System.out.println(tagName); // For DEBUG Purporse
-
                     //Find the pokemon nationalDexId:
                     if (tagName.equals("td")) {
                         attribute = startElement.getAttributeByName(new QName("style"));
@@ -414,7 +421,7 @@ public class DataCrawler {
 
     //bulbapedia.bulbagarden.net
     public void crawl_romajiName_japaneseName_pictureURI(Pokemon pokemon) throws IOException, XMLStreamException {
-        //pokemon = cleanPokemonName(pokemon);
+        pokemon = cleanPokemonNameBulbapedia(pokemon);
         String urlString = "https://bulbapedia.bulbagarden.net/wiki/" + pokemon.getEnglishName() + "_(Pok%C3%A9mon)";
         XMLEventReader reader = readFromWebsite(urlString);
         XMLEvent event;
@@ -434,7 +441,7 @@ public class DataCrawler {
 
         String xmlPath = "web/WEB-INF/xml/PokemonList.xml";
         String schemaPath = "web/WEB-INF/schemas/PokemonList.xsd";
-        PokemonDAO pkmDao = new PokemonDAO();
+        PokemonDAO pkmDao = null;
 
         while (reader.hasNext()) {
             try {
@@ -442,11 +449,24 @@ public class DataCrawler {
                     errorCount = 0;
                     break;
                 }
+                if (isJapaneseNameCollected
+                        && isPictureURICollected
+                        && isRomajiNameCollected) {
+                    pkmDao = new PokemonDAO();
+                    this.getPokemon().setNationalDexId(pokemon.getNationalDexId());
+                    //Save Data to DB
+                    if (pkmDao.isExistedInDB(Integer.parseInt(this.getPokemon().getNationalDexId().toString()))) {
+                        pkmDao.update_JapanseseName_RomajiName_PictureURI(this.getPokemon());
+                        System.out.println("update_japaneseName_pictureURI_romajiName: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName().toUpperCase());
+                    }
+                    //Purge the pokemon
+                    this.pokemon = new Pokemon();
+                    break;
+                }
                 event = reader.nextEvent();
                 if (event.isStartElement()) {
                     startElement = event.asStartElement();
                     String tagName = startElement.getName().toString();
-                    //System.out.println(tagName); // For Debug Porpurse
 
                     //Find Pokemon romajiName
                     if (tagName.equals("i")) {
@@ -463,28 +483,22 @@ public class DataCrawler {
                             isJapaneseNameContainer = true;
                         }
                     }
-                    if (isJapaneseNameContainer) {
+                    if (isJapaneseNameContainer && tagName.equals("b")) {
                         event = reader.nextEvent();
-                        if (event.isStartElement()) {
+                        if (event.isCharacters()) {
+                            this.getPokemon().setJapaneseName(event.asCharacters().toString());
+                            isJapaneseNameCollected = true;
+                            isJapaneseNameContainer = false;
+                        } else if (event.isStartElement()) { //Case that <b><span class="explain title="..."></span></b>
                             startElement = event.asStartElement();
-                            if (startElement.getName().toString().equals("b")) {
-                                event = reader.nextEvent();
-                                if (event.isCharacters()) {
-                                    this.getPokemon().setJapaneseName(event.asCharacters().toString());
-                                    isJapaneseNameCollected = true;
-                                    isJapaneseNameContainer = false;
-                                } else if (event.isStartElement()) { //Case that <b><span class="explain title="..."></span></b>
-                                    startElement = event.asStartElement();
-                                    if (startElement.getName().toString().equals("span")) {
-                                        attribute = startElement.getAttributeByName(new QName("class"));
-                                        if (attribute != null && attribute.getValue().equals("explain")) {
-                                            event = reader.nextEvent();
-                                            if (event.isCharacters()) {
-                                                this.getPokemon().setJapaneseName(event.asCharacters().toString());
-                                                isJapaneseNameCollected = true;
-                                                isJapaneseNameContainer = false;
-                                            }
-                                        }
+                            if (startElement.getName().toString().equals("span")) {
+                                attribute = startElement.getAttributeByName(new QName("class"));
+                                if (attribute != null && attribute.getValue().equals("explain")) {
+                                    event = reader.nextEvent();
+                                    if (event.isCharacters()) {
+                                        this.getPokemon().setJapaneseName(event.asCharacters().toString());
+                                        isJapaneseNameCollected = true;
+                                        isJapaneseNameContainer = false;
                                     }
                                 }
                             }
@@ -492,48 +506,21 @@ public class DataCrawler {
                     }
                     //Find pokemon PictureURI
                     if (tagName.equals("a")) {
-                        attribute = startElement.getAttributeByName(new QName("title"));
-                        if (attribute != null && attribute.getValue().equals(pokemon.getEnglishName())) {
+                        attribute = startElement.getAttributeByName(new QName("href"));
+                        if (attribute != null && attribute.getValue().contains(pokemon.getEnglishName())) {
                             isPictureURIContainer = true;
                         }
                     }
-                    if (isPictureURIContainer) {
-                        event = reader.nextEvent();
-                        if (event.isStartElement()) {
-                            if (event.asStartElement().getName().toString().equals("img")) {
-                                String pictureURI = event.asStartElement().getAttributeByName(new QName("src")).getValue();
-                                this.getPokemon().setPictureURI(pictureURI);
-                                isPictureURICollected = true;
-                                isPictureURIContainer = false;
-                            }
-                        }
+                    if (isPictureURIContainer && tagName.equals("img")) {
+                        String pictureURI = event.asStartElement().getAttributeByName(new QName("src")).getValue();
+                        this.getPokemon().setPictureURI(pictureURI);
+                        isPictureURICollected = true;
+                        isPictureURIContainer = false;
                     }
                 }
-                if (isJapaneseNameCollected
-                        && isPictureURICollected
-                        && isRomajiNameCollected) {
-                    this.getPokemon().setNationalDexId(pokemon.getNationalDexId());
-                    this.getPokemonList().getPokemon().add(this.getPokemon());
-                    //Validate and save to DB
-                    JAXBHelper.saveAsXML(xmlPath, this.getPokemonList());
-                    if (JAXBHelper.validateXML(xmlPath, schemaPath, this.getPokemonList().getPokemon())) {
-                        //Save Data to DB
-                        pkmDao.update_JapanseseName_RomajiName_PictureURI(this.getPokemon());
-                        System.out.println("update_japaneseName_pictureURI_romajiName: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName().toUpperCase());
-                        //Purge the list
-                        this.pokemon = new Pokemon();
-                        this.pokemonList = new PokemonList();
-                    }
-                    break;
-                }
-
             } catch (XMLStreamException e) {
                 Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
                 errorCount += 1;
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JAXBException ex) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NullPointerException e) {
                 Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
                 break;
@@ -547,7 +534,7 @@ public class DataCrawler {
 
     //azurilland.com
     public void crawl_baseXP_catchRate(Pokemon pokemon) throws IOException, XMLStreamException {
-        pokemon = cleanPokemonName(pokemon);
+        pokemon = cleanPokemonNameAzurill(pokemon);
         String urlString = "https://www.azurilland.com/pokedex/"
                 + pokemon.getNationalDexId()
                 + "-"
@@ -567,17 +554,12 @@ public class DataCrawler {
             StartElement startElement;
             Attribute attribute;
 
-            boolean isNationalDexTag = false;
-            boolean isPokemonNameTag = false;
-
             int errorCount = 0;
 
             boolean isCatchRateCollected = false;
             boolean isBaseXPCollected = false;
-            //boolean isBaseHappinessCollected = false;
 
-            String xmlPath = "web/WEB-INF/xml/PokemonList.xml";
-            String schemaPath = "web/WEB-INF/schemas/PokemonList.xsd";
+            //DAO
             PokemonDAO pkmDao = new PokemonDAO();
 
             while (reader.hasNext()) {
@@ -589,19 +571,12 @@ public class DataCrawler {
                     if (isCatchRateCollected && isBaseXPCollected) {
                         this.getPokemon().setNationalDexId(pokemon.getNationalDexId());
                         this.getPokemon().setEnglishName(pokemon.getEnglishName());
-                        pokemon = this.getPokemon();
-                        this.getPokemonList().getPokemon().add(pokemon);
-                        //Validate and save to DB
-                        JAXBHelper.saveAsXML(xmlPath, this.getPokemonList());
-                        if (JAXBHelper.validateXML(xmlPath, schemaPath, this.getPokemonList().getPokemon())) {
-                            //Save Data to DB
-                            pkmDao.update_catchRate_baseXP_baseHappiness(pokemon);
+                        //Save Data to DB
+                        pkmDao.update_catchRate_baseXP_baseHappiness(this.getPokemon());
+                        System.out.println("update_catchRate_baseXP: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName().toUpperCase());
+                        //Purge the list
+                        this.pokemon = new Pokemon();
 
-                            System.out.println("update_catchRate_baseXP: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName().toUpperCase());
-                            //Purge the list
-                            this.pokemon = new Pokemon();
-                            this.pokemonList = new PokemonList();
-                        }
                         break;
                     }
                     event = reader.nextEvent();
@@ -610,9 +585,8 @@ public class DataCrawler {
                         if (tagName.equals("tr")) {
                             attribute = event.asStartElement().getAttributeByName(new QName("class"));
                             if (attribute != null) {
-                                String token = attribute.getValue();
-                                if (token.equals("pokemon-catch-rate")) {
-                                    System.out.println("");
+                                //Get pokemon catchRate
+                                if (attribute.getValue().equals("pokemon-catch-rate")) {
                                     while (true) {
                                         if (event.isCharacters()) {
                                             if (!event.asCharacters().getData().equals("Catch Rate:")) {
@@ -626,7 +600,8 @@ public class DataCrawler {
                                     }
                                     continue;
                                 }
-                                if (token.equals("pokemon-base-xp")) {
+                                //Get pokemon baseXP
+                                if (attribute.getValue().equals("pokemon-base-xp")) {
                                     while (true) {
                                         if (event.isCharacters()) {
                                             if (!event.asCharacters().getData().equals("Base XP:")) {
@@ -637,7 +612,6 @@ public class DataCrawler {
                                         }
                                         event = reader.nextEvent();
                                     }
-                                    continue;
                                 }
                             }
                         }
@@ -645,10 +619,6 @@ public class DataCrawler {
                 } catch (XMLStreamException e) {
                     Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
                     errorCount += 1;
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (JAXBException ex) {
-                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IllegalArgumentException ex) {
                     Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NullPointerException ex) {
@@ -662,7 +632,7 @@ public class DataCrawler {
 
     //azurilland.com
     public void crawl_baseHappiness(Pokemon pokemon) throws IOException, XMLStreamException {
-        pokemon = cleanPokemonName(pokemon);
+        pokemon = cleanPokemonNameAzurill(pokemon);
         String urlString = "https://www.azurilland.com/pokedex/"
                 + pokemon.getNationalDexId()
                 + "-"
@@ -680,17 +650,14 @@ public class DataCrawler {
 
             XMLEvent event;
 
-            StartElement startElement;
             Attribute attribute;
 
             int errorCount = 0;
 
-            boolean isCatchRateCollected = false;
-            boolean isBaseXPCollected = false;
+            //Info Needed:
             boolean isBaseHappinessCollected = false;
 
-            String xmlPath = "web/WEB-INF/xml/PokemonList.xml";
-            String schemaPath = "web/WEB-INF/schemas/PokemonList.xsd";
+            //DAO
             PokemonDAO pkmDao = new PokemonDAO();
 
             while (reader.hasNext()) {
@@ -702,19 +669,12 @@ public class DataCrawler {
                     if (isBaseHappinessCollected) {
                         this.getPokemon().setNationalDexId(pokemon.getNationalDexId());
                         this.getPokemon().setEnglishName(pokemon.getEnglishName());
-                        pokemon = this.getPokemon();
-                        this.getPokemonList().getPokemon().add(pokemon);
                         //Validate and save to DB
-                        JAXBHelper.saveAsXML(xmlPath, this.getPokemonList());
-                        if (JAXBHelper.validateXML(xmlPath, schemaPath, this.getPokemonList().getPokemon())) {
-                            //Save Data to DB
-                            pkmDao.updateBaseHappiness(pokemon);
-
-                            System.out.println("update_baseHappiness: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName().toUpperCase());
-                            //Purge the list
-                            this.pokemon = new Pokemon();
-                            this.pokemonList = new PokemonList();
-                        }
+                        //Save Data to DB
+                        pkmDao.updateBaseHappiness(this.getPokemon());
+                        System.out.println("update_baseHappiness: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName().toUpperCase());
+                        //Purge the pokemon
+                        this.pokemon = new Pokemon();
                         break;
                     }
                     event = reader.nextEvent();
@@ -723,8 +683,7 @@ public class DataCrawler {
                         if (tagName.equals("tr")) {
                             attribute = event.asStartElement().getAttributeByName(new QName("class"));
                             if (attribute != null) {
-                                String token = attribute.getValue();
-                                if (token.equals("pokemon-base-happiness")) {
+                                if (attribute.getValue().equals("pokemon-base-happiness")) {
                                     System.out.println("");
                                     while (true) {
                                         if (event.isCharacters()) {
@@ -743,10 +702,6 @@ public class DataCrawler {
                 } catch (XMLStreamException e) {
                     Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
                     errorCount += 1;
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (JAXBException ex) {
-                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IllegalArgumentException ex) {
                     Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NullPointerException ex) {
@@ -760,7 +715,7 @@ public class DataCrawler {
 
     //azurilland.com
     public void crawl_growthRate(Pokemon pokemon) throws IOException, XMLStreamException {
-        pokemon = cleanPokemonName(pokemon);
+        pokemon = cleanPokemonNameAzurill(pokemon);
         String urlString = "https://www.azurilland.com/pokedex/"
                 + pokemon.getNationalDexId()
                 + "-"
@@ -778,15 +733,14 @@ public class DataCrawler {
 
             XMLEvent event;
 
-            StartElement startElement;
             Attribute attribute;
 
             int errorCount = 0;
 
+            //Info Needed
             boolean isGrowthRateCollected = false;
 
-            String xmlPath = "web/WEB-INF/xml/PokemonList.xml";
-            String schemaPath = "web/WEB-INF/schemas/PokemonList.xsd";
+            //DAO
             PokemonDAO pkmDao = new PokemonDAO();
 
             while (reader.hasNext()) {
@@ -798,19 +752,15 @@ public class DataCrawler {
                     if (isGrowthRateCollected) {
                         this.getPokemon().setNationalDexId(pokemon.getNationalDexId());
                         this.getPokemon().setEnglishName(pokemon.getEnglishName());
-                        pokemon = this.getPokemon();
-                        this.getPokemonList().getPokemon().add(pokemon);
-                        //Validate and save to DB
-                        JAXBHelper.saveAsXML(xmlPath, this.getPokemonList());
-                        if (JAXBHelper.validateXML(xmlPath, schemaPath, this.getPokemonList().getPokemon())) {
-                            //Save Data to DB
-                            pkmDao.updateGrowthRate(pokemon);
 
-                            System.out.println("update_growthRate: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName().toUpperCase());
-                            //Purge the list
-                            this.pokemon = new Pokemon();
-                            this.pokemonList = new PokemonList();
-                        }
+                        this.getPokemonList().getPokemon().add(this.getPokemon());
+
+                        //Save Data to DB
+                        pkmDao.updateGrowthRate(pokemon);
+
+                        System.out.println("update_growthRate: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName().toUpperCase());
+                        //Purge the list
+                        this.pokemon = new Pokemon();
                         break;
                     }
                     event = reader.nextEvent();
@@ -839,11 +789,6 @@ public class DataCrawler {
                 } catch (XMLStreamException e) {
                     Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
                     errorCount += 1;
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
-                    break;
-                } catch (JAXBException ex) {
-                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IllegalArgumentException ex) {
                     Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NullPointerException ex) {
@@ -927,14 +872,14 @@ public class DataCrawler {
                     }
                 }
             } catch (XMLStreamException ex) {
-
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     //ign.com
     public void crawl_PokemonTypes(Pokemon pokemon) throws IOException, XMLStreamException {
-        pokemon = cleanNamePokemonIGN(pokemon);
+        pokemon = cleanPokemonNameIGN(pokemon);
         String urlString = "http://www.ign.com/pokedex/pokemon/" + pokemon.getEnglishName().toLowerCase();
         try {
             XMLEventReader reader = readFromWebsite(urlString);
@@ -1119,7 +1064,7 @@ public class DataCrawler {
 
     //azurilland.com
     public void crawl_PokemonAbilities(Pokemon pokemon) throws IOException, XMLStreamException {
-        cleanPokemonName(pokemon);
+        cleanPokemonNameAzurill(pokemon);
         String urlString = "https://www.azurilland.com/pokedex/"
                 + pokemon.getNationalDexId()
                 + "-"
@@ -1226,7 +1171,7 @@ public class DataCrawler {
     //CRAWL STATS
     //ign.com
     public void crawl_PokemonStats(Pokemon pokemon) throws IOException, XMLStreamException {
-        pokemon = cleanNamePokemonIGN(pokemon);
+        pokemon = cleanPokemonNameIGN(pokemon);
         String urlString = "http://www.ign.com/pokedex/pokemon/" + pokemon.getEnglishName().toLowerCase();
         try {
             XMLEventReader reader = readFromWebsite(urlString);
@@ -1659,80 +1604,6 @@ public class DataCrawler {
             }
         } catch (IOException e) {
             Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-        }
-    }
-
-    //CRAWL EVOLUTION
-    //ign.com
-    public void crawlEvolution(Pokemon pokemon) throws IOException, XMLStreamException {
-        pokemon = cleanNamePokemonIGN(pokemon);
-        String urlString = "http://www.ign.com/pokedex/pokemon/" + pokemon.getEnglishName().toLowerCase();
-
-        XMLEventReader reader = readFromWebsite(urlString);
-        XMLEvent event;
-
-        //StaX Iterator API:
-        Attribute attribute;
-        StartElement startElement;
-        int errorCount = 0;
-
-        //Tag Flag:
-        boolean isStatsContainer = false;
-        boolean isStatsTable = false;
-
-        boolean isHpContainer = false;
-        boolean isAtkContainer = false;
-        boolean isDefContainer = false;
-        boolean isSpAtkContainer = false;
-        boolean isSpDefContainer = false;
-        boolean isSpeedContainer = false;
-
-        //Info needed:
-        boolean isStatsCollected = false;
-        //DAO
-        PokemonDAO pkmDAO = null;
-        PokemonStatsDAO pkmStatsDAO = null;
-        while (reader.hasNext()) {
-            try {
-                if (errorCount == 50) {
-                    errorCount = 0;
-                    break;
-                }
-
-                event = reader.nextEvent();
-                if (event.isStartElement()) {
-                    startElement = event.asStartElement();
-                    String tagName = startElement.getName().toString();
-                    System.out.println(tagName);
-                    
-                    if (tagName.equals("{http://www.w3.org/1999/xhtml}div")) {
-                        attribute = startElement.getAttributeByName(new QName("class"));
-                        if(attribute != null){
-                            System.out.println(attribute.getValue());
-                        }
-                        if (attribute != null && attribute.getValue().equals("container pokemon-evolution")) {
-                            isStatsTable = true;
-                        }
-                    }
-                    
-                }
-                if (event.isEndElement() && isStatsTable) {
-                    if (event.asEndElement().getName().toString().equals("{http://www.w3.org/1999/xhtml}table")) {
-                        isStatsTable = false;
-                        isStatsCollected = true;
-                    }
-                }
-
-            } catch (XMLStreamException e) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-                errorCount += 1;
-            } catch (NullPointerException e) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-                break;
-            } catch (ArrayIndexOutOfBoundsException e) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-                break;
-            }
         }
     }
 }

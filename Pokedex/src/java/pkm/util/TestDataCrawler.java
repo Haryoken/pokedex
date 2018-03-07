@@ -35,7 +35,7 @@ public class TestDataCrawler {
         Pokemon pkm = new Pokemon();
         pkm.setEnglishName("Bulbasaur");
         pkm.setNationalDexId(BigInteger.valueOf(1));
-        crawler.crawlEvolution(pkm);
+        crawler.crawl_baseHappiness(pkm);
 
         } catch (IOException ex) {
             Logger.getLogger(TestDataCrawler.class.getName()).log(Level.SEVERE, null, ex);
