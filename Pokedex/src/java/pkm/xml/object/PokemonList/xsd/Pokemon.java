@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="englishName" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="japaneseName" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="romajiName" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="types" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="height" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="weight" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="catchRate" type="{http://www.w3.org/2001/XMLSchema}decimal"/>
@@ -32,6 +33,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="growthRate" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="isLegendary" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="pictureURI" type="{http://www.w3.org/2001/XMLSchema}anyURI"/>
+ *         &lt;element name="iconURI" type="{http://www.w3.org/2001/XMLSchema}anyURI"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -46,6 +48,7 @@ import javax.xml.bind.annotation.XmlType;
     "englishName",
     "japaneseName",
     "romajiName",
+    "types",
     "height",
     "weight",
     "catchRate",
@@ -53,7 +56,8 @@ import javax.xml.bind.annotation.XmlType;
     "baseHappiness",
     "growthRate",
     "isLegendary",
-    "pictureURI"
+    "pictureURI",
+    "iconURI"
 })
 public class Pokemon {
 
@@ -66,6 +70,8 @@ public class Pokemon {
     protected String japaneseName;
     @XmlElement(required = true, nillable = true)
     protected String romajiName;
+    @XmlElement(required = true, nillable = true)
+    protected String types;
     @XmlElement(required = true, nillable = true)
     protected String height;
     @XmlElement(required = true, nillable = true)
@@ -85,6 +91,9 @@ public class Pokemon {
     @XmlElement(required = true, nillable = true)
     @XmlSchemaType(name = "anyURI")
     protected String pictureURI;
+    @XmlElement(required = true, nillable = true)
+    @XmlSchemaType(name = "anyURI")
+    protected String iconURI;
 
     /**
      * Gets the value of the nationalDexId property.
@@ -180,6 +189,30 @@ public class Pokemon {
      */
     public void setRomajiName(String value) {
         this.romajiName = value;
+    }
+
+    /**
+     * Gets the value of the types property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getTypes() {
+        return types;
+    }
+
+    /**
+     * Sets the value of the types property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setTypes(String value) {
+        this.types = value;
     }
 
     /**
@@ -364,6 +397,30 @@ public class Pokemon {
      */
     public void setPictureURI(String value) {
         this.pictureURI = value;
+    }
+
+    /**
+     * Gets the value of the iconURI property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getIconURI() {
+        return iconURI;
+    }
+
+    /**
+     * Sets the value of the iconURI property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setIconURI(String value) {
+        this.iconURI = value;
     }
 
 }

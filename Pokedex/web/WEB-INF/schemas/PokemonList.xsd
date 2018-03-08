@@ -24,6 +24,7 @@ and open the template in the editor.
             <xsd:element name="englishName" type="xsd:string" nillable="true"/>
             <xsd:element name="japaneseName" type="xsd:string" nillable="true"/>
             <xsd:element name="romajiName" type="xsd:string" nillable="true"/>
+            <xsd:element name="types" type="xsd:string" nillable="true"/>
             <xsd:element name="height" type="xsd:string" nillable="true"/>
             <xsd:element name="weight" type="xsd:string" nillable="true"/>
             <xsd:element name="catchRate" type="xsd:decimal" nillable="true"/>
@@ -32,6 +33,7 @@ and open the template in the editor.
             <xsd:element name="growthRate" type="xsd:string" nillable="true"/>
             <xsd:element name="isLegendary" type="xsd:boolean" default="false"/>
             <xsd:element name="pictureURI" type="xsd:anyURI" nillable="true"/>
+            <xsd:element name="iconURI" type="xsd:anyURI" nillable="true"/>
         </xsd:sequence>
     </xsd:complexType>
    

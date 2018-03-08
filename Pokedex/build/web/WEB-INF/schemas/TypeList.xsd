@@ -21,6 +21,8 @@ and open the template in the editor.
     <xsd:complexType name="Type">
         <xsd:sequence>
             <xsd:element name="typeLabel" type="xsd:string"/>
+            <xsd:element name="description" type="xsd:string"/>
+            <xsd:element name="iconURI" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>
     
