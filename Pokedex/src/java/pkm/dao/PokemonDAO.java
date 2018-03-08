@@ -142,8 +142,8 @@ public class PokemonDAO {
 
     public boolean insertPokemon(Pokemon pokemon) {
 
-        String query = "INSERT INTO tblPokemon(nationalDexId,englishName,isLegendary)"
-                + " VALUES (?,?,?)";
+        String query = "INSERT INTO tblPokemon(nationalDexId,englishName,isLegendary,types,iconURI)"
+                + " VALUES (?,?,?,?,?)";
         try {
             connection = DatabaseHelper.getConnection();
             statement = connection.prepareStatement(query);
@@ -151,6 +151,8 @@ public class PokemonDAO {
             statement.setInt(1, Integer.parseInt(pokemon.getNationalDexId().toString()));
             statement.setString(2, pokemon.getEnglishName());
             statement.setBoolean(3, false);
+            statement.setString(4, pokemon.getTypes());
+            statement.setString(5, pokemon.getIconURI());
             int row = statement.executeUpdate();
             if (row > 0) {
                 return true;

@@ -313,28 +313,46 @@ public class DataCrawler {
 
         StartElement startElement;
         Attribute attribute;
-
+        String types = "";
+        
         boolean isNationalDexTag = false;
         boolean isPokemonNameTag = false;
+        boolean isInfoArea = false;
+        boolean isAllInfoCollected = false;
 
-        boolean isDexIdCollected = false;
-        boolean isNameCollected = false;
-
-        String xmlPath = "web/WEB-INF/xml/PokemonList.xml";
-        String schemaPath = "web/WEB-INF/schemas/PokemonList.xsd";
         PokemonDAO pkmDao = new PokemonDAO();
         while (reader.hasNext()) {
             try {
+                 if (isAllInfoCollected) {
+                        Pokemon temp;
+//                        if (this.getPokemonList().getPokemon().isEmpty()) {
+//                            this.getPokemonList().getPokemon().add(this.getPokemon());
+//                        } else {
+//                            temp = this.getPokemonList().getPokemon().get(this.getPokemonList().getPokemon().size() - 1);
+//                            if (!temp.getNationalDexId().equals(this.getPokemon().getNationalDexId())) {
+//                                this.getPokemonList().getPokemon().add(this.getPokemon());
+//                            }
+//                        }
+                        String type = this.getPokemon().getTypes();
+                        type = type.substring(0,type.length() -1);
+                        this.getPokemon().setTypes(type);
+                        
+                        this.getPokemonList().getPokemon().add(this.getPokemon());
+                        this.pokemon = new Pokemon();
+                        isAllInfoCollected = false;
+                    }
                 if (this.getPokemonList().getPokemon().size() > 0) {
                     //Save Data to DB
                     for (Pokemon pokemon : this.getPokemonList().getPokemon()) {
                         if (!pkmDao.isExistedInDB(pokemon)) {
                             pkmDao.insertPokemon(pokemon);
+                            System.out.println("Pokemon Inserted: " +pokemon.getNationalDexId()+"_"+ pokemon.getEnglishName()+"_"+pokemon.getTypes());
                         }
                     }
                     //Purge the list
                     this.pokemonList = new PokemonList();
                 }
+                
                 event = reader.nextEvent();
                 if (event.isStartElement()) {
                     startElement = event.asStartElement();
@@ -343,6 +361,7 @@ public class DataCrawler {
                     if (tagName.equals("td")) {
                         attribute = startElement.getAttributeByName(new QName("style"));
                         if (attribute != null && attribute.getValue().equals("font-family:monospace")) { // Ignore the first <td>.
+                            isInfoArea = true;
                             event = reader.nextEvent();
                             while (true) { // This LOOP purpose is to ignore characterElement and endElement of the <td> above.
                                 if (event.isStartElement()) {
@@ -359,7 +378,6 @@ public class DataCrawler {
                                             //System.out.println(idString); //For DEBUG Purpose
                                             this.getPokemon().setNationalDexId(BigInteger.valueOf(Long.parseLong(idString)));
                                             //event = reader. nextEvent();
-                                            isDexIdCollected = true;
                                             isNationalDexTag = false;
                                         }
                                     }
@@ -370,9 +388,19 @@ public class DataCrawler {
                         }
                     }
                     //Find the pokemon Name:
-                    if (tagName.equals("a")) {
+                    if(tagName.equals("img")  && isInfoArea){
+                        this.getPokemon().setIconURI(startElement.asStartElement().getAttributeByName(new QName("src")).getValue());
+                    }
+                    if(tagName.equals("span") && isInfoArea){
+                        event = reader.nextEvent();
+                        if(event.isCharacters()){
+                           types += event.asCharacters().getData() +",";
+                           this.getPokemon().setTypes(types);                           
+                        }
+                    }
+                    if (tagName.equals("a") && isInfoArea) {
                         attribute = startElement.getAttributeByName(new QName("title"));
-                        if (attribute != null && attribute.getValue().contains("(Pokémon)") && !attribute.getValue().contains("Victini")) {
+                        if (attribute != null && attribute.getValue().contains("(Pokémon)")) {
                             isPokemonNameTag = true;
                             event = reader.nextEvent();
                         }
@@ -380,26 +408,11 @@ public class DataCrawler {
                             String name = event.asCharacters().toString().trim();
                             //System.out.println(name.toUpperCase()); //For DEBUG Purpose
                             this.getPokemon().setEnglishName(name);
-                            isNameCollected = true;
                             isPokemonNameTag = false;
                         }
                     }
                     //Add pokemon to List if collect enough info:
-                    if (isDexIdCollected && isNameCollected) {
-                        Pokemon temp;
-                        if (this.getPokemonList().getPokemon().isEmpty()) {
-                            this.getPokemonList().getPokemon().add(this.getPokemon());
-                        } else {
-                            temp = this.getPokemonList().getPokemon().get(this.getPokemonList().getPokemon().size() - 1);
-                            if (!temp.getNationalDexId().equals(this.getPokemon().getNationalDexId())) {
-                                this.getPokemonList().getPokemon().add(this.getPokemon());
-                            }
-                        }
-
-                        this.pokemon = new Pokemon();
-                        isDexIdCollected = false;
-                        isNameCollected = false;
-                    }
+                   
 
                     //Break when collect all the needed info:
                     if (tagName.equals("span")) {
@@ -409,7 +422,13 @@ public class DataCrawler {
                             break;
                         }
                     }
-
+                }
+                if(event.isEndElement()){
+                    if(isInfoArea && event.asEndElement().getName().toString().equals("tr")){
+                        types = "";
+                        isInfoArea = false;
+                        isAllInfoCollected = true;
+                    }
                 }
 
             } catch (XMLStreamException e) {
