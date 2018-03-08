@@ -7,19 +7,17 @@ package pkm.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import pkm.util.DataCrawler;
 
 /**
  *
- * @author admin
+ * @author DUCVINH
  */
-public class MainControllerServlet extends HttpServlet {
-
-    private final String crawlingServlet = "CrawlingServlet";
+public class CrawlingServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,19 +32,11 @@ public class MainControllerServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-
-        String url = "";
-        try {
-            String button = request.getParameter("btnAction");
-            if (button == null) {
-                url = crawlingServlet;
-                request.setAttribute("crawlMode", "firstDeploy");
-            }
-        } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
-
-            out.close();
+        try  {
+            DataCrawler crawler = new DataCrawler();
+            
+        }finally{
+            
         }
     }
 
