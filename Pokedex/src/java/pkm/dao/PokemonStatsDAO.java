@@ -5,8 +5,11 @@
  */
 package pkm.dao;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +25,31 @@ public class PokemonStatsDAO {
     
     Connection connection = null;
     PreparedStatement statement = null;
+    public PokemonStats findById(int id) {
+        ResultSet rs = null;
+        String query = "SELECT * FROM tblStats WHERE pokemonId=?";
+        PokemonStats pkmStats = null;
+        try {
+            connection = DatabaseHelper.getConnection();
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            rs = statement.executeQuery();
+            if (rs.next()) {
+                pkmStats = new PokemonStats();
+                pkmStats.setBaseHP(BigInteger.valueOf(Long.valueOf(rs.getInt("baseHP"))));
+                pkmStats.setAttack(BigInteger.valueOf(Long.valueOf(rs.getInt("attack"))));
+                pkmStats.setDefense(BigInteger.valueOf(Long.valueOf(rs.getInt("defense"))));
+                pkmStats.setSpAttack(BigInteger.valueOf(Long.valueOf(rs.getInt("spAttack"))));
+                pkmStats.setSpDefense(BigInteger.valueOf(Long.valueOf(rs.getInt("stDefense"))));
+                pkmStats.setSpeed(BigInteger.valueOf(Long.valueOf(rs.getInt("speed"))));                     
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pkmStats;
+    }
     public boolean insertPokemonStats(PokemonStats pkmStats) {
 
         String query = "INSERT INTO tblPokemonStats(pokemonId,baseHP,attack,defense,spAttack,spDefense,speed)"

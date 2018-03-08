@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pkm.util.DatabaseHelper;
@@ -23,6 +25,40 @@ import pkm.xml.object.PokemonTypes.xsd.PokemonTypes;
 public class PokemonAbilitiesDAO {
     Connection connection = null;
     PreparedStatement statement = null;
+    public List<String> findByPokemonID(int pokemonID){
+        String query = "SELECT * FROM tblPokemonAbilities WHERE pokemonId=?";
+        List<String> abilitiesName = new ArrayList();
+        try {
+            connection = DatabaseHelper.getConnection();
+            statement = connection.prepareStatement(query);
+            
+            statement.setInt(1, pokemonID);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                abilitiesName.add(rs.getString("abilityName"));
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, e);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return abilitiesName;
+    }
     public boolean isPokemonAbilityExisted(PokemonAbilities pokemonAbility){
         String query = "SELECT * FROM tblPokemonAbilities WHERE pokemonId=? AND abilityName=?";
                 

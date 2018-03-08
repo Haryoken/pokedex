@@ -27,6 +27,47 @@ public class PokemonDAO {
     Connection connection = null;
     PreparedStatement statement = null;
 
+    public Pokemon findById(int id) {
+        ResultSet rs = null;
+        String query = "SELECT * FROM tblPokemon WHERE nationalDexId=?";
+        Pokemon pkm = null;
+        try {
+            connection = DatabaseHelper.getConnection();
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            rs = statement.executeQuery();
+            if (rs.next()) {
+                pkm = new Pokemon();
+                pkm.setNationalDexId(BigInteger.valueOf(Long.parseLong(String.valueOf(rs.getInt("nationalDexId")))));
+                pkm.setEnglishName(rs.getString("englishName"));
+                pkm.setJapaneseName(rs.getString("japaneseName"));
+                pkm.setRomajiName(rs.getString("romajiName"));
+                pkm.setPictureURI(rs.getString("pictureURI"));
+                pkm.setGrowthRate(rs.getString("growthRate"));
+
+                int baseExp = rs.getInt("baseExp");
+                if (baseExp > 0) {
+                    pkm.setBaseExp(BigInteger.valueOf(Long.valueOf(baseExp)));
+                }
+                
+                int baseHappiness = rs.getInt("baseHappiness");
+                if(baseHappiness > 0){
+                    pkm.setBaseHappiness(BigInteger.valueOf(Long.valueOf(baseHappiness)));
+                }
+                
+                double catchRate = rs.getDouble("catchRate");
+                if(catchRate > 0){
+                    pkm.setCatchRate(BigDecimal.valueOf(catchRate));
+                }                               
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pkm;
+    }
+
     public List<Pokemon> getAllthePokemon() {
         ResultSet rs = null;
         String query = "SELECT * FROM tblPokemon";
