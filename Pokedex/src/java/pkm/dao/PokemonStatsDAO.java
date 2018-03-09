@@ -15,7 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import pkm.util.DatabaseHelper;
 import pkm.xml.object.PokemonList.xsd.Pokemon;
-import pkm.xml.object.PokemonStats.xsd.PokemonStats;
+import pkm.xml.object.PokemonStatsList.xsd.PokemonStats;
+
 
 /**
  *
@@ -27,7 +28,7 @@ public class PokemonStatsDAO {
     PreparedStatement statement = null;
     public PokemonStats findById(int id) {
         ResultSet rs = null;
-        String query = "SELECT * FROM tblStats WHERE pokemonId=?";
+        String query = "SELECT * FROM tblPokemonStats WHERE pokemonId=?";
         PokemonStats pkmStats = null;
         try {
             connection = DatabaseHelper.getConnection();
@@ -40,7 +41,7 @@ public class PokemonStatsDAO {
                 pkmStats.setAttack(BigInteger.valueOf(Long.valueOf(rs.getInt("attack"))));
                 pkmStats.setDefense(BigInteger.valueOf(Long.valueOf(rs.getInt("defense"))));
                 pkmStats.setSpAttack(BigInteger.valueOf(Long.valueOf(rs.getInt("spAttack"))));
-                pkmStats.setSpDefense(BigInteger.valueOf(Long.valueOf(rs.getInt("stDefense"))));
+                pkmStats.setSpDefense(BigInteger.valueOf(Long.valueOf(rs.getInt("spDefense"))));
                 pkmStats.setSpeed(BigInteger.valueOf(Long.valueOf(rs.getInt("speed"))));                     
             }
         } catch (ClassNotFoundException ex) {

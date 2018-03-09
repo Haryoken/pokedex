@@ -9,16 +9,31 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBException;
+import pkm.dao.MoveDAO;
 import pkm.dao.PokemonAbilitiesDAO;
 import pkm.dao.PokemonDAO;
+import pkm.dao.PokemonMovesDAO;
 import pkm.dao.PokemonStatsDAO;
-import pkm.xml.object.PokemonAbilities.xsd.PokemonAbilities;
+import pkm.util.JAXBHelper;
+import pkm.xml.object.MoveList.xsd.Move;
+import pkm.xml.object.MoveList.xsd.MoveList;
+import pkm.xml.object.PokemonAbilitiesList.xsd.PokemonAbilities;
+import pkm.xml.object.PokemonAbilitiesList.xsd.PokemonAbilitiesList;
+
 import pkm.xml.object.PokemonList.xsd.Pokemon;
-import pkm.xml.object.PokemonStats.xsd.PokemonStats;
+import pkm.xml.object.PokemonList.xsd.PokemonList;
+import pkm.xml.object.PokemonMovesList.xsd.PokemonMoves;
+import pkm.xml.object.PokemonMovesList.xsd.PokemonMovesList;
+import pkm.xml.object.PokemonStatsList.xsd.PokemonStats;
+import pkm.xml.object.PokemonStatsList.xsd.PokemonStatsList;
 
 /**
  *
@@ -39,44 +54,53 @@ public class DisplayPokemonServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        
+
         String pokemonId = request.getParameter("pokemonId");
-        
+
         PokemonDAO pkmDAO = new PokemonDAO();
         PokemonAbilitiesDAO pkmAbilitiesDAO = new PokemonAbilitiesDAO();
         PokemonStatsDAO pkmStatsDAO = new PokemonStatsDAO();
-        
-        Pokemon pokemon = null;
-        List<String> pokemonAbilities = new ArrayList<>();
-        PokemonStats pkmStats = null;
-        try{
-           pokemon = pkmDAO.findById(Integer.parseInt(pokemonId));
-           pokemonAbilities = pkmAbilitiesDAO.findByPokemonID(Integer.parseInt(pokemonId));
-           pkmStats = pkmStatsDAO.findById(Integer.parseInt(pokemonId));
-            System.out.println("POKEMON MAIN INFO=============================");
-            System.out.println("ID: "+pokemon.getNationalDexId());
-            System.out.println("Name: "+pokemon.getEnglishName());
-            System.out.println("Jap: "+pokemon.getJapaneseName());
-            System.out.println("Rom: "+pokemon.getRomajiName());
-            System.out.println("Pics: "+pokemon.getPictureURI());
-            System.out.println("GrowthRate: "+pokemon.getGrowthRate());
-            System.out.println("Happiness: "+pokemon.getBaseHappiness());
-            System.out.println("BaseExp: "+pokemon.getBaseExp());
-            System.out.println("CatchRate: "+pokemon.getCatchRate());
-            System.out.println("ABILITIES=====================================");
-            for(String ability: pokemonAbilities){
-                System.out.println("Ability"+ability);
-            }
-            System.out.println("STATS:========================================");
-            System.out.println("HP: "+pkmStats.getBaseHP());
-            System.out.println("atk: "+pkmStats.getAttack());
-            System.out.println("def: "+pkmStats.getDefense());
-            System.out.println("spatk: "+pkmStats.getSpAttack());
-            System.out.println("spdef: "+pkmStats.getSpDefense());
-            System.out.println("speed: "+pkmStats.getSpeed());
+        PokemonMovesDAO pkmMovesDAO = new PokemonMovesDAO();
+        MoveDAO moveDAO = new MoveDAO();
 
-        }finally{
+        Pokemon pokemon = null;
+        PokemonList pkmList = new PokemonList();
+        PokemonAbilitiesList pkmAbilitiesList = null;
+        PokemonStats pkmStats = null;
+        PokemonStatsList statsList = new PokemonStatsList();
+        PokemonMovesList pkmMovesList = null;
+        MoveList moveList = null;
+
+        try {
+            pokemon = pkmDAO.findById(Integer.parseInt(pokemonId));
+            pkmList.getPokemon().add(pokemon);
             
+            pkmAbilitiesList = pkmAbilitiesDAO.findByPokemonID(Integer.parseInt(pokemonId));
+            
+            pkmStats = pkmStatsDAO.findById(Integer.parseInt(pokemonId));
+            statsList.getPokemonStats().add(pkmStats);
+            
+            pkmMovesList = pkmMovesDAO.findByPokemonId(Integer.parseInt(pokemonId));
+            moveList = moveDAO.findByMovePokemonId(Integer.parseInt(pokemonId));
+
+            String pokemonXML = JAXBHelper.marshallToString(pkmList);
+            String pokemonAbilitiesXML = JAXBHelper.marshallToString(pkmAbilitiesList);
+            String pkmStatsXML = JAXBHelper.marshallToString(statsList);
+            String pkmMovesXML = JAXBHelper.marshallToString(pkmMovesList);
+            String moveXML = JAXBHelper.marshallToString(moveList);
+            
+            
+            request.setAttribute("POKEMON_XML", pokemonXML);
+            request.setAttribute("POKEMONABILITIES_XML", pokemonAbilitiesXML);
+            request.setAttribute("STATS_XML", pkmStatsXML);
+            request.setAttribute("POKEMONMOVES_XML", pkmMovesXML);
+            request.setAttribute("MOVE_XML", moveXML);
+
+        } catch (JAXBException ex) {
+            Logger.getLogger(DisplayPokemonServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            response.sendRedirect("pokemon.jsp");
+            out.close();                  
         }
     }
 

@@ -42,14 +42,12 @@ public class MainControllerServlet extends HttpServlet {
             
             if (button == null) {
                 url = "index.jsp";
-            }else if(button.equals("RedirectToPokemon")){
-                
+            }else if(button.equals("RedirectToPokemon")){              
                 url = displayPokemonServlet;
             }
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
-
             out.close();
         }
     }

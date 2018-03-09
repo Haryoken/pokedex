@@ -5,6 +5,7 @@
  */
 package pkm.dao;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,9 +15,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pkm.util.DatabaseHelper;
-import pkm.xml.object.PokemonAbilities.xsd.PokemonAbilities;
-import pkm.xml.object.PokemonList.xsd.Pokemon;
-import pkm.xml.object.PokemonTypes.xsd.PokemonTypes;
+import pkm.xml.object.PokemonAbilitiesList.xsd.PokemonAbilities;
+import pkm.xml.object.PokemonAbilitiesList.xsd.PokemonAbilitiesList;
+
+
 
 /**
  *
@@ -25,9 +27,10 @@ import pkm.xml.object.PokemonTypes.xsd.PokemonTypes;
 public class PokemonAbilitiesDAO {
     Connection connection = null;
     PreparedStatement statement = null;
-    public List<String> findByPokemonID(int pokemonID){
+    public PokemonAbilitiesList findByPokemonID(int pokemonID){
         String query = "SELECT * FROM tblPokemonAbilities WHERE pokemonId=?";
-        List<String> abilitiesName = new ArrayList();
+        PokemonAbilities pkmAbilities = null;
+        PokemonAbilitiesList pkmAbilitiesList = new PokemonAbilitiesList();
         try {
             connection = DatabaseHelper.getConnection();
             statement = connection.prepareStatement(query);
@@ -35,7 +38,10 @@ public class PokemonAbilitiesDAO {
             statement.setInt(1, pokemonID);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                abilitiesName.add(rs.getString("abilityName"));
+                pkmAbilities = new PokemonAbilities();
+                pkmAbilities.setPokemonId(BigInteger.valueOf(rs.getInt("pokemonId")));
+                pkmAbilities.setAbilityName(rs.getString("abilityName"));
+                pkmAbilitiesList.getPokemonAbilities().add(pkmAbilities);
             }
         } catch (SQLException e) {
             Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, e);
@@ -57,7 +63,7 @@ public class PokemonAbilitiesDAO {
                 }
             }
         }
-        return abilitiesName;
+        return pkmAbilitiesList;
     }
     public boolean isPokemonAbilityExisted(PokemonAbilities pokemonAbility){
         String query = "SELECT * FROM tblPokemonAbilities WHERE pokemonId=? AND abilityName=?";

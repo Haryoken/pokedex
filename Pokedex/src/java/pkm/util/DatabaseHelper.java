@@ -20,7 +20,7 @@ public class DatabaseHelper {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         String DBStr = "jdbc:sqlserver://localhost:1433;databaseName=PokemonDB";
         String user = "sa";
-        String password = "hannse61793";
+        String password = "zodiacaries1104";
         connection = DriverManager.getConnection(DBStr, user, password);
         return connection;
     }

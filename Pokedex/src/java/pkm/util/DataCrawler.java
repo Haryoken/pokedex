@@ -40,13 +40,17 @@ import pkm.dao.PokemonStatsDAO;
 import pkm.dao.PokemonTypesDAO;
 import pkm.dao.TypeDAO;
 import pkm.xml.object.Ability.xsd.Ability;
-import pkm.xml.object.Move.xsd.Move;
+import pkm.xml.object.MoveList.xsd.Move;
+import pkm.xml.object.PokemonAbilitiesList.xsd.PokemonAbilities;
 
-import pkm.xml.object.PokemonAbilities.xsd.PokemonAbilities;
+
+
 import pkm.xml.object.PokemonList.xsd.Pokemon;
 import pkm.xml.object.PokemonList.xsd.PokemonList;
-import pkm.xml.object.PokemonMoves.xsd.PokemonMoves;
-import pkm.xml.object.PokemonStats.xsd.PokemonStats;
+import pkm.xml.object.PokemonMovesList.xsd.PokemonMoves;
+import pkm.xml.object.PokemonStatsList.xsd.PokemonStats;
+
+
 import pkm.xml.object.PokemonTypes.xsd.PokemonTypes;
 
 import pkm.xml.object.TypeList.xsd.Type;
@@ -325,14 +329,6 @@ public class DataCrawler {
             try {
                  if (isAllInfoCollected) {
                         Pokemon temp;
-//                        if (this.getPokemonList().getPokemon().isEmpty()) {
-//                            this.getPokemonList().getPokemon().add(this.getPokemon());
-//                        } else {
-//                            temp = this.getPokemonList().getPokemon().get(this.getPokemonList().getPokemon().size() - 1);
-//                            if (!temp.getNationalDexId().equals(this.getPokemon().getNationalDexId())) {
-//                                this.getPokemonList().getPokemon().add(this.getPokemon());
-//                            }
-//                        }
                         String type = this.getPokemon().getTypes();
                         type = type.substring(0,type.length() -1);
                         this.getPokemon().setTypes(type);

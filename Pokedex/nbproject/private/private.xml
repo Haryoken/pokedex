@@ -3,10 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/util/TestDataCrawler.java</file>
-            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/util/DataCrawler.java</file>
-            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/util/HTMLValidator.java</file>
-            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/dao/PokemonDAO.java</file>
+            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/dao/PokemonStatsDAO.java</file>
+            <file>file:/D:/pokemon_dex/pokedex/Pokedex/web/pokemon.jsp</file>
+            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/util/JAXBHelper.java</file>
+            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/servlet/DisplayPokemonServlet.java</file>
+            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/util/DatabaseHelper.java</file>
+            <file>file:/D:/pokemon_dex/pokedex/Pokedex/src/java/pkm/dao/MoveDAO.java</file>
         </group>
     </open-files>
 </project-private>
