@@ -1,0 +1,92 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 9 Mar, 2018, 9:30:33 PM
+    Author     : DUCVINH
+*/
+
+#content_div{
+    background-color: white;
+    height: 1000px;
+    width: 67.5%;
+    position: relative;
+    left: 312px;
+}
+#info_table_div{
+    width: auto;
+    background-color: cadetblue;
+    position: relative;
+    left: 350px;   
+    top: 20px;
+    font-size: 25px;
+    border-radius: 10px;
+}
+#pokemon_img_div{
+
+    position: relative;
+    left: 200px; 
+    top: 20px;
+}
+#pokemon_img{
+    width: 300px;
+    height: 300px
+}
+
+#ability_div{
+    background-color: orange;
+    width: 430px;
+    height: auto;
+    text-align:center;
+    position: relative;
+    left: 650px; 
+    top: 30px;
+    border-radius: 10px
+    
+}
+#stats_div{
+    background-color: wheat;
+    width: 450px;
+    height: auto;
+    position: relative;
+    left: 650px; 
+    top: 40px;
+    border-radius: 10px
+}
+.title_td{
+    text-align: right;
+    font-family: Arial;
+    font-weight: 200;
+    font-size: 20px;
+}
+.progress_bar{
+    height: 21px;
+    width: 255px;
+    background-color: whitesmoke;
+    border-radius: 5px;
+}
+.stats_bar{
+    height: 21px;
+    background-color: dodgerblue;
+    border-radius: 0px 5px 5px 0px;
+}
+.info_data_td{
+    text-align: left;
+    font-family: Calibri;
+    font-weight: 900;
+    color: white;
+
+}
+.stats_data_td{
+    text-align: left;
+    font-family: Calibri;
+    font-weight: 900;
+    color: darkseagreen;
+    font-size: 25px
+
+}
+.floating-box {
+    display: inline-block;
+}

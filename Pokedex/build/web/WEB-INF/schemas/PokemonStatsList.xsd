@@ -27,7 +27,7 @@ and open the template in the editor.
                 <xsd:element name="defense" type="xsd:positiveInteger"/>
                 <xsd:element name="spAttack" type="xsd:positiveInteger"/>
                 <xsd:element name="spDefense" type="xsd:positiveInteger"/>
-                <xsd:element name="Speed" type="xsd:positiveInteger"/>
+                <xsd:element name="speed" type="xsd:positiveInteger"/>
             
                 <xsd:element name="minAttack" type="xsd:positiveInteger"/>
                 <xsd:element name="minDefense" type="xsd:positiveInteger"/>

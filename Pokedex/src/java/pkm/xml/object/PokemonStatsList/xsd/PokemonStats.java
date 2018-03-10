@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="defense" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *         &lt;element name="spAttack" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *         &lt;element name="spDefense" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
- *         &lt;element name="Speed" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
+ *         &lt;element name="speed" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *         &lt;element name="minAttack" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *         &lt;element name="minDefense" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *         &lt;element name="minSpAttack" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
@@ -84,7 +84,7 @@ public class PokemonStats {
     @XmlElement(required = true)
     @XmlSchemaType(name = "positiveInteger")
     protected BigInteger spDefense;
-    @XmlElement(name = "Speed", required = true)
+    @XmlElement(required = true)
     @XmlSchemaType(name = "positiveInteger")
     protected BigInteger speed;
     @XmlElement(required = true)

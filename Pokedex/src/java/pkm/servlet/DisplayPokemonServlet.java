@@ -89,17 +89,18 @@ public class DisplayPokemonServlet extends HttpServlet {
             String pkmMovesXML = JAXBHelper.marshallToString(pkmMovesList);
             String moveXML = JAXBHelper.marshallToString(moveList);
             
-            
+            System.out.println(pkmStatsXML);
             request.setAttribute("POKEMON_XML", pokemonXML);
             request.setAttribute("POKEMONABILITIES_XML", pokemonAbilitiesXML);
             request.setAttribute("STATS_XML", pkmStatsXML);
             request.setAttribute("POKEMONMOVES_XML", pkmMovesXML);
             request.setAttribute("MOVE_XML", moveXML);
-
+            
+            RequestDispatcher rd = request.getRequestDispatcher("pokemon.jsp");
+            rd.forward(request, response);
         } catch (JAXBException ex) {
             Logger.getLogger(DisplayPokemonServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            response.sendRedirect("pokemon.jsp");
             out.close();                  
         }
     }
