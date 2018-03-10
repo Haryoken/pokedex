@@ -24,6 +24,7 @@
         </c:if>
         <link rel="stylesheet" href="css/headerstyle.css"/>  
         <link rel="stylesheet" href="css/contentstyle.css"/> 
+        <link rel="stylesheet" href="css/movetype.css"/> 
     </head>
 
     <body>
@@ -65,6 +66,10 @@
             </div>
             <div id="content_div" >
                 <c:if test="${not empty pokemonXML}">
+                    <c:import var="pokemonLinkXSLT" url="WEB-INF/stylesheets/pokemonLink.xsl"/>
+                    <x:transform doc="${pokemonXML}" xslt="${pokemonLinkXSLT}"/>                      
+                </c:if>
+                <c:if test="${not empty pokemonXML}">
                     <c:import var="basicInfoXSLT" url="WEB-INF/stylesheets/pokemonBasicInfo.xsl"/>
                     <x:transform doc="${pokemonXML}" xslt="${basicInfoXSLT}"/>                      
                 </c:if>
@@ -75,6 +80,10 @@
                 <c:if test="${not empty pokemonStatsXML}">
                     <c:import var="pokemonStatsXSLT" url="WEB-INF/stylesheets/pokemonStats.xsl"/>
                     <x:transform doc="${pokemonStatsXML}" xslt="${pokemonStatsXSLT}"/>                      
+                </c:if>
+                <c:if test="${not empty moveXML}">
+                    <c:import var="pokemonMovesXSLT" url="WEB-INF/stylesheets/pokemonMoves.xsl"/>
+                    <x:transform doc="${moveXML}" xslt="${pokemonMovesXSLT}"/>                      
                 </c:if>
             </div>
         </div>

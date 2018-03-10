@@ -1,0 +1,199 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 10 Mar, 2018, 2:17:02 PM
+    Author     : DUCVINH
+*/
+.Normal{
+    width: 50px;
+    height: 22px;
+    background-color: darkkhaki;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+
+}
+.Grass{
+    width: 50px;
+    height: 22px;
+    background-color: green;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Fire{
+    width: 50px;
+    height: 22px;
+    background-color: orangered;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Water{
+    width: 50px;
+    height: 22px;
+    background-color: deepskyblue;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Electric{
+    width: 50px;
+    height: 22px;
+    background-color: gold;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Ice{
+    width: 50px;
+    height: 22px;
+    background-color: paleturquoise;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Fighting{
+    width: 50px;
+    height: 22px;
+    background-color: brown;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Poison{
+    width: 50px;
+    height: 22px;
+    background-color: blueviolet;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Ground{
+    width: 50px;
+    height: 22px;
+    background-color: goldenrod;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Flying{
+    width: 50px;
+    height: 22px;
+    background-color: mediumpurple;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Psychic{
+    width: 50px;
+    height: 22px;
+    background-color: deeppink;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Bug{
+    width: 50px;
+    height: 22px;
+    background-color: yellowgreen;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Rock{
+    width: 50px;
+    height: 22px;
+    background-color: darkgoldenrod;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Ghost{
+    width: 50px;
+    height: 22px;
+    background-color: indigo;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Dragon{
+    width: 50px;
+    height: 22px;
+    background-color: mediumblue;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Dark{
+    width: 50px;
+    height: 22px;
+    background-color: midnightblue;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Steel{
+    width: 50px;
+    height: 22px;
+    background-color: gainsboro;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Fairy{
+    width: 50px;
+    height: 22px;
+    background-color: deepskyblue;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Physical{
+    width: 50px;
+    height: 22px;
+    background-color: crimson;
+    color: gold;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Status{
+    width: 50px;
+    height: 22px;
+    background-color: darkgrey;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.Special{
+    width: 50px;
+    height: 22px;
+    background-color: blue;
+    color: gold;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}

@@ -34,7 +34,24 @@ and open the template in the editor.
     width: 300px;
     height: 300px
 }
-
+#next_pokemon{
+    font-size: 25px;  
+    font-family: Agency FB;
+    float: right;
+    width: 35px;
+    height: 30px;
+    position: relative;
+    right: 20px;
+}
+#previous_pokemon{
+    font-size: 25px;
+    font-family: Agency FB;
+    float: left;
+    width: 35px;
+    height: 30px;
+    position: relative;
+    left: 10px;
+}
 #ability_div{
     background-color: orange;
     width: 430px;
@@ -44,7 +61,7 @@ and open the template in the editor.
     left: 650px; 
     top: 30px;
     border-radius: 10px
-    
+
 }
 #stats_div{
     background-color: wheat;
@@ -54,6 +71,35 @@ and open the template in the editor.
     left: 650px; 
     top: 40px;
     border-radius: 10px
+}
+#move_div{
+    background-color: gainsboro;
+    text-align: center;
+    width: 500px;
+    height: auto;
+    border-radius: 10px;
+    position:relative;
+    top: -300px;
+    left:80px
+      
+}
+
+.table_move_th {
+    font-size: 20px
+}
+.table_move_td {
+    text-align: center;
+    width: auto;
+    font-family: calibri
+}
+.table_move_tr{
+    background-color: white;
+    font-size: 22px;
+}
+.table_move{
+    border-collapse: collapse;
+    position:relative;
+    left:20px;
 }
 .title_td{
     text-align: right;
@@ -89,4 +135,7 @@ and open the template in the editor.
 }
 .floating-box {
     display: inline-block;
+}
+a:hover{
+    color: gold;
 }

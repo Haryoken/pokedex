@@ -9,25 +9,23 @@
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-                xmlns:pkm = "https://www.pokedex.com/schemas/PokemonList.xsd"
-                xmlns:abi = "https://www.pokedex.com/schemas/PokemonAbilities.xsd"
-                xmlns:exsl = "http://exslt.org/common">
+                xmlns:pkm = "https://www.pokedex.com/schemas/PokemonList.xsd">
     <xsl:output method="html"/>
 
     <!-- TODO customize transformation rules 
          syntax recommendation http://www.w3.org/TR/xslt 
     -->
     <xsl:template match="pkm:pokemon">
+        
         <div id="pokemon_img_div" class="floating-box">
             <img id="pokemon_img" src="{pkm:pictureURI}"/>
         </div>
-        
         <div id="info_table_div" class="floating-box">
             <table border="0">
                 <tr>
                     <td style="text-align:center" colspan="2">
                         <span style="font-family:Agency FB;font-size:50px;font-weight:600">
-                            <xsl:value-of select="pkm:englishName"/>
+                            <xsl:value-of select="pkm:englishName"/>                           
                         </span>                      
                     </td>                   
                 </tr>
