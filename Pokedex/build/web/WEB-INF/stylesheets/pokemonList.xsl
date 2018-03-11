@@ -17,7 +17,7 @@
     -->
     <xsl:template match="pkm:PokemonList">
         <div>
-            <table border="1">
+            <table border="0">
                 <th></th>
                 <th>Dex Id</th>
                 <th>Name</th>
@@ -25,7 +25,7 @@
                 <xsl:for-each select="pkm:pokemon">
                     <tr>
                         <td>
-                            <img src="pkm:iconURI"/>
+                            <img src="{pkm:iconURI}"/>
                         </td>
                         <td>
                             <xsl:if test="pkm:nationalDexId &lt; 10">
@@ -46,7 +46,15 @@
                             </a>
                         </td>    
                         <td>
-                            
+                            <a class="{pkm:firstType}">
+                            <xsl:value-of select="pkm:firstType"/>
+                        </a>
+                        
+                        <xsl:if test="pkm:secondType != ''">
+                            , <a class="{pkm:secondType}">
+                                <xsl:value-of select="pkm:secondType"/>
+                            </a>
+                        </xsl:if>     
                         </td>                   
                     </tr>
                 </xsl:for-each>             

@@ -1,26 +1,25 @@
 
-package pkm.xml.object.TypeInteraction.xsd;
+package pkm.xml.object.TypeInteractionList.xsd;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for anonymous complex type.
+ * <p>Java class for TypeInteraction complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType>
+ * &lt;complexType name="TypeInteraction">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="baseType" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="affectedType" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="effect" type="{https://www.pokedex.com/schemas/TypeInteraction.xsd}TypeEffect"/>
+ *         &lt;element name="attackType" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="defenseType" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="effect" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="effectMultipler" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -31,70 +30,69 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "baseType",
-    "affectedType",
+@XmlType(name = "TypeInteraction", propOrder = {
+    "attackType",
+    "defenseType",
     "effect",
     "effectMultipler"
 })
-@XmlRootElement(name = "TypeInteraction")
 public class TypeInteraction {
 
     @XmlElement(required = true)
-    protected String baseType;
+    protected String attackType;
     @XmlElement(required = true)
-    protected String affectedType;
+    protected String defenseType;
     @XmlElement(required = true)
-    protected TypeEffect effect;
+    protected String effect;
     @XmlElement(required = true)
     protected String effectMultipler;
 
     /**
-     * Gets the value of the baseType property.
+     * Gets the value of the attackType property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getBaseType() {
-        return baseType;
+    public String getAttackType() {
+        return attackType;
     }
 
     /**
-     * Sets the value of the baseType property.
+     * Sets the value of the attackType property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setBaseType(String value) {
-        this.baseType = value;
+    public void setAttackType(String value) {
+        this.attackType = value;
     }
 
     /**
-     * Gets the value of the affectedType property.
+     * Gets the value of the defenseType property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getAffectedType() {
-        return affectedType;
+    public String getDefenseType() {
+        return defenseType;
     }
 
     /**
-     * Sets the value of the affectedType property.
+     * Sets the value of the defenseType property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setAffectedType(String value) {
-        this.affectedType = value;
+    public void setDefenseType(String value) {
+        this.defenseType = value;
     }
 
     /**
@@ -102,10 +100,10 @@ public class TypeInteraction {
      * 
      * @return
      *     possible object is
-     *     {@link TypeEffect }
+     *     {@link String }
      *     
      */
-    public TypeEffect getEffect() {
+    public String getEffect() {
         return effect;
     }
 
@@ -114,10 +112,10 @@ public class TypeInteraction {
      * 
      * @param value
      *     allowed object is
-     *     {@link TypeEffect }
+     *     {@link String }
      *     
      */
-    public void setEffect(TypeEffect value) {
+    public void setEffect(String value) {
         this.effect = value;
     }
 

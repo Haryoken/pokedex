@@ -12,10 +12,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Pokédex</title>
-        <link rel="stylesheet" href="css/headerstyle.css"/>  
-        <link rel="stylesheet" href="css/contentstyle.css"/> 
+        <link rel="stylesheet" href="css/headerstyle.css"/>   
         <link rel="stylesheet" href="css/movetype.css"/> 
         <link rel="stylesheet" href="css/layout.css"/>
+        <link rel="stylesheet" href="css/listtable.css"/>
     </head>
     <body>
         <div class="header">
@@ -50,6 +50,13 @@
                         <x:transform doc="${pokemonListXML}" xslt="${pokemonListXSLT}"/>                      
                     </c:if>
                 </div>
+                
+            </div>
+            <div class="rightcolumn">
+                <div class="card">
+                    <h2>Featured Pokémon</h2>
+                    <a href="MainControllerServlet?btnAction=RedirectToPokemon&pokemonId=1">Bulbasaur</a>
+                </div>
                 <div class="card">
                     <h2>Features</h2>
                     <p>We provide you features to start learning about pokemon:</p>
@@ -57,13 +64,6 @@
                     <br/><br/>
                     <a>2. Pokémon Types</a>
                 </div>
-            </div>
-            <div class="rightcolumn">
-                <div class="card">
-                    <h2>Featured Pokémon</h2>
-                    <a href="MainControllerServlet?btnAction=RedirectToPokemon&pokemonId=1">Bulbasaur</a>
-                </div>
-
             </div>
         </div>
     </body>

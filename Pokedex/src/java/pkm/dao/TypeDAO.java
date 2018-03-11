@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pkm.util.DatabaseHelper;
@@ -87,7 +89,7 @@ public class TypeDAO {
         }
         return false;
     }
-    public boolean insertPokemon(Type type) {
+    public boolean insertType(Type type) {
 
         String query = "INSERT INTO tblType(typeLabel)"
                 + " VALUES (?)";
@@ -121,5 +123,25 @@ public class TypeDAO {
             }
         }
         return false;
+    }
+    public List<Type> getAllType(){
+        List<Type> typeList  = new ArrayList<>();
+        String query = "SELECT * FROM tblType";
+        Type type = null;
+        try{
+             connection = DatabaseHelper.getConnection();
+            statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                type = new Type();
+                type.setTypeLabel(rs.getString(1));
+                typeList.add(type);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TypeDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TypeDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return typeList;
     }
 }

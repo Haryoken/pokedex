@@ -54,6 +54,7 @@ public class PokemonListServlet extends HttpServlet {
             if (!pokemonCount.isEmpty() && pokemonCount.equals("genI")) {
                 pkmList = pkmDAO.getGenIBasicInfo();
                 String pokemonListXML = JAXBHelper.marshallToString(pkmList);
+                System.out.println(pokemonListXML);
                 session.setAttribute("POKEMONLIST",pokemonListXML);
             }
         } catch (JAXBException ex) {

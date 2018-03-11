@@ -12,7 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.stream.XMLStreamException;
 import pkm.dao.PokemonDAO;
+import pkm.dao.TypeDAO;
 import pkm.xml.object.PokemonList.xsd.Pokemon;
+import pkm.xml.object.TypeList.xsd.Type;
 
 /**
  *
@@ -27,28 +29,42 @@ public class TestDataCrawler {
 //            PokemonDAO pkmDao = new PokemonDAO();
 //            List<Pokemon> pokemonList = pkmDao.getPokemonBeforeGenVII();
 //            if (pokemonList.size() > 0) {
-//                for(Pokemon pokemon: pokemonList){
+//                for (Pokemon pokemon : pokemonList) {
 //                    crawler.crawl_baseHappiness(pokemon);
 //                    crawler.crawl_baseXP_catchRate(pokemon);
-//                    crawler.crawl_growthRate(pokemon);
+//                    //crawler.crawl_growthRate(pokemon);
 //                    crawler.crawl_romajiName_japaneseName_pictureURI(pokemon);
-//                    crawler.crawl_PokemonTypes(pokemon);
 //                    crawler.crawl_PokemonStats(pokemon);
-//                    crawler.crawl_PokemonAbilities(pokemon);                  
+//                    crawler.crawl_PokemonAbilities(pokemon);
 //                    crawler.crawlPokemonMoves(pokemon);
 //                }
 //            }
-        Pokemon pkm = new Pokemon();
-        pkm.setEnglishName("Bulbasaur");
-        pkm.setNationalDexId(BigInteger.valueOf(1));
-        crawler.crawl_PokemonTypes(pkm);
+//            Pokemon pkm = new Pokemon();
+//            
+//            pkm.setEnglishName("Bulbasaur");
+//            pkm.setNationalDexId(BigInteger.valueOf(1));
+//            crawler.crawl_romajiName_japaneseName_pictureURI(pkm);
+//           crawler.crawl_baseHappiness(pkm);
+//            crawler.crawl_baseXP_catchRate(pkm);
+//            //crawler.crawl_growthRate(pokemon);
+//            
+//            crawler.crawl_PokemonStats(pkm);
+//            crawler.crawl_PokemonAbilities(pkm);
+//            crawler.crawlPokemonMoves(pkm);
+              TypeDAO typeDAO = new TypeDAO();
+              List<Type> typeList = typeDAO.getAllType();
+              for(Type type: typeList){
+                  crawler.crawlTypesInteraction(type);
+              }
+              
+              
 
         } catch (IOException ex) {
             Logger.getLogger(TestDataCrawler.class.getName()).log(Level.SEVERE, null, ex);
-            
+
         } catch (XMLStreamException ex) {
             Logger.getLogger(TestDataCrawler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 }

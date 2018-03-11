@@ -45,21 +45,23 @@ public class PokemonDAO {
                 pkm.setRomajiName(rs.getString("romajiName"));
                 pkm.setPictureURI(rs.getString("pictureURI"));
                 pkm.setGrowthRate(rs.getString("growthRate"));
-
+                pkm.setFirstType(rs.getString("firstType"));
+                pkm.setSecondType(rs.getString("secondType"));
+                pkm.setIconURI(rs.getString("iconURI"));
                 int baseExp = rs.getInt("baseExp");
                 if (baseExp > 0) {
                     pkm.setBaseExp(BigInteger.valueOf(Long.valueOf(baseExp)));
                 }
-                
+
                 int baseHappiness = rs.getInt("baseHappiness");
-                if(baseHappiness > 0){
+                if (baseHappiness > 0) {
                     pkm.setBaseHappiness(BigInteger.valueOf(Long.valueOf(baseHappiness)));
                 }
-                
+
                 double catchRate = rs.getDouble("catchRate");
-                if(catchRate > 0){
+                if (catchRate > 0) {
                     pkm.setCatchRate(BigDecimal.valueOf(catchRate));
-                }                               
+                }
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,7 +84,8 @@ public class PokemonDAO {
                 pkm = new Pokemon();
                 pkm.setNationalDexId(BigInteger.valueOf(Long.parseLong(String.valueOf(rs.getInt("nationalDexId")))));
                 pkm.setEnglishName(rs.getString("englishName"));
-                pkm.setTypes(rs.getString("types"));
+                pkm.setFirstType(rs.getString("firstType"));
+                pkm.setSecondType(rs.getString("secondType"));
                 pkm.setIconURI(rs.getString("iconURI"));
                 pokemonList.getPokemon().add(pkm);
             }
@@ -93,6 +96,7 @@ public class PokemonDAO {
         }
         return pokemonList;
     }
+
     public PokemonList getGenIBasicInfo() {
         ResultSet rs = null;
         String query = "SELECT * FROM tblPokemon WHERE nationalDexId < 152";
@@ -106,7 +110,8 @@ public class PokemonDAO {
                 pkm = new Pokemon();
                 pkm.setNationalDexId(BigInteger.valueOf(Long.parseLong(String.valueOf(rs.getInt("nationalDexId")))));
                 pkm.setEnglishName(rs.getString("englishName"));
-                pkm.setTypes(rs.getString("types"));
+                pkm.setFirstType(rs.getString("firstType"));
+                pkm.setSecondType(rs.getString("secondType"));
                 pkm.setIconURI(rs.getString("iconURI"));
                 pokemonList.getPokemon().add(pkm);
             }
@@ -117,6 +122,7 @@ public class PokemonDAO {
         }
         return pokemonList;
     }
+
     public List<Pokemon> getPokemonBeforeGenVII() {
         ResultSet rs = null;
         String query = "SELECT * FROM tblPokemon WHERE nationalDexId < 722";
@@ -208,9 +214,13 @@ public class PokemonDAO {
     }
 
     public boolean insertPokemon(Pokemon pokemon) {
+        String query = "INSERT INTO tblPokemon(nationalDexId,englishName,isLegendary,iconURI,firstType,secondType)"
+                + " VALUES (?,?,?,?,?,?)";
+        if (pokemon.getSecondType() == null) {
+            query = "INSERT INTO tblPokemon(nationalDexId,englishName,isLegendary,iconURI,firstType)"
+                    + " VALUES (?,?,?,?,?)";
+        }
 
-        String query = "INSERT INTO tblPokemon(nationalDexId,englishName,isLegendary,types,iconURI)"
-                + " VALUES (?,?,?,?,?)";
         try {
             connection = DatabaseHelper.getConnection();
             statement = connection.prepareStatement(query);
@@ -218,8 +228,12 @@ public class PokemonDAO {
             statement.setInt(1, Integer.parseInt(pokemon.getNationalDexId().toString()));
             statement.setString(2, pokemon.getEnglishName());
             statement.setBoolean(3, false);
-            statement.setString(4, pokemon.getTypes());
-            statement.setString(5, pokemon.getIconURI());
+            statement.setString(4, pokemon.getIconURI());
+            statement.setString(5, pokemon.getFirstType());
+            if (pokemon.getSecondType() != null) {
+                statement.setString(6, pokemon.getSecondType());
+            }
+
             int row = statement.executeUpdate();
             if (row > 0) {
                 return true;

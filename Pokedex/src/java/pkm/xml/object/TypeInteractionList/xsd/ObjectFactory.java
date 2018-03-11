@@ -1,5 +1,5 @@
 
-package pkm.xml.object.TypeInteraction.xsd;
+package pkm.xml.object.TypeInteractionList.xsd;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRegistry;
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the pkm.xml.object.TypeInteraction.xsd package. 
+ * generated in the pkm.xml.object.TypeInteractionList.xsd package. 
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -23,10 +23,18 @@ public class ObjectFactory {
 
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: pkm.xml.object.TypeInteraction.xsd
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: pkm.xml.object.TypeInteractionList.xsd
      * 
      */
     public ObjectFactory() {
+    }
+
+    /**
+     * Create an instance of {@link TypeInteractionList }
+     * 
+     */
+    public TypeInteractionList createTypeInteractionList() {
+        return new TypeInteractionList();
     }
 
     /**
@@ -35,14 +43,6 @@ public class ObjectFactory {
      */
     public TypeInteraction createTypeInteraction() {
         return new TypeInteraction();
-    }
-
-    /**
-     * Create an instance of {@link TypeEffect }
-     * 
-     */
-    public TypeEffect createTypeEffect() {
-        return new TypeEffect();
     }
 
 }

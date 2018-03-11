@@ -52,7 +52,15 @@
                         Type
                     </td>
                     <td class="info_data_td">
-                        <xsl:value-of select="pkm:types"/>                    
+                        <a class="{pkm:firstType}">
+                            <xsl:value-of select="pkm:firstType"/>
+                        </a>
+                        
+                        <xsl:if test="pkm:secondType != ''">
+                            , <a class="{pkm:secondType}">
+                                <xsl:value-of select="pkm:secondType"/>
+                            </a>
+                        </xsl:if>                    
                     </td>
                 </tr>
                 <tr>

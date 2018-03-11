@@ -12,25 +12,27 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pkm.util.DatabaseHelper;
-import pkm.xml.object.PokemonTypes.xsd.PokemonTypes;
+import pkm.xml.object.TypeInteractionList.xsd.TypeInteraction;
+import pkm.xml.object.TypeList.xsd.Type;
 
 /**
  *
  * @author DUCVINH
  */
-public class PokemonTypesDAO {
+public class TypeInteractionDAO {
 
     Connection connection = null;
     PreparedStatement statement = null;
-    public boolean isPokeMonTypesExisted(PokemonTypes pokemonTypes){
-        String query = "SELECT * FROM tblPokemonTypes WHERE pokemonId=? AND pokemonType=?";
-                
+
+    public boolean isTypeInteractionExisted(TypeInteraction typeInteraction) {
+        String query = "SELECT * FROM tblTypeInteraction WHERE attackType=? AND defenseType=?";
         try {
             connection = DatabaseHelper.getConnection();
             statement = connection.prepareStatement(query);
-            
-            statement.setInt(1, Integer.parseInt(pokemonTypes.getPokemonId().toString()));
-            statement.setString(2, pokemonTypes.getPokemonTypeLabel());
+
+            statement.setString(1, typeInteraction.getAttackType());
+            statement.setString(2, typeInteraction.getDefenseType());
+
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 return true;
@@ -57,15 +59,19 @@ public class PokemonTypesDAO {
         }
         return false;
     }
-    public boolean insertPokemonTypes(PokemonTypes pokemonTypes) {
-        String query = "INSERT INTO tblPokemonTypes(pokemonId, pokemonType)"
-                + " VALUES (?,?)";
+
+    public boolean insertType(TypeInteraction typeInteraction) {
+
+        String query = "INSERT INTO tblTypeInteraction(attackType,defenseType,effect,effectMultipler)"
+                + " VALUES (?,?,?,?)";
         try {
             connection = DatabaseHelper.getConnection();
             statement = connection.prepareStatement(query);
 
-            statement.setInt(1, Integer.parseInt(pokemonTypes.getPokemonId().toString()));
-            statement.setString(2, pokemonTypes.getPokemonTypeLabel());
+            statement.setString(1, typeInteraction.getAttackType());
+            statement.setString(2, typeInteraction.getDefenseType());
+            statement.setString(3, typeInteraction.getEffect());
+            statement.setString(4, typeInteraction.getEffectMultipler());
             int row = statement.executeUpdate();
             if (row > 0) {
                 return true;

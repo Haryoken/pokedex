@@ -89,7 +89,6 @@ public class DisplayPokemonServlet extends HttpServlet {
             String pkmMovesXML = JAXBHelper.marshallToString(pkmMovesList);
             String moveXML = JAXBHelper.marshallToString(moveList);
             
-            System.out.println(moveXML);
             request.setAttribute("POKEMON_XML", pokemonXML);
             request.setAttribute("POKEMONABILITIES_XML", pokemonAbilitiesXML);
             request.setAttribute("STATS_XML", pkmStatsXML);

@@ -24,7 +24,8 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="englishName" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="japaneseName" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="romajiName" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="types" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="firstType" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="secondType" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="height" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="weight" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="catchRate" type="{http://www.w3.org/2001/XMLSchema}decimal"/>
@@ -48,7 +49,8 @@ import javax.xml.bind.annotation.XmlType;
     "englishName",
     "japaneseName",
     "romajiName",
-    "types",
+    "firstType",
+    "secondType",
     "height",
     "weight",
     "catchRate",
@@ -71,7 +73,9 @@ public class Pokemon {
     @XmlElement(required = true, nillable = true)
     protected String romajiName;
     @XmlElement(required = true, nillable = true)
-    protected String types;
+    protected String firstType;
+    @XmlElement(required = true, nillable = true)
+    protected String secondType;
     @XmlElement(required = true, nillable = true)
     protected String height;
     @XmlElement(required = true, nillable = true)
@@ -192,27 +196,51 @@ public class Pokemon {
     }
 
     /**
-     * Gets the value of the types property.
+     * Gets the value of the firstType property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getTypes() {
-        return types;
+    public String getFirstType() {
+        return firstType;
     }
 
     /**
-     * Sets the value of the types property.
+     * Sets the value of the firstType property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setTypes(String value) {
-        this.types = value;
+    public void setFirstType(String value) {
+        this.firstType = value;
+    }
+
+    /**
+     * Gets the value of the secondType property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSecondType() {
+        return secondType;
+    }
+
+    /**
+     * Sets the value of the secondType property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSecondType(String value) {
+        this.secondType = value;
     }
 
     /**

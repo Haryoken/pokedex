@@ -5,7 +5,6 @@
  */
 package pkm.util;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,10 +19,7 @@ import java.util.List;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -37,21 +33,18 @@ import pkm.dao.PokemonAbilitiesDAO;
 import pkm.dao.PokemonDAO;
 import pkm.dao.PokemonMovesDAO;
 import pkm.dao.PokemonStatsDAO;
-import pkm.dao.PokemonTypesDAO;
 import pkm.dao.TypeDAO;
+import pkm.dao.TypeInteractionDAO;
 import pkm.xml.object.Ability.xsd.Ability;
 import pkm.xml.object.MoveList.xsd.Move;
 import pkm.xml.object.PokemonAbilitiesList.xsd.PokemonAbilities;
-
-
 
 import pkm.xml.object.PokemonList.xsd.Pokemon;
 import pkm.xml.object.PokemonList.xsd.PokemonList;
 import pkm.xml.object.PokemonMovesList.xsd.PokemonMoves;
 import pkm.xml.object.PokemonStatsList.xsd.PokemonStats;
-
-
-import pkm.xml.object.PokemonTypes.xsd.PokemonTypes;
+import pkm.xml.object.TypeInteractionList.xsd.TypeInteraction;
+import pkm.xml.object.TypeInteractionList.xsd.TypeInteractionList;
 
 import pkm.xml.object.TypeList.xsd.Type;
 import pkm.xml.object.TypeList.xsd.TypeList;
@@ -68,9 +61,6 @@ public class DataCrawler {
     Type pokemonType;
     TypeList typeList;
 
-    PokemonTypes pokemonTypes;
-    List<PokemonTypes> pokemonTypesList;
-
     Ability ability;
     List<Ability> abilityList;
 
@@ -82,8 +72,11 @@ public class DataCrawler {
     Move move;
     List<Move> moveList;
 
-    PokemonMoves pokemonMoves = null;
-    List<PokemonMoves> pokemonMoveList = null;
+    PokemonMoves pokemonMoves;
+    List<PokemonMoves> pokemonMoveList;
+
+    TypeInteraction typeInteraction;
+    TypeInteractionList typeInteractionList;
 
     public DataCrawler() {
         pokemon = new Pokemon();
@@ -91,9 +84,6 @@ public class DataCrawler {
 
         pokemonType = new Type();
         typeList = new TypeList();
-
-        pokemonTypesList = new ArrayList<PokemonTypes>();
-        pokemonTypes = new PokemonTypes();
 
         ability = new Ability();
         abilityList = new ArrayList<>();
@@ -109,6 +99,24 @@ public class DataCrawler {
         pokemonMoves = new PokemonMoves();
         pokemonMoveList = new ArrayList<>();
 
+        typeInteraction = new TypeInteraction();
+        typeInteractionList = new TypeInteractionList();
+    }
+
+    public TypeInteraction getTypeInteraction() {
+        return typeInteraction;
+    }
+
+    public void setTypeInteraction(TypeInteraction typeInteraction) {
+        this.typeInteraction = typeInteraction;
+    }
+
+    public TypeInteractionList getTypeInteractionList() {
+        return typeInteractionList;
+    }
+
+    public void setTypeInteractionList(TypeInteractionList typeInteractionList) {
+        this.typeInteractionList = typeInteractionList;
     }
 
     public PokemonMoves getPokemonMoves() {
@@ -183,22 +191,6 @@ public class DataCrawler {
         this.abilityList = abilityList;
     }
 
-    public PokemonTypes getPokemonTypes() {
-        return pokemonTypes;
-    }
-
-    public void setPokemonTypes(PokemonTypes pokemonTypes) {
-        this.pokemonTypes = pokemonTypes;
-    }
-
-    public List<PokemonTypes> getPokemonTypesList() {
-        return pokemonTypesList;
-    }
-
-    public void setPokemonTypesList(List<PokemonTypes> pokemonTypesList) {
-        this.pokemonTypesList = pokemonTypesList;
-    }
-
     public TypeList getTypeList() {
         return typeList;
     }
@@ -231,50 +223,50 @@ public class DataCrawler {
         this.pokemon = pokemon;
     }
 
-    private static Pokemon cleanPokemonNameAzurill(Pokemon pokemon) {
-        if (pokemon.getEnglishName().equals("Mr. Mime")) {
-            pokemon.setEnglishName("Mr-Mime");
+    private static String cleanPokemonNameAzurill(String pokemon) {
+        if (pokemon.equals("Mr. Mime")) {
+            pokemon = "Mr-Mime";
         }
-        if (pokemon.getEnglishName().equals("Mime Jr.")) {
-            pokemon.setEnglishName("Mime-Jr");
+        if (pokemon.equals("Mime Jr.")) {
+            pokemon = "Mime-Jr";
         }
-        if (pokemon.getEnglishName().equals("Farfetch'd")) {
-            pokemon.setEnglishName("Farfetchd");
+        if (pokemon.equals("Farfetch'd")) {
+            pokemon = "Farfetchd";
         }
-        if (pokemon.getEnglishName().equals("Nidoran♀") || pokemon.getEnglishName().equals("Nidoran♂")) {
-            pokemon.setEnglishName("Nidoran");
+        if (pokemon.equals("Nidoran♀") || pokemon.equals("Nidoran♂")) {
+            pokemon = "Nidoran";
         }
-        if (pokemon.getEnglishName().equals("Flabébé")) {
-            pokemon.setEnglishName("Flabebe");
-        }
-        return pokemon;
-    }
-
-    private static Pokemon cleanPokemonNameIGN(Pokemon pokemon) {
-        if (pokemon.getEnglishName().equals("Mr. Mime")) {
-            pokemon.setEnglishName("mr-mime");
-        }
-        if (pokemon.getEnglishName().equals("Mime Jr.")) {
-            pokemon.setEnglishName("Mime-Jr");
-        }
-        if (pokemon.getEnglishName().equals("Farfetch'd")) {
-            pokemon.setEnglishName("farfetchd");
-        }
-        if (pokemon.getEnglishName().equals("Nidoran♀") || pokemon.getEnglishName().equals("Nidoran♂")) {
-            pokemon.setEnglishName("nidoran-f");
-        }
-        if (pokemon.getEnglishName().equals("Flabébé")) {
-            pokemon.setEnglishName("flabb");
+        if (pokemon.equals("Flabébé")) {
+            pokemon = "Flabebe";
         }
         return pokemon;
     }
 
-    private static Pokemon cleanPokemonNameBulbapedia(Pokemon pokemon) {
-        if (pokemon.getEnglishName().equals("Mr. Mime")) {
-            pokemon.setEnglishName("Mr._Mime");
+    private static String cleanPokemonNameIGN(String pokemon) {
+        if (pokemon.equals("Mr. Mime")) {
+            pokemon = "mr-mime";
         }
-        if (pokemon.getEnglishName().equals("Mime Jr.")) {
-            pokemon.setEnglishName("Mime_Jr.");
+        if (pokemon.equals("Mime Jr.")) {
+            pokemon = "Mime-Jr";
+        }
+        if (pokemon.equals("Farfetch'd")) {
+            pokemon = "farfetchd";
+        }
+        if (pokemon.equals("Nidoran♀") || pokemon.equals("Nidoran♂")) {
+            pokemon = "nidoran-f";
+        }
+        if (pokemon.equals("Flabébé")) {
+            pokemon = "flabb";
+        }
+        return pokemon;
+    }
+
+    private static String cleanPokemonNameBulbapedia(String pokemon) {
+        if (pokemon.equals("Mr. Mime")) {
+            pokemon = "Mr._Mime";
+        }
+        if (pokemon.equals("Mime Jr.")) {
+            pokemon = "Mime_Jr.";
         }
 
         return pokemon;
@@ -303,6 +295,8 @@ public class DataCrawler {
             reader = factory.createXMLEventReader(new InputStreamReader(HTMLValidator.validateInputStreamWikia(is), "UTF-8"));
         } else if (urlString.contains("ign")) {
             reader = factory.createXMLEventReader(new InputStreamReader(HTMLValidator.validateInputStreamIGN(is), "UTF-8"));
+        } else if (urlString.contains("pokemondb")) {
+            reader = factory.createXMLEventReader(new InputStreamReader(HTMLValidator.validateInputStreamPKMDB(is), "UTF-8"));
         }
         return reader;
     }
@@ -318,7 +312,7 @@ public class DataCrawler {
         StartElement startElement;
         Attribute attribute;
         String types = "";
-        
+
         boolean isNationalDexTag = false;
         boolean isPokemonNameTag = false;
         boolean isInfoArea = false;
@@ -327,28 +321,31 @@ public class DataCrawler {
         PokemonDAO pkmDao = new PokemonDAO();
         while (reader.hasNext()) {
             try {
-                 if (isAllInfoCollected) {
-                        Pokemon temp;
-                        String type = this.getPokemon().getTypes();
-                        type = type.substring(0,type.length() -1);
-                        this.getPokemon().setTypes(type);
-                        
-                        this.getPokemonList().getPokemon().add(this.getPokemon());
-                        this.pokemon = new Pokemon();
-                        isAllInfoCollected = false;
+                if (isAllInfoCollected) {
+                    String[] typeArray = types.split(",");
+                    if (typeArray.length == 2) {
+                        this.getPokemon().setFirstType(typeArray[0]);
+                        this.getPokemon().setSecondType(typeArray[1]);
+                    } else {
+                        this.getPokemon().setFirstType(typeArray[0]);
                     }
+                    types = "";
+                    this.getPokemonList().getPokemon().add(this.getPokemon());
+                    this.pokemon = new Pokemon();
+                    isAllInfoCollected = false;
+                }
                 if (this.getPokemonList().getPokemon().size() > 0) {
                     //Save Data to DB
                     for (Pokemon pokemon : this.getPokemonList().getPokemon()) {
                         if (!pkmDao.isExistedInDB(pokemon)) {
                             pkmDao.insertPokemon(pokemon);
-                            System.out.println("Pokemon Inserted: " +pokemon.getNationalDexId()+"_"+ pokemon.getEnglishName()+"_"+pokemon.getTypes());
+                            System.out.println("Pokemon Inserted: " + pokemon.getNationalDexId() + "_" + pokemon.getEnglishName() + "_" + pokemon.getFirstType() + "," + pokemon.getSecondType());
                         }
                     }
                     //Purge the list
                     this.pokemonList = new PokemonList();
                 }
-                
+
                 event = reader.nextEvent();
                 if (event.isStartElement()) {
                     startElement = event.asStartElement();
@@ -384,14 +381,14 @@ public class DataCrawler {
                         }
                     }
                     //Find the pokemon Name:
-                    if(tagName.equals("img")  && isInfoArea){
+                    if (tagName.equals("img") && isInfoArea) {
                         this.getPokemon().setIconURI(startElement.asStartElement().getAttributeByName(new QName("src")).getValue());
                     }
-                    if(tagName.equals("span") && isInfoArea){
+                    if (tagName.equals("span") && isInfoArea) {
                         event = reader.nextEvent();
-                        if(event.isCharacters()){
-                           types += event.asCharacters().getData() +",";
-                           this.getPokemon().setTypes(types);                           
+                        if (event.isCharacters()) {
+                            types += event.asCharacters().getData() + ",";
+//                           this.getPokemon().setTypes(types);                           
                         }
                     }
                     if (tagName.equals("a") && isInfoArea) {
@@ -408,7 +405,6 @@ public class DataCrawler {
                         }
                     }
                     //Add pokemon to List if collect enough info:
-                   
 
                     //Break when collect all the needed info:
                     if (tagName.equals("span")) {
@@ -419,9 +415,8 @@ public class DataCrawler {
                         }
                     }
                 }
-                if(event.isEndElement()){
-                    if(isInfoArea && event.asEndElement().getName().toString().equals("tr")){
-                        types = "";
+                if (event.isEndElement()) {
+                    if (isInfoArea && event.asEndElement().getName().toString().equals("tr")) {
                         isInfoArea = false;
                         isAllInfoCollected = true;
                     }
@@ -436,8 +431,8 @@ public class DataCrawler {
 
     //bulbapedia.bulbagarden.net
     public void crawl_romajiName_japaneseName_pictureURI(Pokemon pokemon) throws IOException, XMLStreamException {
-        pokemon = cleanPokemonNameBulbapedia(pokemon);
-        String urlString = "https://bulbapedia.bulbagarden.net/wiki/" + pokemon.getEnglishName() + "_(Pok%C3%A9mon)";
+        String pokemonName = cleanPokemonNameBulbapedia(pokemon.getEnglishName());
+        String urlString = "https://bulbapedia.bulbagarden.net/wiki/" + pokemonName + "_(Pok%C3%A9mon)";
         XMLEventReader reader = readFromWebsite(urlString);
         XMLEvent event;
 
@@ -520,7 +515,7 @@ public class DataCrawler {
                         }
                     }
                     //Find pokemon PictureURI
-                    if (tagName.equals("a")) {
+                    if (isJapaneseNameCollected && tagName.equals("a")) {
                         attribute = startElement.getAttributeByName(new QName("href"));
                         if (attribute != null && attribute.getValue().contains(pokemon.getEnglishName())) {
                             isPictureURIContainer = true;
@@ -549,17 +544,17 @@ public class DataCrawler {
 
     //azurilland.com
     public void crawl_baseXP_catchRate(Pokemon pokemon) throws IOException, XMLStreamException {
-        pokemon = cleanPokemonNameAzurill(pokemon);
+        String pokemonName = cleanPokemonNameAzurill(pokemon.getEnglishName());
         String urlString = "https://www.azurilland.com/pokedex/"
                 + pokemon.getNationalDexId()
                 + "-"
-                + pokemon.getEnglishName().toLowerCase();
+                + pokemonName.toLowerCase();
         if (Integer.parseInt(pokemon.getNationalDexId().toString()) >= 651) {
             int number = 99351 + Integer.parseInt(pokemon.getNationalDexId().toString());
             urlString = "https://www.azurilland.com/pokedex/"
                     + number
                     + "-"
-                    + pokemon.getEnglishName().toLowerCase();
+                    + pokemonName.toLowerCase();
         }
         try {
             XMLEventReader reader = readFromWebsite(urlString);
@@ -647,17 +642,17 @@ public class DataCrawler {
 
     //azurilland.com
     public void crawl_baseHappiness(Pokemon pokemon) throws IOException, XMLStreamException {
-        pokemon = cleanPokemonNameAzurill(pokemon);
+        String pokemonName = cleanPokemonNameAzurill(pokemon.getEnglishName());
         String urlString = "https://www.azurilland.com/pokedex/"
                 + pokemon.getNationalDexId()
                 + "-"
-                + pokemon.getEnglishName().toLowerCase();
+                + pokemonName.toLowerCase();
         if (Integer.parseInt(pokemon.getNationalDexId().toString()) >= 651) {
             int number = 99351 + Integer.parseInt(pokemon.getNationalDexId().toString());
             urlString = "https://www.azurilland.com/pokedex/"
                     + number
                     + "-"
-                    + pokemon.getEnglishName().toLowerCase();
+                    + pokemonName.toLowerCase();
         }
 
         try {
@@ -730,17 +725,17 @@ public class DataCrawler {
 
     //azurilland.com
     public void crawl_growthRate(Pokemon pokemon) throws IOException, XMLStreamException {
-        pokemon = cleanPokemonNameAzurill(pokemon);
+        String pokemonName = cleanPokemonNameAzurill(pokemon.getEnglishName());
         String urlString = "https://www.azurilland.com/pokedex/"
                 + pokemon.getNationalDexId()
                 + "-"
-                + pokemon.getEnglishName().toLowerCase();
+                + pokemonName.toLowerCase();
         if (Integer.parseInt(pokemon.getNationalDexId().toString()) >= 651) {
             int number = 99351 + Integer.parseInt(pokemon.getNationalDexId().toString());
             urlString = "https://www.azurilland.com/pokedex/"
                     + number
                     + "-"
-                    + pokemon.getEnglishName().toLowerCase();
+                    + pokemonName.toLowerCase();
         }
 
         try {
@@ -842,10 +837,9 @@ public class DataCrawler {
                     break;
                 }
                 if (isAllTypesCollected) {
-                    System.out.println("");
                     for (Type type : this.getTypeList().getPokemonType()) {
                         if (!typeDao.isTypeExisted(type)) {
-                            typeDao.insertPokemon(type);
+                            typeDao.insertType(type);
                             System.out.println("Insert Type: " + type.getTypeLabel());
                         }
                     }
@@ -889,102 +883,6 @@ public class DataCrawler {
             } catch (XMLStreamException ex) {
                 Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-    }
-
-    //ign.com
-    public void crawl_PokemonTypes(Pokemon pokemon) throws IOException, XMLStreamException {
-        pokemon = cleanPokemonNameIGN(pokemon);
-        String urlString = "http://www.ign.com/pokedex/pokemon/" + pokemon.getEnglishName().toLowerCase();
-        try {
-            XMLEventReader reader = readFromWebsite(urlString);
-            XMLEvent event;
-
-            //StaX Iterator API:
-            Attribute attribute;
-            StartElement startElement;
-            int errorCount = 0;
-
-            //Tag Flag:
-            boolean isTypesContainer = false;
-
-            //Info needed:
-            boolean isPokemonTypesCollected = false;
-            //DAO
-            PokemonDAO pkmDAO = null;
-            TypeDAO typeDAO = null;
-            PokemonTypesDAO pkmTypesDAO = null;
-            while (reader.hasNext()) {
-                try {
-                    if (errorCount == 50) {
-                        errorCount = 0;
-                        break;
-                    }
-                    if (isPokemonTypesCollected) {
-                        pkmDAO = new PokemonDAO();
-                        typeDAO = new TypeDAO();
-                        pkmTypesDAO = new PokemonTypesDAO();
-                        for (PokemonTypes pokemonTypes : this.getPokemonTypesList()) {
-                            if (pkmDAO.isExistedInDB(Integer.parseInt(pokemonTypes.getPokemonId().toString()))) {
-                                if (typeDAO.isTypeExisted(pokemonTypes.getPokemonTypeLabel())) {
-                                    if (!pkmTypesDAO.isPokeMonTypesExisted(pokemonTypes)) {
-                                        pkmTypesDAO.insertPokemonTypes(pokemonTypes);
-                                        System.out.println("Insert: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName() + "-Type: " + pokemonTypes.getPokemonTypeLabel());
-                                    }
-                                }
-                            }
-                        }
-                        this.pokemonTypesList = new ArrayList();
-                        break;
-                    }
-                    event = reader.nextEvent();
-                    if (event.isStartElement()) {
-                        startElement = event.asStartElement();
-                        String tagName = startElement.getName().toString();
-                        System.out.println(tagName);
-                        //Find Pokemon romajiName
-                        if (tagName.equals("{http://www.w3.org/1999/xhtml}dl")) {
-                            attribute = startElement.getAttributeByName(new QName("class"));
-                            if(attribute!=null){
-                                System.out.println("div: "+attribute.getValue());
-                            }
-                            if (attribute != null && attribute.getValue().equals("dl-horizontal pokedex-general-info-list")) {
-                                isTypesContainer = true;
-                            }
-                        }
-                        if (tagName.equals("{http://www.w3.org/1999/xhtml}span") && isTypesContainer) {
-                            event = reader.nextEvent();
-                            if (event.isCharacters()) {
-                                this.getPokemonTypes().setPokemonId(pokemon.getNationalDexId());
-                                this.getPokemonTypes().setPokemonTypeLabel(event.asCharacters().getData());
-                                this.getPokemonTypesList().add(this.getPokemonTypes());
-                                this.pokemonTypes = new PokemonTypes();
-                            }
-                        }
-
-                    }
-                    if (event.isCharacters()) {
-                        if (event.asCharacters().getData().equals("Weak To")) {
-                            if (isTypesContainer) {
-                                isTypesContainer = false;
-                                isPokemonTypesCollected = true;
-                            }
-                        }
-                    }
-
-                } catch (XMLStreamException e) {
-                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-                    errorCount += 1;
-                } catch (NullPointerException e) {
-                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-                    break;
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
@@ -1083,17 +981,17 @@ public class DataCrawler {
 
     //azurilland.com
     public void crawl_PokemonAbilities(Pokemon pokemon) throws IOException, XMLStreamException {
-        cleanPokemonNameAzurill(pokemon);
+        String pokemonName = cleanPokemonNameAzurill(pokemon.getEnglishName());
         String urlString = "https://www.azurilland.com/pokedex/"
                 + pokemon.getNationalDexId()
                 + "-"
-                + pokemon.getEnglishName().toLowerCase();
+                + pokemonName.toLowerCase();
         if (Integer.parseInt(pokemon.getNationalDexId().toString()) >= 651) {
             int number = 99351 + Integer.parseInt(pokemon.getNationalDexId().toString());
             urlString = "https://www.azurilland.com/pokedex/"
                     + number
                     + "-"
-                    + pokemon.getEnglishName().toLowerCase();
+                    + pokemonName.toLowerCase();
         }
         try {
             XMLEventReader reader = readFromWebsite(urlString);
@@ -1190,8 +1088,8 @@ public class DataCrawler {
     //CRAWL STATS
     //ign.com
     public void crawl_PokemonStats(Pokemon pokemon) throws IOException, XMLStreamException {
-        pokemon = cleanPokemonNameIGN(pokemon);
-        String urlString = "http://www.ign.com/pokedex/pokemon/" + pokemon.getEnglishName().toLowerCase();
+        String pokemonName = cleanPokemonNameIGN(pokemon.getEnglishName());
+        String urlString = "http://www.ign.com/pokedex/pokemon/" + pokemonName.toLowerCase();
         try {
             XMLEventReader reader = readFromWebsite(urlString);
             XMLEvent event;
@@ -1486,7 +1384,8 @@ public class DataCrawler {
 
     //bulbapedia.bulbagarden.net
     public void crawlPokemonMoves(Pokemon pokemon) throws IOException, XMLStreamException {
-        String urlString = "https://bulbapedia.bulbagarden.net/wiki/" + pokemon.getEnglishName() + "_(Pok%C3%A9mon)/Generation_VI_learnset#By_leveling_up";
+        String pokemonName = cleanPokemonNameBulbapedia(pokemon.getEnglishName());
+        String urlString = "https://bulbapedia.bulbagarden.net/wiki/" + pokemonName + "_(Pok%C3%A9mon)/Generation_VI_learnset#By_leveling_up";
         try {
             XMLEventReader reader = readFromWebsite(urlString);
             XMLEvent event;
@@ -1608,6 +1507,401 @@ public class DataCrawler {
                             if (event.asEndElement().getName().toString().equals("table")) {
                                 isAllMoveCollected = true;
                             }
+                        }
+                    }
+                } catch (XMLStreamException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    errorCount += 1;
+                } catch (NullPointerException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    break;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+
+                }
+            }
+        } catch (IOException e) {
+            Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    //bulbapedia.bulbagarden.net
+    public void crawlTypesInteraction(Type type) throws IOException, XMLStreamException {
+        String urlString = "https://pokemondb.net/type";
+        try {
+            XMLEventReader reader = readFromWebsite(urlString);
+            XMLEvent event;
+
+            //StaX Iterator API:
+            Attribute attribute;
+            StartElement startElement;
+            int errorCount = 0;
+
+            //Tag Flag:
+            boolean isTypeTable = false;
+            boolean isTypeTr = false;
+            //Info needed:
+            boolean isAllTypeCollected = false;
+            //DAO
+            TypeDAO typeDAO = null;
+            TypeInteractionDAO typeIntDAO = null;
+            while (reader.hasNext()) {
+                try {
+                    if (errorCount == 50) {
+                        errorCount = 0;
+                        break;
+                    }
+                    if(isAllTypeCollected){
+                        typeDAO = new TypeDAO();
+                        typeIntDAO = new TypeInteractionDAO();
+                        for(TypeInteraction typeInteraction: this.getTypeInteractionList().getTypeInteraction()){
+                            if(typeDAO.isTypeExisted(typeInteraction.getAttackType()) && typeDAO.isTypeExisted(typeInteraction.getDefenseType())){
+                                if(!typeIntDAO.isTypeInteractionExisted(typeInteraction)){
+                                    typeIntDAO.insertType(typeInteraction);
+                                    System.out.println("Insert Type Interaction: "+typeInteraction.getAttackType() + " → " + typeInteraction.getDefenseType()
+                                            + " - Effect: "+typeInteraction.getEffect() +" ("+ typeInteraction.getEffectMultipler()+")");
+                                }
+                            }
+                        }
+                        typeInteractionList = new TypeInteractionList();
+                        break;
+                    }
+                    event = reader.nextEvent();
+                    if (event.isStartElement()) {
+                        startElement = event.asStartElement();
+                        String tagName = startElement.getName().toString();
+                        if (tagName.equals("table")) {
+                            attribute = startElement.getAttributeByName(new QName("class"));
+                            if (attribute != null && attribute.getValue().equals("type-table")) {
+                                isTypeTable = true;
+                            }
+                        }
+                        if (isTypeTable && tagName.equals("a")) {
+                            attribute = startElement.getAttributeByName(new QName("class"));
+                            if (attribute != null && attribute.getValue().contains("type-icon-th type-" + type.getTypeLabel().toLowerCase())) {
+                                isTypeTr = true;
+                            }
+                        }
+                        if (isTypeTr && tagName.equals("td")) {
+                            attribute = startElement.getAttributeByName(new QName("title"));
+                            if (attribute != null) {
+                                String attrString = attribute.getValue();
+                                if (attrString.contains("→ Normal")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Normal");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Fire")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Fire");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Water")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Water");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Electric")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Electric");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Grass")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Grass");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Ice")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Ice");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Fighting")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Fighting");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Poison")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Poison");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Ground")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Ground");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Flying")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Flying");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Psychic")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Psychic");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Bug")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Bug");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Rock")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Rock");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Ghost")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Ghost");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Dragon")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Dragon");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Dark")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Dark");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Steel")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Steel");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                if (attrString.contains("→ Fairy")) {
+                                    this.getTypeInteraction().setAttackType(type.getTypeLabel());
+                                    this.getTypeInteraction().setDefenseType("Fairy");
+                                    if (attrString.contains("normal effectiveness")) {
+                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffectMultipler("1");
+                                    } else if (attrString.contains("not very effective")) {
+                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffectMultipler("0.5");
+                                    } else if (attrString.contains("super-effective")) {
+                                        this.getTypeInteraction().setEffect("super-effective");
+                                        this.getTypeInteraction().setEffectMultipler("2");
+                                    } else if (attrString.contains("no effect")) {
+                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffectMultipler("0");
+                                    }
+                                }
+                                this.getTypeInteractionList().getTypeInteraction().add(this.getTypeInteraction());
+                                this.typeInteraction = new TypeInteraction();
+                            }
+                        }                       
+                    }
+                    if(isTypeTr && event.isEndElement()){
+                        if(event.asEndElement().getName().toString().equals("tr")){
+                            isTypeTr = false;
+                            isTypeTable = false;
+                            isAllTypeCollected =true;
                         }
                     }
                 } catch (XMLStreamException e) {
