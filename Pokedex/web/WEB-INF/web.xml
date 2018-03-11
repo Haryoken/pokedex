@@ -12,6 +12,14 @@
         <servlet-name>DisplayPokemonServlet</servlet-name>
         <servlet-class>pkm.servlet.DisplayPokemonServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PokemonListServlet</servlet-name>
+        <servlet-class>pkm.servlet.PokemonListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchServlet</servlet-name>
+        <servlet-class>pkm.servlet.SearchServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainControllerServlet</servlet-name>
         <url-pattern>/MainControllerServlet</url-pattern>
@@ -23,6 +31,14 @@
     <servlet-mapping>
         <servlet-name>DisplayPokemonServlet</servlet-name>
         <url-pattern>/DisplayPokemonServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PokemonListServlet</servlet-name>
+        <url-pattern>/PokemonListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchServlet</servlet-name>
+        <url-pattern>/SearchServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -96,7 +96,7 @@ public class DisplayPokemonServlet extends HttpServlet {
             request.setAttribute("POKEMONMOVES_XML", pkmMovesXML);
             request.setAttribute("MOVE_XML", moveXML);
             
-            RequestDispatcher rd = request.getRequestDispatcher("pokemon.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("pokemonDetails.jsp");
             rd.forward(request, response);
         } catch (JAXBException ex) {
             Logger.getLogger(DisplayPokemonServlet.class.getName()).log(Level.SEVERE, null, ex);

@@ -7,11 +7,19 @@ package pkm.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
+import javax.xml.bind.JAXBException;
+import pkm.dao.PokemonDAO;
+import pkm.util.JAXBHelper;
+import pkm.xml.object.PokemonList.xsd.PokemonList;
 
 /**
  *
@@ -19,8 +27,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class MainControllerServlet extends HttpServlet {
 
+    private final String homePage = "index.jsp";
     private final String crawlingServlet = "CrawlingServlet";
     private final String displayPokemonServlet = "DisplayPokemonServlet";
+    private final String pokemonListServlet = "PokemonListServlet";
+     private final String searchServlet = "SearchServlet";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,13 +48,19 @@ public class MainControllerServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         String button = request.getParameter("btnAction");
         String url = "";
-        String pokemonId= "";
+        String pokemonId = "";
         try {
-            
+
             if (button == null) {
-                url = "index.jsp";
-            }else if(button.equals("RedirectToPokemon")){              
+                url = homePage;
+            } else if (button.equals("RedirectToPokemon")) {
                 url = displayPokemonServlet;
+            } else if (button.equals("Home")) {
+                url = homePage;
+            } else if (button.equals("Pokedex")) {
+                url = pokemonListServlet;
+            }else if (button.equals("Search")) {
+                url = searchServlet;
             }
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);

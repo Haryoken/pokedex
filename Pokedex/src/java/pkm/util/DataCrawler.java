@@ -941,10 +941,14 @@ public class DataCrawler {
                     if (event.isStartElement()) {
                         startElement = event.asStartElement();
                         String tagName = startElement.getName().toString();
+                        System.out.println(tagName);
                         //Find Pokemon romajiName
-                        if (tagName.equals("{http://www.w3.org/1999/xhtml}div")) {
+                        if (tagName.equals("{http://www.w3.org/1999/xhtml}dl")) {
                             attribute = startElement.getAttributeByName(new QName("class"));
-                            if (attribute != null && attribute.getValue().equals("span5")) {
+                            if(attribute!=null){
+                                System.out.println("div: "+attribute.getValue());
+                            }
+                            if (attribute != null && attribute.getValue().equals("dl-horizontal pokedex-general-info-list")) {
                                 isTypesContainer = true;
                             }
                         }

@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import pkm.util.DatabaseHelper;
 import pkm.xml.object.PokemonList.xsd.Pokemon;
+import pkm.xml.object.PokemonList.xsd.PokemonList;
 
 /**
  *
@@ -68,10 +69,10 @@ public class PokemonDAO {
         return pkm;
     }
 
-    public List<Pokemon> getAllthePokemon() {
+    public PokemonList getAllPokemonBasicInfo() {
         ResultSet rs = null;
         String query = "SELECT * FROM tblPokemon";
-        List<Pokemon> pokemonList = new ArrayList<>();
+        PokemonList pokemonList = new PokemonList();
         Pokemon pkm = null;
         try {
             connection = DatabaseHelper.getConnection();
@@ -81,7 +82,9 @@ public class PokemonDAO {
                 pkm = new Pokemon();
                 pkm.setNationalDexId(BigInteger.valueOf(Long.parseLong(String.valueOf(rs.getInt("nationalDexId")))));
                 pkm.setEnglishName(rs.getString("englishName"));
-                pokemonList.add(pkm);
+                pkm.setTypes(rs.getString("types"));
+                pkm.setIconURI(rs.getString("iconURI"));
+                pokemonList.getPokemon().add(pkm);
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -90,7 +93,30 @@ public class PokemonDAO {
         }
         return pokemonList;
     }
-
+    public PokemonList getGenIBasicInfo() {
+        ResultSet rs = null;
+        String query = "SELECT * FROM tblPokemon WHERE nationalDexId < 152";
+        PokemonList pokemonList = new PokemonList();
+        Pokemon pkm = null;
+        try {
+            connection = DatabaseHelper.getConnection();
+            statement = connection.prepareStatement(query);
+            rs = statement.executeQuery();
+            while (rs.next()) {
+                pkm = new Pokemon();
+                pkm.setNationalDexId(BigInteger.valueOf(Long.parseLong(String.valueOf(rs.getInt("nationalDexId")))));
+                pkm.setEnglishName(rs.getString("englishName"));
+                pkm.setTypes(rs.getString("types"));
+                pkm.setIconURI(rs.getString("iconURI"));
+                pokemonList.getPokemon().add(pkm);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pokemonList;
+    }
     public List<Pokemon> getPokemonBeforeGenVII() {
         ResultSet rs = null;
         String query = "SELECT * FROM tblPokemon WHERE nationalDexId < 722";

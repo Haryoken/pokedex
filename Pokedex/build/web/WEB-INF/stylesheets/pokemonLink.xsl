@@ -23,15 +23,15 @@
             <xsl:if test="pkm:nationalDexId - 1 != 0">
                 <a style="text-decoration:none;color:black;" href="MainControllerServlet?btnAction=RedirectToPokemon&amp;pokemonId={$nextId}">                       
                     <xsl:if test="pkm:nationalDexId - 1 &lt; 10">
-                        #00<xsl:value-of select="pkm:nationalDexId - 1"/>
+                        &lt;#00<xsl:value-of select="pkm:nationalDexId - 1"/>
                     </xsl:if>
                     <xsl:if test="pkm:nationalDexId - 1 &gt; 9">
                         <xsl:if test="pkm:nationalDexId - 1 &lt; 100">
-                            #0<xsl:value-of select="pkm:nationalDexId - 1"/>
+                             &lt;#0<xsl:value-of select="pkm:nationalDexId - 1"/>
                         </xsl:if>                     
                     </xsl:if>
                     <xsl:if test="pkm:nationalDexId - 1 &gt; 99">
-                        #<xsl:value-of select="pkm:nationalDexId - 1"/>
+                        &lt;#<xsl:value-of select="pkm:nationalDexId - 1"/>
                     </xsl:if>
                 </a>
             </xsl:if>
@@ -42,15 +42,15 @@
             </xsl:variable>
             <a style="text-decoration:none;color:black" href="MainControllerServlet?btnAction=RedirectToPokemon&amp;pokemonId={$nextId}">
                 <xsl:if test="pkm:nationalDexId + 1 &lt; 10">
-                    #00<xsl:value-of select="pkm:nationalDexId + 1"/>
+                    #00<xsl:value-of select="pkm:nationalDexId + 1"/>&gt;
                 </xsl:if>
                 <xsl:if test="pkm:nationalDexId + 1 &gt; 9">
                     <xsl:if test="pkm:nationalDexId + 1 &lt; 100">
-                        #0<xsl:value-of select="pkm:nationalDexId + 1"/>
+                        #0<xsl:value-of select="pkm:nationalDexId + 1"/>&gt;
                     </xsl:if>                     
                 </xsl:if>
                 <xsl:if test="pkm:nationalDexId + 1 &gt; 99">
-                    #<xsl:value-of select="pkm:nationalDexId + 1"/>
+                    #<xsl:value-of select="pkm:nationalDexId + 1"/>&gt;
                 </xsl:if>
             </a>
             
