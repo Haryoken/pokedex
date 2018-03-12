@@ -19,15 +19,15 @@ and open the template in the editor.
     width: auto;
     background-color: cadetblue;
     position: relative;
-    left: 350px;   
-    top: 20px;
+    left: 175px;   
+    top: 50px;
     font-size: 25px;
     border-radius: 10px;
 }
 #pokemon_img_div{
 
     position: relative;
-    left: 200px; 
+    left: 50px; 
     top: 20px;
 }
 #pokemon_img{
@@ -58,8 +58,8 @@ and open the template in the editor.
     height: auto;
     text-align:center;
     position: relative;
-    left: 650px; 
-    top: 30px;
+    left: 510px; 
+    top: 50px;
     border-radius: 10px
 
 }
@@ -68,8 +68,8 @@ and open the template in the editor.
     width: 450px;
     height: auto;
     position: relative;
-    left: 650px; 
-    top: 40px;
+    left: 510px; 
+    top: 60px;
     border-radius: 10px
 }
 #move_div{
@@ -80,7 +80,7 @@ and open the template in the editor.
     border-radius: 10px;
     position:relative;
     top: -300px;
-    left:80px
+
       
 }
 #welcome_div{
@@ -151,6 +151,7 @@ span.test1 {
 .floating-box {
     display: inline-block;
 }
+
 a:hover{
     color: gold;
 }

@@ -41,7 +41,6 @@
                     <h2>Pokémon Type List</h2>
                     <c:set var="typeListXML" value="${sessionScope.TYPELIST}"/>
                     <c:if test="${not empty typeListXML}">
-                        ${typeListXML}
                         <c:import var="typeListXSLT" url="WEB-INF/stylesheets/typeList.xsl"/>
                         <x:transform doc="${typeListXML}" xslt="${typeListXSLT}"/>
                     </c:if>

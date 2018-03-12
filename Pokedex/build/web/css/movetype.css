@@ -7,18 +7,21 @@ and open the template in the editor.
     Created on : 10 Mar, 2018, 2:17:02 PM
     Author     : DUCVINH
 */
+a{
+    text-decoration: none;
+    
+}
 .Normal{
     width: 50px;
     height: 22px;
-    background-color: darkkhaki;
+    background-color: darkkhaki;   
     color: white;
     border-radius: 3px;
     font-size: 17px;
-    font-weight: 550;
-
+    font-weight: 550;   
 }
 .Grass{
-    width: 50px;
+    width: 60px;
     height: 22px;
     background-color: green;
     color: white;

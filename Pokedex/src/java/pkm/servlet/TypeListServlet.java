@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,12 +44,13 @@ public class TypeListServlet extends HttpServlet {
         try{
             HttpSession session = request.getSession(true);
             String typeListXML = (String) session.getAttribute("TYPELIST");
+            
             if(typeListXML == null){
                 TypeDAO typeDAO = new TypeDAO();
                 TypeList typeList= typeDAO.getAllTypes();
                 typeListXML = JAXBHelper.marshallToString(typeList);
-                System.out.println("TypeListXML:"+typeListXML);
-                session.setAttribute(typeListXML, "TYPELIST");
+                System.out.println(typeListXML);
+                session.setAttribute("TYPELIST",typeListXML);
             }
         } catch (JAXBException ex) {
             Logger.getLogger(TypeListServlet.class.getName()).log(Level.SEVERE, null, ex);
