@@ -42,7 +42,6 @@
             <a href="MainControllerServlet?btnAction=Home">Home</a>
             <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=genI">Pokémon</a>
             <a href="MainControllerServlet?btnAction=TypeList">Type</a>
-            <a href="#">Move</a>
             <form method="GET" action="MainControllerServlet" style="padding-top: 13px">
                 <input type="text" name="txtSearch"/>
                 <input type="submit" name="btnAction" value="Search"/>
@@ -78,6 +77,13 @@
                 <div class="card">
                     <h2>Featured Pokémon</h2>
                     <a href="MainControllerServlet?btnAction=RedirectToPokemon&pokemonId=1">Bulbasaur</a>
+                </div>
+                <div class="card">
+                    <h2>Features</h2>
+                    <p>We provide you features to start learning about pokemon:</p>
+                    <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=all">1. All pokemons List</a> 
+                    <br/><br/>
+                    <a href="MainControllerServlet?btnAction=TypeList">2. Pokémon Types</a>
                 </div>
 
             </div>

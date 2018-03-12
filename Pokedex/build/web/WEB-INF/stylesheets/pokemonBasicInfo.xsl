@@ -52,12 +52,12 @@
                         Type
                     </td>
                     <td class="info_data_td">
-                        <a class="{pkm:firstType}">
+                        <a href="MainControllerServlet?btnAction=TypeDetails&amp;type={pkm:firstType}" class="{pkm:firstType}">
                             <xsl:value-of select="pkm:firstType"/>
                         </a>
                         
                         <xsl:if test="pkm:secondType != ''">
-                            , <a class="{pkm:secondType}">
+                            <a href="MainControllerServlet?btnAction=TypeDetails&amp;type={pkm:secondType}" class="{pkm:secondType}">
                                 <xsl:value-of select="pkm:secondType"/>
                             </a>
                         </xsl:if>                    

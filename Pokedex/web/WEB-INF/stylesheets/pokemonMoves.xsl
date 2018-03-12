@@ -29,7 +29,7 @@
                     <tr class="table_move_tr">
                         <td class="table_move_td"><xsl:value-of select="mv:name"/></td>
                         <td class="table_move_td">
-                            <a class="{mv:type}"><xsl:value-of select="mv:type"/></a>
+                            <a href="MainControllerServlet?btnAction=TypeDetails&amp;type={mv:type}" class="{mv:type}"><xsl:value-of select="mv:type"/></a>
                         </td>
                         <td class="table_move_td">
                             <a class="{mv:category}"><xsl:value-of select="mv:category"/></a>

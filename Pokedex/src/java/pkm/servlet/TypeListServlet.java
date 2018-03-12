@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBException;
 import pkm.dao.TypeDAO;
+import pkm.dao.TypeInteractionDAO;
 import pkm.util.JAXBHelper;
+import pkm.xml.object.TypeInteractionList.xsd.TypeInteractionList;
 import pkm.xml.object.TypeList.xsd.Type;
 import pkm.xml.object.TypeList.xsd.TypeList;
 
@@ -43,14 +45,13 @@ public class TypeListServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try{
             HttpSession session = request.getSession(true);
-            String typeListXML = (String) session.getAttribute("TYPELIST");
             
-            if(typeListXML == null){
-                TypeDAO typeDAO = new TypeDAO();
-                TypeList typeList= typeDAO.getAllTypes();
-                typeListXML = JAXBHelper.marshallToString(typeList);
-                System.out.println(typeListXML);
-                session.setAttribute("TYPELIST",typeListXML);
+            String typeInteractXML = (String) session.getAttribute("TYPEINTERACT");
+            if(typeInteractXML == null){
+                TypeInteractionDAO typeIntDAO = new TypeInteractionDAO();
+                TypeInteractionList typeInteractionList = typeIntDAO.getAllTypeInteraction();
+                typeInteractXML =  JAXBHelper.marshallToString(typeInteractionList);
+                session.setAttribute("TYPEINTERACTION", typeInteractXML);
             }
         } catch (JAXBException ex) {
             Logger.getLogger(TypeListServlet.class.getName()).log(Level.SEVERE, null, ex);

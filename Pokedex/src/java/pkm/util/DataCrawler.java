@@ -268,7 +268,12 @@ public class DataCrawler {
         if (pokemon.equals("Mime Jr.")) {
             pokemon = "Mime_Jr.";
         }
-
+        if (pokemon.equals("Nidoran♀")) {
+            pokemon = "Nidoran\u2640";
+        }
+         if (pokemon.equals("Nidoran♂")) {
+            pokemon = "Nidoran\u2642";
+        }
         return pokemon;
     }
 
@@ -1517,6 +1522,7 @@ public class DataCrawler {
                     break;
                 } catch (ArrayIndexOutOfBoundsException e) {
                     Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    return;
 
                 }
             }
@@ -1590,16 +1596,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Normal");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1607,16 +1613,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Fire");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("norma- effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1624,16 +1630,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Water");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
-                                    } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                    } else if (attrString.contains("no-effect")) {
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1641,16 +1647,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Electric");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1658,16 +1664,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Grass");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1675,16 +1681,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Ice");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1692,16 +1698,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Fighting");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1712,13 +1718,13 @@ public class DataCrawler {
                                         this.getTypeInteraction().setEffect("normal effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1726,16 +1732,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Ground");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1743,16 +1749,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Flying");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1760,16 +1766,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Psychic");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1777,16 +1783,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Bug");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1794,16 +1800,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Rock");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-ery-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1811,16 +1817,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Ghost");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1828,16 +1834,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Dragon");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1845,16 +1851,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Dark");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1862,16 +1868,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Steel");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }
@@ -1879,16 +1885,16 @@ public class DataCrawler {
                                     this.getTypeInteraction().setAttackType(type.getTypeLabel());
                                     this.getTypeInteraction().setDefenseType("Fairy");
                                     if (attrString.contains("normal effectiveness")) {
-                                        this.getTypeInteraction().setEffect("normal effective");
+                                        this.getTypeInteraction().setEffect("normal-effective");
                                         this.getTypeInteraction().setEffectMultipler("1");
                                     } else if (attrString.contains("not very effective")) {
-                                        this.getTypeInteraction().setEffect("not very effective");
+                                        this.getTypeInteraction().setEffect("not-very-effective");
                                         this.getTypeInteraction().setEffectMultipler("0.5");
                                     } else if (attrString.contains("super-effective")) {
                                         this.getTypeInteraction().setEffect("super-effective");
                                         this.getTypeInteraction().setEffectMultipler("2");
                                     } else if (attrString.contains("no effect")) {
-                                        this.getTypeInteraction().setEffect("no effect");
+                                        this.getTypeInteraction().setEffect("no-effect");
                                         this.getTypeInteraction().setEffectMultipler("0");
                                     }
                                 }

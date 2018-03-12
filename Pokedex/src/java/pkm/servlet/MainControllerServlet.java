@@ -33,7 +33,7 @@ public class MainControllerServlet extends HttpServlet {
     private final String pokemonListServlet = "PokemonListServlet";
     private final String searchServlet = "SearchServlet";
     private final String typeListServlet = "TypeListServlet";
-
+    private final String typeDetailsServlet = "TypeDetailsServlet";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -69,6 +69,8 @@ public class MainControllerServlet extends HttpServlet {
                 url = searchServlet;
             } else if (button.equals("TypeList")) {
                 url = typeListServlet;
+            } else if (button.equals("TypeDetails")) {
+                url = typeDetailsServlet;
             }
         } catch (JAXBException ex) {
             Logger.getLogger(MainControllerServlet.class.getName()).log(Level.SEVERE, null, ex);

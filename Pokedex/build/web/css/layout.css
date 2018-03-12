@@ -83,7 +83,7 @@ body {
     font-size: 20px;
 }
 .card a:hover{
-    color: gold;
+    opacity: 0.3;
 }
 /* Clear floats after the columns */
 .row:after {

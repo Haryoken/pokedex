@@ -17,12 +17,12 @@
     -->
     <xsl:template match="type:TypeList">
         <xsl:for-each select="type:pokemonType">
-            <div>
+
                 <a class="{type:typeLabel}" href="MainControllerServlet?btnAction=TypeDetails&amp;type={type:typeLabel}">
                     <xsl:value-of select="type:typeLabel"/>
                 </a>
-                <br/><br/>
-            </div>
+                <xsl:value-of select="' '"/> 
+                
         </xsl:for-each>
     </xsl:template>
 

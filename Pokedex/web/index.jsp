@@ -23,12 +23,11 @@
                     <span style="color: white" >NATIONAL</span>
                     <span style="color: tomato; font-style: italic;font-family:Constantia">POKéDEX</span>
                 </span>
-
             </div>
         </div>
 
         <div class="topnav">
-            <a href="#">Home</a>
+            <a href="MainControllerServlet?btnAction=Home">Home</a>
             <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=genI">Pokémon</a>
             <a href="MainControllerServlet?btnAction=TypeList">Type</a>
             <a >Move</a>
@@ -45,7 +44,7 @@
                     <p>We provide you features to start learning about pokemon:</p>
                     <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=all">1. All pokemons List</a> 
                     <br/><br/>
-                    <a href="MainControllerServlet?btnAction=TypeList">2. Pokémon Types</a>
+                    <a href="MainControllerServlet?btnAction=TypeList">2. Pokémon Type Chart</a>
                 </div>
             </div>
             <div class="rightcolumn">
@@ -53,9 +52,8 @@
                     <h2>Featured Pokémon</h2>
                     <a href="MainControllerServlet?btnAction=RedirectToPokemon&pokemonId=1">Bulbasaur</a>
                 </div>
-               
+
             </div>
         </div>
     </body>   
-</body>
 </html>

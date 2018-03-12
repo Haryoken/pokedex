@@ -32,7 +32,6 @@
             <a href="MainControllerServlet?btnAction=Home">Home</a>
             <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=genI">Pokémon</a>
             <a href="MainControllerServlet?btnAction=TypeList">Type</a>
-            <a href="#">Move</a>
         </div>
 
         <div class="row">
@@ -71,7 +70,7 @@
                     <p>We provide you features to start learning about pokemon:</p>
                     <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=all">1. All pokemons List</a> 
                     <br/><br/>
-                    <a href="MainControllerServlet?btnAction=TypeList">2. Pokémon Types</a>
+                    <a href="MainControllerServlet?btnAction=TypeList">2. Pokémon Type Chart</a>
                 </div>
             </div>
         </div>

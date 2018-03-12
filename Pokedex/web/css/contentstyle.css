@@ -19,7 +19,7 @@ and open the template in the editor.
     width: auto;
     background-color: cadetblue;
     position: relative;
-    left: 175px;   
+    left: 215px;   
     top: 50px;
     font-size: 25px;
     border-radius: 10px;
@@ -58,7 +58,7 @@ and open the template in the editor.
     height: auto;
     text-align:center;
     position: relative;
-    left: 510px; 
+    left: 550px; 
     top: 50px;
     border-radius: 10px
 
@@ -68,14 +68,14 @@ and open the template in the editor.
     width: 450px;
     height: auto;
     position: relative;
-    left: 510px; 
+    left: 550px; 
     top: 60px;
     border-radius: 10px
 }
 #move_div{
     background-color: gainsboro;
     text-align: center;
-    width: 500px;
+    width: 530px;
     height: auto;
     border-radius: 10px;
     position:relative;
@@ -152,6 +152,3 @@ span.test1 {
     display: inline-block;
 }
 
-a:hover{
-    color: gold;
-}

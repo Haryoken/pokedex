@@ -9,164 +9,455 @@ and open the template in the editor.
 */
 a{
     text-decoration: none;
-    
 }
+a:hover{
+    opacity: 0.5;
+}
+.type_chart td{
+    text-align: center;
+}
+.super-effective{
+    background-color: green;
+    color:white;
+    border-radius: 5px;
+}
+.not-very-effective{
+    background-color: orangered;
+    color:white;
+}
+.no-effect{
+    background-color: blue;
+    color:white;
+}
+
 .Normal{
-    width: 50px;
-    height: 22px;
-    background-color: darkkhaki;   
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #8a8a59;   
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;   
 }
 .Grass{
-    width: 60px;
-    height: 22px;
-    background-color: green;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #78c850;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Fire{
-    width: 50px;
-    height: 22px;
-    background-color: orangered;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #f08030;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Water{
-    width: 50px;
-    height: 22px;
-    background-color: deepskyblue;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #6890f0;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Electric{
-    width: 50px;
-    height: 22px;
-    background-color: gold;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #f8d030;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Ice{
-    width: 50px;
-    height: 22px;
-    background-color: paleturquoise;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #98d8d8;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Fighting{
-    width: 50px;
-    height: 22px;
-    background-color: brown;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #c03028;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Poison{
-    width: 50px;
-    height: 22px;
-    background-color: blueviolet;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #a040a0;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Ground{
-    width: 50px;
-    height: 22px;
-    background-color: goldenrod;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #e0c068;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Flying{
-    width: 50px;
-    height: 22px;
-    background-color: mediumpurple;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #a890f0;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Psychic{
-    width: 50px;
-    height: 22px;
-    background-color: deeppink;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #f85888;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Bug{
-    width: 50px;
-    height: 22px;
-    background-color: yellowgreen;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #a8b820;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Rock{
-    width: 50px;
-    height: 22px;
-    background-color: darkgoldenrod;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #b8a038;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Ghost{
-    width: 50px;
-    height: 22px;
-    background-color: indigo;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #705898;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Dragon{
-    width: 50px;
-    height: 22px;
-    background-color: mediumblue;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #7038f8;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Dark{
-    width: 50px;
-    height: 22px;
-    background-color: midnightblue;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #705848;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Steel{
-    width: 50px;
-    height: 22px;
-    background-color: gainsboro;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: #b8b8d0;
     color: white;
     border-radius: 3px;
     font-size: 17px;
     font-weight: 550;
 }
 .Fairy{
-    width: 50px;
-    height: 22px;
+    text-align: center;
+    display: block;
+    width: 73px;
+    height: 28px;
+    padding-top: 4px;
+    background-color: pink;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+
+
+.halfNormal{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #8a8a59;   
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;   
+}
+.halfGrass{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #78c850;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfFire{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #f08030;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfWater{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #6890f0;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfElectric{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #f8d030;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfIce{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #98d8d8;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfFighting{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #c03028;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfPoison{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #a040a0;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfGround{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #e0c068;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfFlying{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #a890f0;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfPsychic{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #f85888;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfBug{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #a8b820;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfRock{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #b8a038;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfGhost{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #705898;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfDragon{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #7038f8;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfDark{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #705848;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfSteel{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
+    background-color: #b8b8d0;
+    color: white;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: 550;
+}
+.halfFairy{
+    text-align: center;
+    display: block;
+    width: 37px;
+    height: 37px;
+    padding-top: 9px;
     background-color: pink;
     color: white;
     border-radius: 3px;
@@ -176,7 +467,7 @@ a{
 .Physical{
     width: 50px;
     height: 22px;
-    background-color: crimson;
+    background-color: red;
     color: gold;
     border-radius: 3px;
     font-size: 17px;
