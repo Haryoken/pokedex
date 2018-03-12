@@ -20,6 +20,10 @@
         <servlet-name>SearchServlet</servlet-name>
         <servlet-class>pkm.servlet.SearchServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TypeListServlet</servlet-name>
+        <servlet-class>pkm.servlet.TypeListServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainControllerServlet</servlet-name>
         <url-pattern>/MainControllerServlet</url-pattern>
@@ -39,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>SearchServlet</servlet-name>
         <url-pattern>/SearchServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TypeListServlet</servlet-name>
+        <url-pattern>/TypeListServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

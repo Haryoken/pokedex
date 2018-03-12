@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,8 @@ import pkm.xml.object.PokemonList.xsd.PokemonList;
  */
 public class PokemonListServlet extends HttpServlet {
 
+    private static String pokemonListPage = "pokemonList.jsp";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -41,26 +44,34 @@ public class PokemonListServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         PokemonList pkmList = null;
         try {
-            
-            HttpSession session = request.getSession(false);
-            String pokemonCount = request.getParameter("pokemonCount");
-            PokemonDAO pkmDAO = new PokemonDAO();
-            if (!pokemonCount.isEmpty() && pokemonCount.equals("all")) {
-                pkmList = pkmDAO.getAllPokemonBasicInfo();
-                String pokemonListXML = JAXBHelper.marshallToString(pkmList);
-                session.setAttribute("POKEMONLIST",pokemonListXML);
 
+            HttpSession session = request.getSession(false);
+            String displayMode = request.getParameter("pokemonCount");
+            PokemonDAO pkmDAO = new PokemonDAO();
+            if (!displayMode.isEmpty() && displayMode.equals("all")) {
+                String pokemonFullList = (String) session.getAttribute("POKEMONLISTFULL");
+                if (pokemonFullList == null) {
+                    pkmList = pkmDAO.getAllPokemonBasicInfo();
+                    String pokemonListXML = JAXBHelper.marshallToString(pkmList);
+                    session.setAttribute("POKEMONLISTFULL", pokemonListXML);
+                }
             }
-            if (!pokemonCount.isEmpty() && pokemonCount.equals("genI")) {
-                pkmList = pkmDAO.getGenIBasicInfo();
-                String pokemonListXML = JAXBHelper.marshallToString(pkmList);
-                System.out.println(pokemonListXML);
-                session.setAttribute("POKEMONLIST",pokemonListXML);
+            if (!displayMode.isEmpty() && displayMode.equals("genI")) {
+                String pokemonGenI = (String) session.getAttribute("POKEMONLISTGENI");
+                if (pokemonGenI == null) {
+                    pkmList = pkmDAO.getGenIBasicInfo();
+                    String pokemonListXML = JAXBHelper.marshallToString(pkmList);
+                    System.out.println(pokemonListXML);
+                    session.setAttribute("POKEMONLISTGENI", pokemonListXML);
+                }
             }
+
+            request.setAttribute("DISPLAYMODE", displayMode);
         } catch (JAXBException ex) {
             Logger.getLogger(PokemonListServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            response.sendRedirect("pokemonList.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher(pokemonListPage);
+            rd.forward(request, response);
             out.close();
         }
     }

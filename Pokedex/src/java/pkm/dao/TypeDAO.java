@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import pkm.util.DatabaseHelper;
 import pkm.xml.object.PokemonList.xsd.Pokemon;
 import pkm.xml.object.TypeList.xsd.Type;
+import pkm.xml.object.TypeList.xsd.TypeList;
 
 /**
  *
@@ -136,6 +137,26 @@ public class TypeDAO {
                 type = new Type();
                 type.setTypeLabel(rs.getString(1));
                 typeList.add(type);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TypeDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TypeDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return typeList;
+    }
+    public TypeList getAllTypes(){
+        TypeList typeList  = new TypeList();
+        String query = "SELECT * FROM tblType";
+        Type type = null;
+        try{
+             connection = DatabaseHelper.getConnection();
+            statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                type = new Type();
+                type.setTypeLabel(rs.getString(1));
+                typeList.getPokemonType().add(type);
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(TypeDAO.class.getName()).log(Level.SEVERE, null, ex);

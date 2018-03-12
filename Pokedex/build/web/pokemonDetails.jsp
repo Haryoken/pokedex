@@ -41,7 +41,7 @@
         <div class="topnav">
             <a href="MainControllerServlet?btnAction=Home">Home</a>
             <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=genI">Pokémon</a>
-            <a href="#">Type</a>
+            <a href="MainControllerServlet?btnAction=TypeList">Type</a>
             <a href="#">Move</a>
             <form method="GET" action="MainControllerServlet" style="padding-top: 13px">
                 <input type="text" name="txtSearch"/>

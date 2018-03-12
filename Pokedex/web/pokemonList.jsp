@@ -31,15 +31,24 @@
         <div class="topnav">
             <a href="MainControllerServlet?btnAction=Home">Home</a>
             <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=genI">Pokémon</a>
-            <a href="#">Type</a>
+            <a href="MainControllerServlet?btnAction=TypeList">Type</a>
             <a href="#">Move</a>
         </div>
 
         <div class="row">
             <div class="leftcolumn">
                 <div class="card">
+                    <c:set var="displayMode" value="${requestScope.DISPLAYMODE}"/>
+                    <c:if test="${not empty displayMode}">
+                        <c:if test="${displayMode == 'all'}">
+                            <c:set var="pokemonListXML" value="${sessionScope.POKEMONLISTFULL}"/>
+                        </c:if>
+                        <c:if test="${displayMode == 'genI'}">
+                            <c:set var="pokemonListXML" value="${sessionScope.POKEMONLISTGENI}"/>
+                        </c:if>
+                    </c:if>
                     <h2>Pokémon List</h2>
-                    <c:set var="pokemonListXML" value="${sessionScope.POKEMONLIST}"/>
+                    
                     <form method="POST" action="MainControllerServlet">
                         <input type="text" name="txtSearch" value=""/>
                         <input type="submit" name="btnAction" value="Search"/>
@@ -62,7 +71,7 @@
                     <p>We provide you features to start learning about pokemon:</p>
                     <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=all">1. All pokemons List</a> 
                     <br/><br/>
-                    <a>2. Pokémon Types</a>
+                    <a href="MainControllerServlet?btnAction=TypeList">2. Pokémon Types</a>
                 </div>
             </div>
         </div>

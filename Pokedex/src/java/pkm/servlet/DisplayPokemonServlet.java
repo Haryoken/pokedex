@@ -7,8 +7,6 @@ package pkm.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -23,14 +21,11 @@ import pkm.dao.PokemonDAO;
 import pkm.dao.PokemonMovesDAO;
 import pkm.dao.PokemonStatsDAO;
 import pkm.util.JAXBHelper;
-import pkm.xml.object.MoveList.xsd.Move;
 import pkm.xml.object.MoveList.xsd.MoveList;
-import pkm.xml.object.PokemonAbilitiesList.xsd.PokemonAbilities;
 import pkm.xml.object.PokemonAbilitiesList.xsd.PokemonAbilitiesList;
 
 import pkm.xml.object.PokemonList.xsd.Pokemon;
 import pkm.xml.object.PokemonList.xsd.PokemonList;
-import pkm.xml.object.PokemonMovesList.xsd.PokemonMoves;
 import pkm.xml.object.PokemonMovesList.xsd.PokemonMovesList;
 import pkm.xml.object.PokemonStatsList.xsd.PokemonStats;
 import pkm.xml.object.PokemonStatsList.xsd.PokemonStatsList;

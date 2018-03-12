@@ -31,7 +31,8 @@ public class MainControllerServlet extends HttpServlet {
     private final String crawlingServlet = "CrawlingServlet";
     private final String displayPokemonServlet = "DisplayPokemonServlet";
     private final String pokemonListServlet = "PokemonListServlet";
-     private final String searchServlet = "SearchServlet";
+    private final String searchServlet = "SearchServlet";
+    private final String typeListServlet = "TypeListServlet";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -52,6 +53,11 @@ public class MainControllerServlet extends HttpServlet {
         try {
 
             if (button == null) {
+                PokemonDAO pkmDAO = new PokemonDAO();
+                PokemonList pkmList = pkmDAO.getGenIBasicInfo();
+                String pokemonGenIXML = JAXBHelper.marshallToString(pkmList);
+                HttpSession session = request.getSession(true);
+                session.setAttribute("POKEMONLISTGENI", pokemonGenIXML);
                 url = homePage;
             } else if (button.equals("RedirectToPokemon")) {
                 url = displayPokemonServlet;
@@ -59,9 +65,13 @@ public class MainControllerServlet extends HttpServlet {
                 url = homePage;
             } else if (button.equals("Pokedex")) {
                 url = pokemonListServlet;
-            }else if (button.equals("Search")) {
+            } else if (button.equals("Search")) {
                 url = searchServlet;
+            } else if (button.equals("TypeList")) {
+                url = typeListServlet;
             }
+        } catch (JAXBException ex) {
+            Logger.getLogger(MainControllerServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
