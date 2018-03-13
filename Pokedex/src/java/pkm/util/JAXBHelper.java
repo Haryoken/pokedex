@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -88,6 +89,14 @@ public class JAXBHelper {
             marshaller.marshal(jaxbObject, writer);
             return writer.toString();
         
+    }
+     public static <T> void marshallToStream(T jaxbObject, OutputStream os) throws JAXBException{    
+            JAXBContext context = JAXBContext.newInstance(jaxbObject.getClass());
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(jaxbObject, os);
+
     }
     public static <T> void unmarshall(String xmlFilePath, T jaxbObject) {
         try {

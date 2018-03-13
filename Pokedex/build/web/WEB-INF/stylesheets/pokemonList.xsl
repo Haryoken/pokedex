@@ -17,7 +17,7 @@
     -->
     <xsl:template match="pkm:PokemonList">
         <div>
-            <table border="0">
+            <table border="0" id="pokemonTable">
                 <th></th>
                 <th>Dex Id</th>
                 <th>Name</th>

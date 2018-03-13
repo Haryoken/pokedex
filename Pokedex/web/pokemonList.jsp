@@ -10,6 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Pokédex</title>
         <link rel="stylesheet" href="css/headerstyle.css"/>   
@@ -18,6 +19,8 @@
         <link rel="stylesheet" href="css/listtable.css"/>
     </head>
     <body>
+
+        
         <div class="header">
             <div id="title_div">
                 <span id="title_span">
@@ -27,7 +30,6 @@
 
             </div>
         </div>
-
         <div class="topnav">
             <a href="MainControllerServlet?btnAction=Home">Home</a>
             <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=genI">Pokémon</a>
@@ -45,9 +47,12 @@
                         <c:if test="${displayMode == 'genI'}">
                             <c:set var="pokemonListXML" value="${sessionScope.POKEMONLISTGENI}"/>
                         </c:if>
+                        <c:if test="${displayMode == 'search'}">
+                            <c:set var="pokemonListXML" value="${requestScope.SEARCHRESULT}"/>
+                        </c:if>
                     </c:if>
                     <h2>Pokémon List</h2>
-                    
+
                     <form method="POST" action="MainControllerServlet">
                         <input type="text" name="txtSearch" value=""/>
                         <input type="submit" name="btnAction" value="Search"/>
@@ -58,7 +63,7 @@
                         <x:transform doc="${pokemonListXML}" xslt="${pokemonListXSLT}"/>                      
                     </c:if>
                 </div>
-                
+
             </div>
             <div class="rightcolumn">
                 <div class="card">

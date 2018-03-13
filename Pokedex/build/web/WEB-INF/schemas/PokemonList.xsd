@@ -25,7 +25,7 @@ and open the template in the editor.
             <xsd:element name="japaneseName" type="xsd:string" nillable="true"/>
             <xsd:element name="romajiName" type="xsd:string" nillable="true"/>
             <xsd:element name="firstType" type="xsd:string" nillable="true"/>
-            <xsd:element name="secondType" type="xsd:string" nillable="true"/>
+            <xsd:element name="secondType" type name="firstType" type="xsd:string" nillable="true"/>
             <xsd:element name="height" type="xsd:string" nillable="true"/>
             <xsd:element name="weight" type="xsd:string" nillable="true"/>
             <xsd:element name="catchRate" type="xsd:decimal" nillable="true"/>

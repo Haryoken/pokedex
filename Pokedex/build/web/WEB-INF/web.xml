@@ -5,10 +5,6 @@
         <servlet-class>pkm.servlet.MainControllerServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CrawlingServlet</servlet-name>
-        <servlet-class>pkm.servlet.CrawlingServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>DisplayPokemonServlet</servlet-name>
         <servlet-class>pkm.servlet.DisplayPokemonServlet</servlet-class>
     </servlet>
@@ -31,10 +27,6 @@
     <servlet-mapping>
         <servlet-name>MainControllerServlet</servlet-name>
         <url-pattern>/MainControllerServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CrawlingServlet</servlet-name>
-        <url-pattern>/CrawlingServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DisplayPokemonServlet</servlet-name>

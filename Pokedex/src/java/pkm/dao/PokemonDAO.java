@@ -27,7 +27,31 @@ public class PokemonDAO {
 
     Connection connection = null;
     PreparedStatement statement = null;
-
+    public PokemonList searchByName(String name) {
+        ResultSet rs = null;
+        String query = "SELECT * FROM tblPokemon";
+        PokemonList pokemonList = new PokemonList();
+        Pokemon pkm = null;
+        try {
+            connection = DatabaseHelper.getConnection();
+            statement = connection.prepareStatement(query);
+            rs = statement.executeQuery();
+            while (rs.next()) {
+                pkm = new Pokemon();
+                pkm.setNationalDexId(BigInteger.valueOf(Long.parseLong(String.valueOf(rs.getInt("nationalDexId")))));
+                pkm.setEnglishName(rs.getString("englishName"));
+                pkm.setFirstType(rs.getString("firstType"));
+                pkm.setSecondType(rs.getString("secondType"));
+                pkm.setIconURI(rs.getString("iconURI"));
+                pokemonList.getPokemon().add(pkm);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(PokemonDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pokemonList;
+    }
     public Pokemon findById(int id) {
         ResultSet rs = null;
         String query = "SELECT * FROM tblPokemon WHERE nationalDexId=?";

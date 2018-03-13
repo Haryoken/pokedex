@@ -5,12 +5,29 @@
  */
 package pkm.servlet;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import pkm.dao.PokemonDAO;
+import pkm.util.JAXBHelper;
+import pkm.xml.object.PokemonList.xsd.Pokemon;
+import pkm.xml.object.PokemonList.xsd.PokemonList;
 
 /**
  *
@@ -30,17 +47,90 @@ public class SearchServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet SearchServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet SearchServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        String search = request.getParameter("txtSearch");
+        PrintWriter out = response.getWriter();
+        try {
+            HttpSession session = request.getSession(false);
+
+            String fullPkmXML = (String) session.getAttribute("POKEMONLISTFULL");
+            if (fullPkmXML == null) {
+                PokemonDAO pkmDAO = new PokemonDAO();
+                PokemonList list = pkmDAO.getAllPokemonBasicInfo();
+                fullPkmXML = JAXBHelper.marshallToString(list);
+                session.setAttribute("POKEMONLISTFULL", fullPkmXML);
+            }
+            XMLInputFactory factory = XMLInputFactory.newInstance();
+            factory.setProperty(XMLInputFactory.IS_VALIDATING, false);
+            factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, false);
+
+            XMLStreamReader reader = factory.createXMLStreamReader(new InputStreamReader(new ByteArrayInputStream(fullPkmXML.getBytes(StandardCharsets.UTF_8)), "UTF-8"));
+
+            Pokemon pokemon = new Pokemon();
+            PokemonList resultList = new PokemonList();
+            String dexId = "";
+            boolean isPokemon = false;
+            boolean isPokemonMatch = false;
+            while (reader.hasNext()) {
+                reader.next();
+
+                int eventType = reader.getEventType();
+
+                if (eventType == XMLStreamConstants.START_ELEMENT) {
+                    String tagName = reader.getLocalName();
+                    if (tagName.equals("pokemon")) {
+                        isPokemon = true;
+                    }
+                    if (isPokemon && tagName.equals("nationalDexId")) {
+                        reader.next();
+                        if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
+                            dexId = reader.getText();
+                        }
+                    }
+                    if (isPokemon && tagName.equals("englishName")) {
+                        reader.next();
+                        if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
+                            if (reader.getText().toLowerCase().contains(search.toLowerCase())) {
+                                isPokemonMatch = true;
+                                pokemon.setNationalDexId(BigInteger.valueOf(Long.valueOf(dexId)));
+                                pokemon.setEnglishName(reader.getText());
+                            }
+                        }
+                    }
+                    if (isPokemonMatch && tagName.equals("firstType")) {
+                        reader.next();
+                        if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
+                            pokemon.setFirstType(reader.getText());
+                        }
+                    }
+                    if (isPokemonMatch && tagName.equals("secondType")) {
+                        reader.next();
+                        if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
+                            pokemon.setSecondType(reader.getText());
+                        }
+                    }
+                    if (isPokemonMatch && tagName.equals("iconURI")) {
+                        reader.next();
+                        if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
+                            pokemon.setIconURI(reader.getText());
+                            resultList.getPokemon().add(pokemon);
+                            pokemon = new Pokemon();
+                            isPokemonMatch = false;
+                            isPokemon = false;
+                        }
+                    }
+                }
+            }//End of hasNext
+            String resultXML = JAXBHelper.marshallToString(resultList);         
+            request.setAttribute("SEARCHRESULT", resultXML);
+
+        } catch (JAXBException ex) {
+            Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (XMLStreamException ex) {
+            Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            RequestDispatcher rd = request.getRequestDispatcher("MainControllerServlet?btnAction=Pokedex&pokemonCount=search");
+            rd.forward(request, response);
+            out.close();
         }
     }
 

@@ -42,8 +42,8 @@
             <a href="MainControllerServlet?btnAction=Home">Home</a>
             <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=genI">Pokémon</a>
             <a href="MainControllerServlet?btnAction=TypeList">Type</a>
-            <form method="GET" action="MainControllerServlet" style="padding-top: 13px">
-                <input type="text" name="txtSearch"/>
+            <form method="POST" action="MainControllerServlet" style="padding-top: 13px">
+                <input type="text" name="txtSearch" value=""/>
                 <input type="submit" name="btnAction" value="Search"/>
             </form>
         </div>
