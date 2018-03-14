@@ -27,14 +27,17 @@ public class PokemonDAO {
 
     Connection connection = null;
     PreparedStatement statement = null;
-    public PokemonList searchByName(String name) {
+    public PokemonList searchByType(String type) {
         ResultSet rs = null;
-        String query = "SELECT * FROM tblPokemon";
+        String query = "SELECT nationalDexId,englishName,firstType,secondType,iconURI FROM tblPokemon where firstType=? OR secondType=?";
         PokemonList pokemonList = new PokemonList();
         Pokemon pkm = null;
         try {
             connection = DatabaseHelper.getConnection();
             statement = connection.prepareStatement(query);
+            
+            statement.setString(1, type);
+            statement.setString(2, type);
             rs = statement.executeQuery();
             while (rs.next()) {
                 pkm = new Pokemon();
@@ -357,14 +360,13 @@ public class PokemonDAO {
     }
 
     public boolean updateGrowthRate(Pokemon pokemon) {
-        String query = "UPDATE tblPokemon SET growthRate=? WHERE nationalDexId= '"
-                + pokemon.getNationalDexId() + "'";
+        String query = "UPDATE tblPokemon SET growthRate=? WHERE nationalDexId=?";
         try {
             connection = DatabaseHelper.getConnection();
             statement = connection.prepareStatement(query);
 
             statement.setString(1, pokemon.getGrowthRate());
-
+            statement.setInt(2, Integer.parseInt(pokemon.getNationalDexId().toString()));
             int row = statement.executeUpdate();
             if (row > 0) {
                 return true;

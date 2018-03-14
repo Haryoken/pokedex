@@ -17,6 +17,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.XMLConstants;
@@ -36,6 +38,43 @@ import org.xml.sax.SAXParseException;
  * @author DUCVINH
  */
 public class JAXBHelper {
+
+    public static void bindSchemas(String output,String filePath,String packageName){
+        JAXBHelper jHelper = new JAXBHelper();
+
+        List<String> xmlFileNameList = new ArrayList();
+        
+        File file = new File(filePath);
+
+        xmlFileNameList = getFileList(file);
+
+        System.out.println("FILE NAME LIST:");
+        for (String fileName : xmlFileNameList) {
+            System.out.println(fileName);
+        }
+
+        for (String fileName : xmlFileNameList) {
+            try {
+                System.out.println(filePath + fileName);
+                bindSchemaToObject(output, packageName + fileName, filePath + fileName);
+            } catch (IOException ex) {
+                Logger.getLogger(JAXBHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    private static List getFileList(File directory) {
+        if (directory.isDirectory()) {
+            System.out.println("is Directory");
+            String[] fileNames = directory.list();
+            List<String> fileNameList = new ArrayList();
+            for (String fileName : fileNames) {
+                fileNameList.add(fileName);
+            }
+            return fileNameList;
+        }
+        return null;
+    }
 
     public static void bindSchemaToObject(String output, String packageName, String schemaFile) throws IOException {
         SchemaCompiler sc = XJC.createSchemaCompiler();
@@ -80,24 +119,27 @@ public class JAXBHelper {
             Logger.getLogger(JAXBHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-     public static <T> String marshallToString(T jaxbObject) throws JAXBException{    
-            JAXBContext context = JAXBContext.newInstance(jaxbObject.getClass());
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            StringWriter writer = new StringWriter();
-            marshaller.marshal(jaxbObject, writer);
-            return writer.toString();
-        
-    }
-     public static <T> void marshallToStream(T jaxbObject, OutputStream os) throws JAXBException{    
-            JAXBContext context = JAXBContext.newInstance(jaxbObject.getClass());
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            marshaller.marshal(jaxbObject, os);
+
+    public static <T> String marshallToString(T jaxbObject) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(jaxbObject.getClass());
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        StringWriter writer = new StringWriter();
+        marshaller.marshal(jaxbObject, writer);
+        return writer.toString();
 
     }
+
+    public static <T> void marshallToStream(T jaxbObject, OutputStream os) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(jaxbObject.getClass());
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        marshaller.marshal(jaxbObject, os);
+
+    }
+
     public static <T> void unmarshall(String xmlFilePath, T jaxbObject) {
         try {
             JAXBContext context = JAXBContext.newInstance(jaxbObject.getClass());
@@ -109,6 +151,7 @@ public class JAXBHelper {
             Logger.getLogger(JAXBHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     public static <T> boolean validateXML(String xmlFilePath, String schemaFilePath, Object jaxbObject) throws FileNotFoundException, IOException, JAXBException {
         try {
             JAXBContext context = JAXBContext.newInstance(jaxbObject.getClass());

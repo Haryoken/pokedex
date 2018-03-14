@@ -29,8 +29,7 @@
         <div class="topnav">
             <a href="MainControllerServlet?btnAction=Home">Home</a>
             <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=genI">Pokémon</a>
-            <a href="MainControllerServlet?btnAction=TypeList">Type</a>
-            <a >Move</a>
+            <a href="MainControllerServlet?btnAction=TypeList">Type</a> 
         </div>
 
         <div class="row">

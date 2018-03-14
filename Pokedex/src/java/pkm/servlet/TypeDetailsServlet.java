@@ -16,8 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBException;
+import pkm.dao.PokemonDAO;
 import pkm.dao.TypeInteractionDAO;
 import pkm.util.JAXBHelper;
+import pkm.xml.object.PokemonList.xsd.PokemonList;
 import pkm.xml.object.TypeInteractionList.xsd.TypeInteractionList;
 
 /**
@@ -41,18 +43,21 @@ public class TypeDetailsServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             String type = request.getParameter("type");
-            HttpSession session = request.getSession(false);
+
             TypeInteractionDAO interDAO = new TypeInteractionDAO();
-
-
-                TypeInteractionList attackList = interDAO.findByAttackType(type);
-                String attackXML = JAXBHelper.marshallToString(attackList);
-                session.setAttribute("TYPEATTACK", attackXML);
+            PokemonDAO pkmDAO =  new PokemonDAO();
             
+            TypeInteractionList attackList = interDAO.findByAttackType(type);
+            String attackXML = JAXBHelper.marshallToString(attackList);
+            request.setAttribute("TYPEATTACK", attackXML);
 
-                TypeInteractionList defenseList = interDAO.findByDefenseType(type);
-                String defenseXML = JAXBHelper.marshallToString(defenseList);
-                session.setAttribute("TYPEDEFENSE", defenseXML);
+            TypeInteractionList defenseList = interDAO.findByDefenseType(type);
+            String defenseXML = JAXBHelper.marshallToString(defenseList);
+            request.setAttribute("TYPEDEFENSE", defenseXML);
+            
+            PokemonList pokemonList = pkmDAO.searchByType(type);
+            String pokemonXML = JAXBHelper.marshallToString(pokemonList);
+            request.setAttribute("TYPEPOKEMON", pokemonXML);
             
             request.setAttribute("TYPE", type);
         } catch (JAXBException ex) {

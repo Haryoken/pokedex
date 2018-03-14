@@ -6,7 +6,7 @@
 
 
 
-var xmlDOM = new ActiveXObject("Microsoft.XMLDOM");
+var xmlDOM = new DOMParser();
 var count = 0;
 var cells = [];
 var xmlHttp;
@@ -44,8 +44,7 @@ function searchNode(node, strSearch, tableName) {
     }
 }
 function searchProcess(tableName) {
-    alert("haha");
-    alert("haha"+xmlString);
+
     if (!xmlString) {
         return false;
     }

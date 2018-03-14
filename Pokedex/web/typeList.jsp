@@ -29,7 +29,7 @@
         </div>
 
         <div class="topnav">
-            <a href="#">Home</a>
+            <a href="MainControllerServlet?btnAction=Home">Home</a>
             <a href="MainControllerServlet?btnAction=Pokedex&pokemonCount=genI">Pokémon</a>
             <a href="MainControllerServlet?btnAction=TypeList">Type</a>
         </div>

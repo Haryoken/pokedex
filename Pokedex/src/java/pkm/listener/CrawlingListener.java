@@ -5,13 +5,19 @@
  */
 package pkm.listener;
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import pkm.util.CrawlBasicInfoTask;
 import pkm.util.CrawlDetailsInfoTask;
+import pkm.util.JAXBHelper;
+import pkm.util.SchemaBinding;
+import pkm.util.SchemaBindingTask;
 
 /**
  *
@@ -19,9 +25,11 @@ import pkm.util.CrawlDetailsInfoTask;
  */
 @WebListener
 public class CrawlingListener implements ServletContextListener {
-    Timer timer;
-    CrawlBasicInfoTask basicInfoTimerTask;
-    CrawlDetailsInfoTask detailsTask;
+
+    private Timer timer;
+    private CrawlBasicInfoTask basicInfoTimerTask;
+    private CrawlDetailsInfoTask detailsTask;
+    private SchemaBindingTask schemaBindingTask;
 
     public CrawlDetailsInfoTask getDetailsTask() {
         return detailsTask;
@@ -30,6 +38,7 @@ public class CrawlingListener implements ServletContextListener {
     public void setDetailsTask(CrawlDetailsInfoTask detailsTask) {
         this.detailsTask = detailsTask;
     }
+
     public Timer getTimer() {
         return timer;
     }
@@ -45,19 +54,36 @@ public class CrawlingListener implements ServletContextListener {
     public void setBasicInfoTimerTask(CrawlBasicInfoTask basicInfoTimerTask) {
         this.basicInfoTimerTask = basicInfoTimerTask;
     }
+
+    public SchemaBindingTask getSchemaBindingTask() {
+        return schemaBindingTask;
+    }
+
+    public void setSchemaBindingTask(SchemaBindingTask schemaBindingTask) {
+        this.schemaBindingTask = schemaBindingTask;
+    }
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        this.timer = new Timer();
-        this.basicInfoTimerTask = new CrawlBasicInfoTask();        
-        timer.schedule(this.getBasicInfoTimerTask(), TimeUnit.SECONDS.toMillis(10), TimeUnit.HOURS.toMillis(24));
         
+        this.timer = new Timer();
+        
+//        this.schemaBindingTask = new SchemaBindingTask();
+//        timer.schedule(this.getSchemaBindingTask(), TimeUnit.SECONDS.toMillis(10));
+        
+        this.basicInfoTimerTask = new CrawlBasicInfoTask();
+        timer.schedule(this.getBasicInfoTimerTask(), TimeUnit.SECONDS.toMillis(10), TimeUnit.HOURS.toMillis(24));
+
         this.detailsTask = new CrawlDetailsInfoTask();
-        timer.schedule(this.getDetailsTask(),TimeUnit.SECONDS.toMillis(10), TimeUnit.HOURS.toMillis(24));
+        timer.schedule(this.getDetailsTask(), TimeUnit.SECONDS.toMillis(10), TimeUnit.HOURS.toMillis(24));
+        
+        
+
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        
+
     }
-    
+
 }

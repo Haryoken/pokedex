@@ -43,20 +43,24 @@
                     <c:if test="${not empty displayMode}">
                         <c:if test="${displayMode == 'all'}">
                             <c:set var="pokemonListXML" value="${sessionScope.POKEMONLISTFULL}"/>
+                            <h2>All Pokémon List</h2>
                         </c:if>
                         <c:if test="${displayMode == 'genI'}">
                             <c:set var="pokemonListXML" value="${sessionScope.POKEMONLISTGENI}"/>
+                            <h2>Generation I Pokémons</h2>
                         </c:if>
                         <c:if test="${displayMode == 'search'}">
                             <c:set var="pokemonListXML" value="${requestScope.SEARCHRESULT}"/>
+                            <h2>Search Result:</h2>
                         </c:if>
                     </c:if>
-                    <h2>Pokémon List</h2>
+                    
 
                     <form method="POST" action="MainControllerServlet">
                         <input type="text" name="txtSearch" value=""/>
-                        <input type="submit" name="btnAction" value="Search"/>
+                        <input type="submit" name="btnAction" value="Search"/>                      
                     </form>
+
                     <br/>
                     <c:if test="${not empty pokemonListXML}">
                         <c:import var="pokemonListXSLT" url="WEB-INF/stylesheets/pokemonList.xsl"/>

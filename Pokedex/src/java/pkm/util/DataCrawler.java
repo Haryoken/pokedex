@@ -5,6 +5,7 @@
  */
 package pkm.util;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -271,13 +272,17 @@ public class DataCrawler {
         if (pokemon.equals("Nidoran♀")) {
             pokemon = "Nidoran\u2640";
         }
-         if (pokemon.equals("Nidoran♂")) {
+        if (pokemon.equals("Nidoran♂")) {
             pokemon = "Nidoran\u2642";
         }
+        if (pokemon.equals("Flabébé")) {
+            pokemon = "Flab%C3%A9b%C3%A9";
+        }
+
         return pokemon;
     }
 
-    private XMLEventReader readFromWebsite(String urlString) throws MalformedURLException, IOException, XMLStreamException {
+    private XMLEventReader readFromWebsite(String urlString) throws MalformedURLException, IOException, XMLStreamException, FileNotFoundException {
         XMLEventReader reader = null;
 
         URL url = new URL(urlString);
@@ -373,6 +378,9 @@ public class DataCrawler {
                                         if (event.isCharacters() && isNationalDexTag) {
                                             String idString = event.asCharacters().toString().trim();
                                             idString = idString.substring(1);
+                                            if (idString.equals("722")) {
+                                                return;
+                                            }
                                             //System.out.println(idString); //For DEBUG Purpose
                                             this.getPokemon().setNationalDexId(BigInteger.valueOf(Long.parseLong(idString)));
                                             //event = reader. nextEvent();
@@ -482,18 +490,15 @@ public class DataCrawler {
                 if (event.isStartElement()) {
                     startElement = event.asStartElement();
                     String tagName = startElement.getName().toString();
-
+                    System.out.println(tagName);
                     //Find Pokemon romajiName
-                    if (tagName.equals("i")) {
-                        event = reader.nextEvent();
-                        if (event.isCharacters()) {
-                            this.getPokemon().setRomajiName(event.asCharacters().toString());
-                            isRomajiNameCollected = true;
-                        }
-                    }
+
                     //Find Pokemon japaneseName
                     if (tagName.equals("span")) {
                         attribute = startElement.getAttributeByName(new QName("lang"));
+                        if(attribute!= null){
+                            System.out.println(attribute.getValue());
+                        }
                         if (attribute != null && attribute.getValue().equals("ja")) {
                             isJapaneseNameContainer = true;
                         }
@@ -517,6 +522,13 @@ public class DataCrawler {
                                     }
                                 }
                             }
+                        }
+                    }
+                    if (isJapaneseNameContainer && tagName.equals("i")) {
+                        event = reader.nextEvent();
+                        if (event.isCharacters()) {
+                            this.getPokemon().setRomajiName(event.asCharacters().toString());
+                            isRomajiNameCollected = true;
                         }
                     }
                     //Find pokemon PictureURI
@@ -645,6 +657,90 @@ public class DataCrawler {
         }
     }
 
+    public void crawl_levelRate(Pokemon pokemon) throws IOException, XMLStreamException {
+        String pokemonName = cleanPokemonNameAzurill(pokemon.getEnglishName());
+        String urlString = "https://www.azurilland.com/pokedex/"
+                + pokemon.getNationalDexId()
+                + "-"
+                + pokemonName.toLowerCase();
+        if (Integer.parseInt(pokemon.getNationalDexId().toString()) >= 651) {
+            int number = 99351 + Integer.parseInt(pokemon.getNationalDexId().toString());
+            urlString = "https://www.azurilland.com/pokedex/"
+                    + number
+                    + "-"
+                    + pokemonName.toLowerCase();
+        }
+
+        try {
+            XMLEventReader reader = readFromWebsite(urlString);
+
+            XMLEvent event;
+
+            Attribute attribute;
+
+            int errorCount = 0;
+
+            //Info Needed:
+            boolean isLevelRateCollected = false;
+
+            //DAO
+            PokemonDAO pkmDao = new PokemonDAO();
+
+            while (reader.hasNext()) {
+                try {
+                    if (errorCount == 50) {
+                        errorCount = 0;
+                        break;
+                    }
+                    if (isLevelRateCollected) {
+                        this.getPokemon().setNationalDexId(pokemon.getNationalDexId());
+                        if (pkmDao.isExistedInDB(this.getPokemon())) {
+                            pkmDao.updateGrowthRate(this.getPokemon());
+                            System.out.println("Update GrowthRate: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName());
+                        }
+                        this.pokemon = new Pokemon();
+                        break;
+                    }
+                    event = reader.nextEvent();
+                    if (event.isStartElement()) {
+                        String tagName = event.asStartElement().getName().toString();
+                        if (tagName.equals("tr")) {
+                            attribute = event.asStartElement().getAttributeByName(new QName("class"));
+                            if (attribute != null) {
+                                String token = attribute.getValue();
+                                if (token.equals("pokemon-level-rate")) {
+                                    while (true) {
+                                        if (event.isCharacters()) {
+                                            if (!event.asCharacters().getData().equals("Level Rate:")) {
+                                                this.getPokemon().setGrowthRate(event.asCharacters().getData());
+                                                isLevelRateCollected = true;
+                                                break;
+                                            }
+                                        }
+                                        event = reader.nextEvent();
+                                    }
+                                }
+                                if (token.equals("pokemon-effort-values")) {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                } catch (XMLStreamException e) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                    errorCount += 1;
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NullPointerException ex) {
+                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
+                    break;
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     //azurilland.com
     public void crawl_baseHappiness(Pokemon pokemon) throws IOException, XMLStreamException {
         String pokemonName = cleanPokemonNameAzurill(pokemon.getEnglishName());
@@ -721,94 +817,6 @@ public class DataCrawler {
                     Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NullPointerException ex) {
                     Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    //azurilland.com
-    public void crawl_growthRate(Pokemon pokemon) throws IOException, XMLStreamException {
-        String pokemonName = cleanPokemonNameAzurill(pokemon.getEnglishName());
-        String urlString = "https://www.azurilland.com/pokedex/"
-                + pokemon.getNationalDexId()
-                + "-"
-                + pokemonName.toLowerCase();
-        if (Integer.parseInt(pokemon.getNationalDexId().toString()) >= 651) {
-            int number = 99351 + Integer.parseInt(pokemon.getNationalDexId().toString());
-            urlString = "https://www.azurilland.com/pokedex/"
-                    + number
-                    + "-"
-                    + pokemonName.toLowerCase();
-        }
-
-        try {
-            XMLEventReader reader = readFromWebsite(urlString);
-
-            XMLEvent event;
-
-            Attribute attribute;
-
-            int errorCount = 0;
-
-            //Info Needed
-            boolean isGrowthRateCollected = false;
-
-            //DAO
-            PokemonDAO pkmDao = new PokemonDAO();
-
-            while (reader.hasNext()) {
-                try {
-                    if (errorCount == 50) {
-                        errorCount = 0;
-                        break;
-                    }
-                    if (isGrowthRateCollected) {
-                        this.getPokemon().setNationalDexId(pokemon.getNationalDexId());
-                        this.getPokemon().setEnglishName(pokemon.getEnglishName());
-
-                        this.getPokemonList().getPokemon().add(this.getPokemon());
-
-                        //Save Data to DB
-                        pkmDao.updateGrowthRate(pokemon);
-
-                        System.out.println("update_growthRate: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName().toUpperCase());
-                        //Purge the list
-                        this.pokemon = new Pokemon();
-                        break;
-                    }
-                    event = reader.nextEvent();
-                    if (event.isStartElement()) {
-                        String tagName = event.asStartElement().getName().toString();
-                        if (tagName.equals("tr")) {
-                            attribute = event.asStartElement().getAttributeByName(new QName("class"));
-                            if (attribute != null) {
-                                String token = attribute.getValue();
-                                if (token.equals("pokemon-level-rate")) {
-                                    System.out.println("");
-                                    while (true) {
-                                        if (event.isCharacters()) {
-                                            if (!event.asCharacters().getData().equals("Level Rate:")) {
-                                                this.getPokemon().setGrowthRate(event.asCharacters().toString());
-                                                isGrowthRateCollected = true;
-                                                break;
-                                            }
-                                        }
-                                        event = reader.nextEvent();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } catch (XMLStreamException e) {
-                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-                    errorCount += 1;
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (NullPointerException ex) {
-                    Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, ex);
-                    break;
                 }
             }
         } catch (IOException ex) {
@@ -1523,7 +1531,6 @@ public class DataCrawler {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
                     return;
-
                 }
             }
         } catch (IOException e) {
@@ -1557,15 +1564,15 @@ public class DataCrawler {
                         errorCount = 0;
                         break;
                     }
-                    if(isAllTypeCollected){
+                    if (isAllTypeCollected) {
                         typeDAO = new TypeDAO();
                         typeIntDAO = new TypeInteractionDAO();
-                        for(TypeInteraction typeInteraction: this.getTypeInteractionList().getTypeInteraction()){
-                            if(typeDAO.isTypeExisted(typeInteraction.getAttackType()) && typeDAO.isTypeExisted(typeInteraction.getDefenseType())){
-                                if(!typeIntDAO.isTypeInteractionExisted(typeInteraction)){
+                        for (TypeInteraction typeInteraction : this.getTypeInteractionList().getTypeInteraction()) {
+                            if (typeDAO.isTypeExisted(typeInteraction.getAttackType()) && typeDAO.isTypeExisted(typeInteraction.getDefenseType())) {
+                                if (!typeIntDAO.isTypeInteractionExisted(typeInteraction)) {
                                     typeIntDAO.insertType(typeInteraction);
-                                    System.out.println("Insert Type Interaction: "+typeInteraction.getAttackType() + " → " + typeInteraction.getDefenseType()
-                                            + " - Effect: "+typeInteraction.getEffect() +" ("+ typeInteraction.getEffectMultipler()+")");
+                                    System.out.println("Insert Type Interaction: " + typeInteraction.getAttackType() + " → " + typeInteraction.getDefenseType()
+                                            + " - Effect: " + typeInteraction.getEffect() + " (" + typeInteraction.getEffectMultipler() + ")");
                                 }
                             }
                         }
@@ -1901,13 +1908,13 @@ public class DataCrawler {
                                 this.getTypeInteractionList().getTypeInteraction().add(this.getTypeInteraction());
                                 this.typeInteraction = new TypeInteraction();
                             }
-                        }                       
+                        }
                     }
-                    if(isTypeTr && event.isEndElement()){
-                        if(event.asEndElement().getName().toString().equals("tr")){
+                    if (isTypeTr && event.isEndElement()) {
+                        if (event.asEndElement().getName().toString().equals("tr")) {
                             isTypeTr = false;
                             isTypeTable = false;
-                            isAllTypeCollected =true;
+                            isAllTypeCollected = true;
                         }
                     }
                 } catch (XMLStreamException e) {

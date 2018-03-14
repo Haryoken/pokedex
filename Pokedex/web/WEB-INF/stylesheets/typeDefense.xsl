@@ -18,7 +18,7 @@
     -->
     <xsl:template match="defInt:TypeInteractionList">
         <div> 
-            <h2>Attack pros &amp; cons</h2>
+            <h2>Defense pros &amp; cons</h2>
             <p style="font-size:25px">
                 These move types are <i><b>not very effective</b></i> against 
                 <i><b> <xsl:value-of select="defInt:typeInteraction/defInt:defenseType"/></b></i>

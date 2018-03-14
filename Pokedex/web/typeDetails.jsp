@@ -14,11 +14,12 @@
         <link rel="stylesheet" href="css/headerstyle.css"/>  
         <link rel="stylesheet" href="css/movetype.css"/> 
         <link rel="stylesheet" href="css/layout.css"/>
+        <link rel="stylesheet" href="css/listtable.css"/>
         <c:set var="type" value="${requestScope.TYPE}"/>
         <c:if test="${not empty type}">
             <title>Type - ${type}</title>
         </c:if>
-        
+
     </head>
     <body>
         <div class="header">
@@ -42,17 +43,25 @@
                     <h1>${type} type</h1>
                 </div>
                 <div class="card">
-                    <c:set var="typeAttackXML" value="${sessionScope.TYPEATTACK}"/>
+                    <c:set var="typeAttackXML" value="${requestScope.TYPEATTACK}"/>
                     <c:if test="${not empty typeAttackXML}">
                         <c:import var="typeAttackXSLT" url="WEB-INF/stylesheets/typeAttack.xsl"/>
                         <x:transform doc="${typeAttackXML}" xslt="${typeAttackXSLT}"/>                      
                     </c:if>
                 </div>
                 <div class="card">
-                    <c:set var="typeDefenseXML" value="${sessionScope.TYPEDEFENSE}"/>
+                    <c:set var="typeDefenseXML" value="${requestScope.TYPEDEFENSE}"/>
                     <c:if test="${not empty typeDefenseXML}">
                         <c:import charEncoding="UTF-8" var="typeDefenseXSLT" url="WEB-INF/stylesheets/typeDefense.xsl"/>
                         <x:transform doc="${typeDefenseXML}" xslt="${typeDefenseXSLT}"/>                      
+                    </c:if>
+                </div>
+                <div class="card">
+                    <h2>${type} type Pokémon</h2>
+                    <c:set var="typePokemonXML" value="${requestScope.TYPEPOKEMON}"/>
+                    <c:if test="${not empty typePokemonXML}">
+                        <c:import charEncoding="UTF-8" var="pokemonListXSLT" url="WEB-INF/stylesheets/pokemonList.xsl"/>
+                        <x:transform doc="${typePokemonXML}" xslt="${pokemonListXSLT}"/>                      
                     </c:if>
                 </div>
             </div>

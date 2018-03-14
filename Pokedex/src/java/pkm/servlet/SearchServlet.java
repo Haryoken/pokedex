@@ -50,79 +50,90 @@ public class SearchServlet extends HttpServlet {
         String search = request.getParameter("txtSearch");
         PrintWriter out = response.getWriter();
         try {
-            HttpSession session = request.getSession(false);
+            if (!search.equals("")) {
+                HttpSession session = request.getSession(false);
 
-            String fullPkmXML = (String) session.getAttribute("POKEMONLISTFULL");
-            if (fullPkmXML == null) {
-                PokemonDAO pkmDAO = new PokemonDAO();
-                PokemonList list = pkmDAO.getAllPokemonBasicInfo();
-                fullPkmXML = JAXBHelper.marshallToString(list);
-                session.setAttribute("POKEMONLISTFULL", fullPkmXML);
-            }
-            XMLInputFactory factory = XMLInputFactory.newInstance();
-            factory.setProperty(XMLInputFactory.IS_VALIDATING, false);
-            factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, false);
+                String fullPkmXML = (String) session.getAttribute("POKEMONLISTFULL");
+                if (fullPkmXML == null) {
+                    PokemonDAO pkmDAO = new PokemonDAO();
+                    PokemonList list = pkmDAO.getAllPokemonBasicInfo();
+                    fullPkmXML = JAXBHelper.marshallToString(list);
+                    session.setAttribute("POKEMONLISTFULL", fullPkmXML);
+                }
+                XMLInputFactory factory = XMLInputFactory.newInstance();
+                factory.setProperty(XMLInputFactory.IS_VALIDATING, false);
+                factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, false);
 
-            XMLStreamReader reader = factory.createXMLStreamReader(new InputStreamReader(new ByteArrayInputStream(fullPkmXML.getBytes(StandardCharsets.UTF_8)), "UTF-8"));
+                XMLStreamReader reader = factory.createXMLStreamReader(new InputStreamReader(new ByteArrayInputStream(fullPkmXML.getBytes(StandardCharsets.UTF_8)), "UTF-8"));
 
-            Pokemon pokemon = new Pokemon();
-            PokemonList resultList = new PokemonList();
-            String dexId = "";
-            boolean isPokemon = false;
-            boolean isPokemonMatch = false;
-            while (reader.hasNext()) {
-                reader.next();
+                Pokemon pokemon = new Pokemon();
+                PokemonList resultList = new PokemonList();
+                String dexId = "";
+                boolean isPokemon = false;
+                boolean isPokemonMatch = false;
+                boolean isIdMatch = false;
+                while (reader.hasNext()) {
+                    reader.next();
 
-                int eventType = reader.getEventType();
+                    int eventType = reader.getEventType();
 
-                if (eventType == XMLStreamConstants.START_ELEMENT) {
-                    String tagName = reader.getLocalName();
-                    if (tagName.equals("pokemon")) {
-                        isPokemon = true;
-                    }
-                    if (isPokemon && tagName.equals("nationalDexId")) {
-                        reader.next();
-                        if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
-                            dexId = reader.getText();
+                    if (eventType == XMLStreamConstants.START_ELEMENT) {
+                        String tagName = reader.getLocalName();
+                        if (tagName.equals("pokemon")) {
+                            isPokemon = true;
                         }
-                    }
-                    if (isPokemon && tagName.equals("englishName")) {
-                        reader.next();
-                        if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
-                            if (reader.getText().toLowerCase().contains(search.toLowerCase())) {
-                                isPokemonMatch = true;
-                                pokemon.setNationalDexId(BigInteger.valueOf(Long.valueOf(dexId)));
-                                pokemon.setEnglishName(reader.getText());
+                        if (isPokemon && tagName.equals("nationalDexId")) {
+                            reader.next();
+                            if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
+                                dexId = reader.getText();
+                                if (reader.getText().equals(search)) {
+                                    isIdMatch = true;
+                                    pokemon.setNationalDexId(BigInteger.valueOf(Long.valueOf(dexId)));
+                                }
+
+                            }
+                        }
+                        if (isPokemon && tagName.equals("englishName")) {
+                            reader.next();
+                            if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
+                                if (isIdMatch) {
+                                    pokemon.setEnglishName(reader.getText());
+                                }
+                                if (!isIdMatch && reader.getText().toLowerCase().contains(search.toLowerCase())) {
+                                    isPokemonMatch = true;
+                                    pokemon.setNationalDexId(BigInteger.valueOf(Long.valueOf(dexId)));
+                                    pokemon.setEnglishName(reader.getText());
+                                }
+                            }
+                        }
+                        if ((isPokemonMatch || isIdMatch) && tagName.equals("firstType")) {
+                            reader.next();
+                            if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
+                                pokemon.setFirstType(reader.getText());
+                            }
+                        }
+                        if ((isPokemonMatch || isIdMatch) && tagName.equals("secondType")) {
+                            reader.next();
+                            if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
+                                pokemon.setSecondType(reader.getText());
+                            }
+                        }
+                        if ((isPokemonMatch || isIdMatch) && tagName.equals("iconURI")) {
+                            reader.next();
+                            if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
+                                pokemon.setIconURI(reader.getText());
+                                resultList.getPokemon().add(pokemon);
+                                pokemon = new Pokemon();
+                                isPokemonMatch = false;
+                                isIdMatch = false;
+                                isPokemon = false;
                             }
                         }
                     }
-                    if (isPokemonMatch && tagName.equals("firstType")) {
-                        reader.next();
-                        if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
-                            pokemon.setFirstType(reader.getText());
-                        }
-                    }
-                    if (isPokemonMatch && tagName.equals("secondType")) {
-                        reader.next();
-                        if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
-                            pokemon.setSecondType(reader.getText());
-                        }
-                    }
-                    if (isPokemonMatch && tagName.equals("iconURI")) {
-                        reader.next();
-                        if (reader.getEventType() == XMLStreamConstants.CHARACTERS) {
-                            pokemon.setIconURI(reader.getText());
-                            resultList.getPokemon().add(pokemon);
-                            pokemon = new Pokemon();
-                            isPokemonMatch = false;
-                            isPokemon = false;
-                        }
-                    }
-                }
-            }//End of hasNext
-            String resultXML = JAXBHelper.marshallToString(resultList);         
-            request.setAttribute("SEARCHRESULT", resultXML);
-
+                }//End of hasNext
+                String resultXML = JAXBHelper.marshallToString(resultList);
+                request.setAttribute("SEARCHRESULT", resultXML);
+            }
         } catch (JAXBException ex) {
             Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (XMLStreamException ex) {
