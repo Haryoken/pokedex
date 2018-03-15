@@ -312,6 +312,119 @@ public class DataCrawler {
     }
 
     //CRAWL POKEMON
+    
+     //bulbapedia.bulbagarden.net
+    public void crawlRomJapImage(Pokemon pokemon) throws IOException, XMLStreamException {
+        String pokemonName = cleanPokemonNameBulbapedia(pokemon.getEnglishName());
+        String urlString = "https://bulbapedia.bulbagarden.net/wiki/" + pokemonName + "_(Pok%C3%A9mon)";
+
+        XMLEventReader reader = readFromWebsite(urlString);
+        XMLEvent event;
+
+        StartElement startElement;
+        Attribute attribute;
+        int errorCount = 0;
+        
+        boolean isJapaneseNameContainer = false;
+        boolean isPictureURIContainer = false;
+
+        //Info needed:
+        boolean isIdCollected = false;
+        boolean isRomajiNameCollected = false;
+        boolean isJapaneseNameCollected = false;
+        boolean isPictureURICollected = false;
+
+
+        PokemonDAO pkmDao = null;
+        
+        while (reader.hasNext()) {
+            try {
+                if (errorCount == 50) {
+                    errorCount = 0;
+                    break;
+                }
+                if (isJapaneseNameCollected
+                        && isPictureURICollected
+                        && isRomajiNameCollected) {
+                    pkmDao = new PokemonDAO();
+                    this.getPokemon().setNationalDexId(pokemon.getNationalDexId());
+                    //Save Data to DB
+                    if (pkmDao.isExistedInDB(Integer.parseInt(this.getPokemon().getNationalDexId().toString()))) {
+                        pkmDao.update_JapanseseName_RomajiName_PictureURI(this.getPokemon());
+                        System.out.println("update_japaneseName_pictureURI_romajiName: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName().toUpperCase());
+                    }
+                    //Purge the pokemon
+                    this.pokemon = new Pokemon();
+                    break;
+                }
+                event = reader.nextEvent();
+                if (event.isStartElement()) {
+                    startElement = event.asStartElement();
+                    String tagName = startElement.getName().toString();
+                    
+                    if (tagName.equals("i")) {
+                        event = reader.nextEvent();
+                        if (event.isCharacters()) {
+                            this.getPokemon().setRomajiName(event.asCharacters().toString());
+                            isRomajiNameCollected = true;
+                        }
+                    }
+                    //Find Pokemon japaneseName
+                    if (tagName.equals("span")) {
+                        attribute = startElement.getAttributeByName(new QName("lang"));
+                        if (attribute != null && attribute.getValue().equals("ja")) {
+                            isJapaneseNameContainer = true;
+                        }
+                    }
+                    
+                    if (isJapaneseNameContainer && tagName.equals("b")) {
+                        event = reader.nextEvent();
+                        if (event.isCharacters()) {
+                            this.getPokemon().setJapaneseName(event.asCharacters().toString());
+                            isJapaneseNameCollected = true;
+                            isJapaneseNameContainer = false;
+                        } else if (event.isStartElement()) { //Case that <b><span class="explain title="..."></span></b>
+                            startElement = event.asStartElement();
+                            if (startElement.getName().toString().equals("span")) {
+                                attribute = startElement.getAttributeByName(new QName("class"));
+                                if (attribute != null && attribute.getValue().equals("explain")) {
+                                    event = reader.nextEvent();
+                                    if (event.isCharacters()) {
+                                        this.getPokemon().setJapaneseName(event.asCharacters().toString());
+                                        isJapaneseNameCollected = true;
+                                        isJapaneseNameContainer = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    //Find pokemon PictureURI
+                    if (isJapaneseNameCollected && tagName.equals("a")) {
+                        attribute = startElement.getAttributeByName(new QName("href"));
+                        if (attribute != null && attribute.getValue().contains(pokemon.getEnglishName())) {
+                            isPictureURIContainer = true;
+                        }
+                    }
+                    if (isPictureURIContainer && tagName.equals("img")) {
+                        String pictureURI = event.asStartElement().getAttributeByName(new QName("src")).getValue();
+                        this.getPokemon().setPictureURI(pictureURI);
+                        isPictureURICollected = true;
+                        isPictureURIContainer = false;
+                    }
+                }
+            } catch (XMLStreamException e) {
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                errorCount += 1;
+            } catch (NullPointerException e) {
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                break;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
+                break;
+            }
+        }
+    }
     //bulbapedia.bulbagarden.net
     public void crawl_All_nationalDexId_englishName() throws IOException, XMLStreamException {
         String urlString = "https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number";
@@ -442,122 +555,7 @@ public class DataCrawler {
 
     }
 
-    //bulbapedia.bulbagarden.net
-    public void crawl_romajiName_japaneseName_pictureURI(Pokemon pokemon) throws IOException, XMLStreamException {
-        String pokemonName = cleanPokemonNameBulbapedia(pokemon.getEnglishName());
-        String urlString = "https://bulbapedia.bulbagarden.net/wiki/" + pokemonName + "_(Pok%C3%A9mon)";
-        XMLEventReader reader = readFromWebsite(urlString);
-        XMLEvent event;
-
-        Attribute attribute;
-        StartElement startElement;
-        int errorCount = 0;
-
-        boolean isJapaneseNameContainer = false;
-        boolean isPictureURIContainer = false;
-
-        //Info needed:
-        boolean isIdCollected = false;
-        boolean isRomajiNameCollected = false;
-        boolean isJapaneseNameCollected = false;
-        boolean isPictureURICollected = false;
-
-        String xmlPath = "web/WEB-INF/xml/PokemonList.xml";
-        String schemaPath = "web/WEB-INF/schemas/PokemonList.xsd";
-        PokemonDAO pkmDao = null;
-
-        while (reader.hasNext()) {
-            try {
-                if (errorCount == 50) {
-                    errorCount = 0;
-                    break;
-                }
-                if (isJapaneseNameCollected
-                        && isPictureURICollected
-                        && isRomajiNameCollected) {
-                    pkmDao = new PokemonDAO();
-                    this.getPokemon().setNationalDexId(pokemon.getNationalDexId());
-                    //Save Data to DB
-                    if (pkmDao.isExistedInDB(Integer.parseInt(this.getPokemon().getNationalDexId().toString()))) {
-                        pkmDao.update_JapanseseName_RomajiName_PictureURI(this.getPokemon());
-                        System.out.println("update_japaneseName_pictureURI_romajiName: " + pokemon.getNationalDexId() + "-" + pokemon.getEnglishName().toUpperCase());
-                    }
-                    //Purge the pokemon
-                    this.pokemon = new Pokemon();
-                    break;
-                }
-                event = reader.nextEvent();
-                if (event.isStartElement()) {
-                    startElement = event.asStartElement();
-                    String tagName = startElement.getName().toString();
-                    System.out.println(tagName);
-                    //Find Pokemon romajiName
-
-                    //Find Pokemon japaneseName
-                    if (tagName.equals("span")) {
-                        attribute = startElement.getAttributeByName(new QName("lang"));
-                        if(attribute!= null){
-                            System.out.println(attribute.getValue());
-                        }
-                        if (attribute != null && attribute.getValue().equals("ja")) {
-                            isJapaneseNameContainer = true;
-                        }
-                    }
-                    if (isJapaneseNameContainer && tagName.equals("b")) {
-                        event = reader.nextEvent();
-                        if (event.isCharacters()) {
-                            this.getPokemon().setJapaneseName(event.asCharacters().toString());
-                            isJapaneseNameCollected = true;
-                            isJapaneseNameContainer = false;
-                        } else if (event.isStartElement()) { //Case that <b><span class="explain title="..."></span></b>
-                            startElement = event.asStartElement();
-                            if (startElement.getName().toString().equals("span")) {
-                                attribute = startElement.getAttributeByName(new QName("class"));
-                                if (attribute != null && attribute.getValue().equals("explain")) {
-                                    event = reader.nextEvent();
-                                    if (event.isCharacters()) {
-                                        this.getPokemon().setJapaneseName(event.asCharacters().toString());
-                                        isJapaneseNameCollected = true;
-                                        isJapaneseNameContainer = false;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (isJapaneseNameContainer && tagName.equals("i")) {
-                        event = reader.nextEvent();
-                        if (event.isCharacters()) {
-                            this.getPokemon().setRomajiName(event.asCharacters().toString());
-                            isRomajiNameCollected = true;
-                        }
-                    }
-                    //Find pokemon PictureURI
-                    if (isJapaneseNameCollected && tagName.equals("a")) {
-                        attribute = startElement.getAttributeByName(new QName("href"));
-                        if (attribute != null && attribute.getValue().contains(pokemon.getEnglishName())) {
-                            isPictureURIContainer = true;
-                        }
-                    }
-                    if (isPictureURIContainer && tagName.equals("img")) {
-                        String pictureURI = event.asStartElement().getAttributeByName(new QName("src")).getValue();
-                        this.getPokemon().setPictureURI(pictureURI);
-                        isPictureURICollected = true;
-                        isPictureURIContainer = false;
-                    }
-                }
-            } catch (XMLStreamException e) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-                errorCount += 1;
-            } catch (NullPointerException e) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-                break;
-            } catch (ArrayIndexOutOfBoundsException e) {
-                Logger.getLogger(DataCrawler.class.getName()).log(Level.SEVERE, null, e);
-                break;
-            }
-        }
-
-    }
+    
 
     //azurilland.com
     public void crawl_baseXP_catchRate(Pokemon pokemon) throws IOException, XMLStreamException {

@@ -48,7 +48,7 @@ public class CrawlDetailsInfoTask extends TimerTask {
                     crawler.crawl_baseHappiness(pokemon);
                     crawler.crawl_baseXP_catchRate(pokemon);
                     crawler.crawl_levelRate(pokemon);
-                    crawler.crawl_romajiName_japaneseName_pictureURI(pokemon);
+                    crawler.crawlRomJapImage(pokemon);
                     crawler.crawl_PokemonStats(pokemon);
                     crawler.crawl_PokemonAbilities(pokemon);
                     crawler.crawlPokemonMoves(pokemon);

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<xsd:schema version="1.0"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="https://www.pokedex.com/schemas/GameGeneration.xsd"
+            xmlns="https://www.pokedex.com/schemas/GameGeneration.xsd"
+            elementFormDefault="qualified"> 
+    <xsd:element name="GameGeneration">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="gameName" type="xsd:string"/>
+                <xsd:element name="generation" type="xsd:positiveInteger"/>          
+                <xsd:element name="regionId" type="xsd:positiveInteger"/>
+                <xsd:element name="platform" type="xsd:string"/>
+                <xsd:element name="releaseDateJAP" type="xsd:long"/>
+                <xsd:element name="releaseDateUS" type="xsd:long"/>
+                <xsd:element name="releaseDateEU" type="xsd:long"/>           
+                <xsd:element name="releaseDateAUS" type="xsd:long"/>       
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

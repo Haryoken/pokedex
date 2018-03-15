@@ -1,0 +1,77 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 9 Mar, 2018, 7:56:08 PM
+    Author     : DUCVINH
+*/
+
+#container_div{
+    width: 100%;
+    height: 100%;
+    background-color: darkslategray;
+
+}
+#header_div{
+    width: 100%;
+    height: 300px;
+    text-align: center;
+    background-image:url('http://cdn.playbuzz.com/cdn/1aaa9cab-a577-4d57-88f0-11552ef31c63/3285be5a-c22d-4eb2-b2fe-09e578fa5e2f.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}   
+#title_div{      
+    position: relative;
+    top:60px;
+
+}  
+#title_span{
+    font-size: 70px;
+    font-weight: 900;
+    font-family: Arial;
+    position: relative;
+    top: 10px;
+    text-shadow: 5px 3px grey;
+    left: -25px;
+
+}
+
+#menu_div{
+    height: 60%;
+    width: 67.3%;
+    position: relative;
+    left: 312px;
+}
+#search_form{
+    padding: 14px 16px;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: grey;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-family: castellar;
+    font-weight: bold
+        
+}
+
+li a:hover {
+    background-color: black;
+    color: gold;
+    opacity: 1;
+}

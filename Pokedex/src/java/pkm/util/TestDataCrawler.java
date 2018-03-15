@@ -37,12 +37,12 @@ public class TestDataCrawler {
 //                    crawler.crawlTypesInteraction(type);
 //                }
 //            }
-//            
+            
 //            PokemonDAO pkmDao = new PokemonDAO();
 //            List<Pokemon> pokemonList = pkmDao.getPokemonBeforeGenVII();
 //            if (pokemonList.size() > 0) {
 //                for (Pokemon pokemon : pokemonList) {
-//                    crawler.crawl_romajiName_japaneseName_pictureURI(pokemon);
+//                    crawler.crawlRomJapImage(pokemon);
 //                    crawler.crawl_baseHappiness(pokemon);
 //                    crawler.crawl_baseXP_catchRate(pokemon);
 //                    crawler.crawl_levelRate(pokemon);                   
@@ -52,10 +52,9 @@ public class TestDataCrawler {
 //                }
 //            }
             Pokemon pkm = new Pokemon();
-
-            pkm.setEnglishName("Nidoran♀");
-            pkm.setNationalDexId(BigInteger.valueOf(29));
-            crawler.crawl_romajiName_japaneseName_pictureURI(pkm);
+            pkm.setEnglishName("Bulbasaur");
+            pkm.setNationalDexId(BigInteger.valueOf(1));
+            crawler.crawlRomJapImage(pkm);
 //            crawler.crawl_baseXP_catchRate(pkm);
 //            crawler.crawl_levelRate(pkm);
 //
