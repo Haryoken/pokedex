@@ -139,7 +139,8 @@ public class SearchServlet extends HttpServlet {
         } catch (XMLStreamException ex) {
             Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher("MainControllerServlet?btnAction=Pokedex&pokemonCount=search");
+            String url = "MainControllerServlet?btnAction=Pokedex&pokemonCount=search";
+            RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
             out.close();
         }

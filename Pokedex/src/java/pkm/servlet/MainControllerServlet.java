@@ -7,19 +7,11 @@ package pkm.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
-import javax.xml.bind.JAXBException;
-import pkm.dao.PokemonDAO;
-import pkm.util.JAXBHelper;
-import pkm.xml.object.PokemonList.xsd.PokemonList;
 
 /**
  *
@@ -28,12 +20,13 @@ import pkm.xml.object.PokemonList.xsd.PokemonList;
 public class MainControllerServlet extends HttpServlet {
 
     private final String homePage = "index.jsp";
-    private final String crawlingServlet = "CrawlingServlet";
     private final String displayPokemonServlet = "DisplayPokemonServlet";
     private final String pokemonListServlet = "PokemonListServlet";
     private final String searchServlet = "SearchServlet";
     private final String typeListServlet = "TypeListServlet";
     private final String typeDetailsServlet = "TypeDetailsServlet";
+    private final String firstDeployServlet = "FirstDeployServlet";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -53,12 +46,7 @@ public class MainControllerServlet extends HttpServlet {
         try {
 
             if (button == null) {
-                PokemonDAO pkmDAO = new PokemonDAO();
-                PokemonList pkmList = pkmDAO.getGenIBasicInfo();
-                String pokemonGenIXML = JAXBHelper.marshallToString(pkmList);
-                HttpSession session = request.getSession(true);
-                session.setAttribute("POKEMONLISTGENI", pokemonGenIXML);
-                url = homePage;
+                url = firstDeployServlet;
             } else if (button.equals("RedirectToPokemon")) {
                 url = displayPokemonServlet;
             } else if (button.equals("Home")) {
@@ -72,8 +60,6 @@ public class MainControllerServlet extends HttpServlet {
             } else if (button.equals("TypeDetails")) {
                 url = typeDetailsServlet;
             }
-        } catch (JAXBException ex) {
-            Logger.getLogger(MainControllerServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

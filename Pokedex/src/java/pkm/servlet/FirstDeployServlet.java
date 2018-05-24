@@ -15,15 +15,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBException;
-import pkm.dao.TypeInteractionDAO;
+import pkm.dao.PokemonDAO;
 import pkm.util.JAXBHelper;
-import pkm.xml.object.TypeInteractionList.xsd.TypeInteractionList;
+import pkm.xml.object.PokemonList.xsd.PokemonList;
 
 /**
  *
  * @author DUCVINH
  */
-public class TypeListServlet extends HttpServlet {
+public class FirstDeployServlet extends HttpServlet {
+
+    private final String homePage = "index.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,20 +40,16 @@ public class TypeListServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        try{
+        try {
+            PokemonDAO pkmDAO = new PokemonDAO();
+            PokemonList pkmList = pkmDAO.getGenIBasicInfo();
+            String pokemonGenIXML = JAXBHelper.marshallToString(pkmList);
             HttpSession session = request.getSession(true);
-            
-            String typeInteractXML = (String) session.getAttribute("TYPEINTERACT");
-            if(typeInteractXML == null){
-                TypeInteractionDAO typeIntDAO = new TypeInteractionDAO();
-                TypeInteractionList typeInteractionList = typeIntDAO.getAllTypeInteraction();
-                typeInteractXML =  JAXBHelper.marshallToString(typeInteractionList);
-                session.setAttribute("TYPEINTERACTION", typeInteractXML);
-            }
+            session.setAttribute("POKEMONLISTGENI", pokemonGenIXML);
         } catch (JAXBException ex) {
-            Logger.getLogger(TypeListServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            response.sendRedirect("typeList.jsp");
+            Logger.getLogger(FirstDeployServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            response.sendRedirect(homePage);
             out.close();
         }
     }

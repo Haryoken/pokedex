@@ -24,6 +24,10 @@
         <servlet-name>TypeDetailsServlet</servlet-name>
         <servlet-class>pkm.servlet.TypeDetailsServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FirstDeployServlet</servlet-name>
+        <servlet-class>pkm.servlet.FirstDeployServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainControllerServlet</servlet-name>
         <url-pattern>/MainControllerServlet</url-pattern>
@@ -47,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>TypeDetailsServlet</servlet-name>
         <url-pattern>/TypeDetailsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FirstDeployServlet</servlet-name>
+        <url-pattern>/FirstDeployServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
